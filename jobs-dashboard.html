@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Miami Metro — Job Market Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <style>
+    /* ── Reset ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Palette — clean slate blue-grey */
+      --bg:          #f0f4f8;
+      --surface:     #ffffff;
+      --surface2:    #f8fafc;
+      --border:      #e2e8f0;
+      --border2:     #cbd5e1;
+
+      /* Brand */
+      --blue:        #1d4ed8;
+      --blue-light:  #3b82f6;
+      --blue-pale:   #eff6ff;
+      --teal:        #0d9488;
+      --teal-light:  #14b8a6;
+      --teal-pale:   #f0fdfa;
+      --amber:       #d97706;
+      --amber-pale:  #fffbeb;
+      --red:         #dc2626;
+      --red-pale:    #fef2f2;
+      --green:       #16a34a;
+      --green-pale:  #f0fdf4;
+
+      /* Text */
+      --text:        #0f172a;
+      --text2:       #334155;
+      --muted:       #64748b;
+      --faint:       #94a3b8;
+
+      /* Shadows */
+      --shadow-sm:   0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+      --shadow:      0 4px 6px -1px rgba(0,0,0,.08), 0 2px 4px -1px rgba(0,0,0,.05);
+      --shadow-md:   0 10px 15px -3px rgba(0,0,0,.08), 0 4px 6px -2px rgba(0,0,0,.04);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+    /* ── Header ───────────────────────────────────────────────── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    .header-icon {
+      width: 34px;
+      height: 34px;
+      background: var(--blue);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -.01em;
+    }
+
+    .header-sub {
+      font-size: .72rem;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    #last-updated {
+      font-size: .72rem;
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      font-size: .68rem;
+      font-weight: 600;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      padding: .25rem .65rem;
+      border-radius: 999px;
+    }
+
+    .badge-bls {
+      background: var(--blue-pale);
+      color: var(--blue);
+      border: 1px solid #bfdbfe;
+    }
+
+    .badge-bls::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--blue-light);
+      border-radius: 50%;
+      animation: blink 2.5s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .3; }
+    }
+
+    /* ── Page Layout ──────────────────────────────────────────── */
+    .page {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 1.75rem 2rem 3rem;
+    }
+
+    /* ── Section Headers ──────────────────────────────────────── */
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      gap: .5rem;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .section-divider {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── KPI Strip ────────────────────────────────────────────── */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 1024px) { .kpi-strip { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px)  { .kpi-strip { grid-template-columns: 1fr; } }
+
+    .kpi {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: .25rem;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow .2s, transform .2s;
+    }
+
+    .kpi:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .kpi::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      border-radius: 12px 0 0 12px;
+    }
+
+    .kpi.blue::after  { background: var(--blue); }
+    .kpi.teal::after  { background: var(--teal); }
+    .kpi.amber::after { background: var(--amber); }
+    .kpi.red::after   { background: var(--red); }
+
+    .kpi-label {
+      font-size: .7rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .kpi-value {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -.03em;
+      line-height: 1.1;
+    }
+
+    .kpi.blue  .kpi-value { color: var(--blue); }
+    .kpi.teal  .kpi-value { color: var(--teal); }
+    .kpi.amber .kpi-value { color: var(--amber); }
+    .kpi.red   .kpi-value { color: var(--red); }
+
+    .kpi-delta {
+      display: inline-flex;
+      align-items: center;
+      gap: .25rem;
+      font-size: .72rem;
+      font-weight: 600;
+      padding: .18rem .45rem;
+      border-radius: 5px;
+      width: fit-content;
+      margin-top: .1rem;
+    }
+
+    .kpi-delta.up   { background: var(--green-pale); color: var(--green); }
+    .kpi-delta.down { background: var(--red-pale);   color: var(--red); }
+    .kpi-delta.flat { background: var(--surface2);   color: var(--muted); }
+
+    .kpi-period {
+      font-size: .68rem;
+      color: var(--faint);
+      margin-top: .15rem;
+    }
+
+    /* ── Cards ────────────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      transition: box-shadow .2s;
+    }
+
+    .card:hover { box-shadow: var(--shadow); }
+
+    .card-head {
+      padding: 1.1rem 1.5rem .9rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .card-title {
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .card-desc {
+      font-size: .72rem;
+      color: var(--muted);
+      margin-top: .2rem;
+    }
+
+    .card-body {
+      padding: 1.25rem 1.5rem;
+    }
+
+    /* ── Range Buttons ────────────────────────────────────────── */
+    .range-btns {
+      display: flex;
+      gap: .3rem;
+      flex-shrink: 0;
+    }
+
+    .btn-r {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: .68rem;
+      font-weight: 600;
+      padding: .22rem .55rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all .15s;
+      letter-spacing: .04em;
+      font-family: inherit;
+    }
+
+    .btn-r:hover { border-color: var(--blue-light); color: var(--blue); }
+    .btn-r.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+    /* ── Chart Grids ──────────────────────────────────────────── */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    .grid-1 { margin-bottom: 1rem; }
+
+    .chart-wrap { position: relative; height: 270px; }
+    .chart-wrap.tall { height: 320px; }
+
+    /* ── Data Table ───────────────────────────────────────────── */
+    .table-wrap {
+      overflow-x: auto;
+      max-height: 360px;
+      overflow-y: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .8rem;
+    }
+
+    thead th {
+      background: var(--surface2);
+      padding: .65rem 1.25rem;
+      text-align: left;
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background .1s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--surface2); }
+
+    tbody td {
+      padding: .6rem 1.25rem;
+      color: var(--text2);
+    }
+
+    td.mono {
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: .78rem;
+    }
+
+    .tag-p {
+      display: inline-block;
+      background: #fef3c7;
+      color: #92400e;
+      font-size: .62rem;
+      font-weight: 700;
+      padding: .08rem .35rem;
+      border-radius: 4px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      margin-left: .35rem;
+      vertical-align: middle;
+    }
+
+    /* ── Footer ───────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      padding: 1.25rem 2rem;
+      font-size: .72rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: .5rem;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    footer a { color: var(--blue); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Loading / Error ──────────────────────────────────────── */
+    #loading {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      gap: .75rem;
+      transition: opacity .35s;
+    }
+
+    #loading.out { opacity: 0; pointer-events: none; }
+
+    .spin {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin .9s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .load-text { font-size: .82rem; color: var(--muted); }
+
+    #error-box {
+      display: none;
+      background: var(--red-pale);
+      border: 1px solid #fca5a5;
+      color: var(--red);
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.25rem;
+      font-size: .82rem;
+    }
+
+    /* ── Responsive ───────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .page { padding: 1rem; }
+      .header-inner { padding: 0 1rem; }
+      .header-sub { display: none; }
+      .kpi-value { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loading -->
+<div id="loading">
+  <div class="spin"></div>
+  <div class="load-text">Loading BLS data…</div>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="header-icon">📊</div>
+      <div>
+        <div class="header-title">Miami Metro Job Market Dashboard</div>
+        <div class="header-sub">Miami–Fort Lauderdale–West Palm Beach, FL · BLS Local Area Unemployment Statistics</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span id="last-updated"></span>
+      <span class="badge badge-bls">BLS Live</span>
+    </div>
+  </div>
+</header>
+
+<!-- Page -->
+<div class="page">
+
+  <div id="error-box"></div>
+
+  <!-- KPI Strip -->
+  <div class="section-head">
+    <span class="section-title">Key Indicators — Latest Month</span>
+    <span class="section-divider"></span>
+  </div>
+  <div class="kpi-strip">
+    <div class="kpi blue">
+      <div class="kpi-label">Unemployment Rate</div>
+      <div class="kpi-value" id="kpi-unemp">—</div>
+      <div class="kpi-delta flat" id="kpi-unemp-delta">—</div>
+      <div class="kpi-period" id="kpi-unemp-period">—</div>
+    </div>
+    <div class="kpi teal">
+      <div class="kpi-label">Total Employment</div>
+      <div class="kpi-value" id="kpi-emp">—</div>
+      <div class="kpi-delta flat" id="kpi-emp-delta">—</div>
+      <div class="kpi-period" id="kpi-emp-period">—</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-label">12-Month Avg Unemployment</div>
+      <div class="kpi-value" id="kpi-avg">—</div>
+      <div class="kpi-delta flat">trailing 12 months</div>
+      <div class="kpi-period" id="kpi-avg-period">—</div>
+    </div>
+    <div class="kpi red">
+      <div class="kpi-label">Peak Unemployment (Dataset)</div>
+      <div class="kpi-value" id="kpi-peak">—</div>
+      <div class="kpi-delta flat" id="kpi-peak-when">—</div>
+      <div class="kpi-period">highest on record</div>
+    </div>
+  </div>
+
+  <!-- Row 1: Two trend charts -->
+  <div class="section-head">
+    <span class="section-title">Monthly Trends</span>
+    <span class="section-divider"></span>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Unemployment Rate (%)</div>
+          <div class="card-desc">Monthly · Not seasonally adjusted · Miami–Fort Lauderdale–West Palm Beach MSA</div>
+        </div>
+        <div class="range-btns">
+          <button class="btn-r" data-chart="unemp" data-range="24">2Y</button>
+          <button class="btn-r" data-chart="unemp" data-range="60">5Y</button>
+          <button class="btn-r" data-chart="unemp" data-range="120">10Y</button>
+          <button class="btn-r active" data-chart="unemp" data-range="all">All</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap"><canvas id="c-unemp"></canvas></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Total Employment Level</div>
+          <div class="card-desc">Monthly persons employed · Miami–Fort Lauderdale–West Palm Beach MSA</div>
+        </div>
+        <div class="range-btns">
+          <button class="btn-r" data-chart="emp" data-range="24">2Y</button>
+          <button class="btn-r" data-chart="emp" data-range="60">5Y</button>
+          <button class="btn-r" data-chart="emp" data-range="120">10Y</button>
+          <button class="btn-r active" data-chart="emp" data-range="all">All</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap"><canvas id="c-emp"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2: Dual-axis -->
+  <div class="grid-1">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Dual-Axis Overlay — Unemployment Rate vs. Employment Level</div>
+          <div class="card-desc">Left axis: unemployment rate (%) · Right axis: employment level (persons)</div>
+        </div>
+        <div class="range-btns">
+          <button class="btn-r" data-chart="dual" data-range="24">2Y</button>
+          <button class="btn-r" data-chart="dual" data-range="60">5Y</button>
+          <button class="btn-r" data-chart="dual" data-range="120">10Y</button>
+          <button class="btn-r active" data-chart="dual" data-range="all">All</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap tall"><canvas id="c-dual"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 3: YoY + Seasonal -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Year-over-Year Change — Unemployment Rate</div>
+          <div class="card-desc">Percentage point change vs. same month prior year</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap"><canvas id="c-yoy"></canvas></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Seasonal Pattern — Avg Unemployment by Month</div>
+          <div class="card-desc">Average unemployment rate per calendar month across all years in dataset</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap"><canvas id="c-seasonal"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 4: Data Table -->
+  <div class="section-head" style="margin-top:.5rem">
+    <span class="section-title">Recent Monthly Data — Last 24 Months</span>
+    <span class="section-divider"></span>
+  </div>
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Period</th>
+            <th>Month</th>
+            <th>Unemployment Rate</th>
+            <th>Employment Level</th>
+            <th>Unemp. YoY Δ</th>
+            <th>Emp. YoY Δ</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="tbl-body">
+          <tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- Footer -->
+<footer>
+  <div>
+    Source: <a href="https://www.bls.gov/lau/" target="_blank" rel="noopener">U.S. Bureau of Labor Statistics — Local Area Unemployment Statistics (LAUS)</a>
+    · Series LAUMT123310000000003 &amp; LAUMT123310000000005
+  </div>
+  <div>Miami–Fort Lauderdale–West Palm Beach, FL MSA · CBSA 33100 · Not seasonally adjusted</div>
+</footer>
+
+<script>
+/* ─────────────────────────────────────────────────────────────
+   Dashboard — Miami Metro Job Market
+   ───────────────────────────────────────────────────────────── */
+
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MON_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+// Chart.js defaults
+Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+Chart.defaults.color = '#64748b';
+Chart.defaults.borderColor = '#e2e8f0';
+
+const REGISTRY = {};
+
+/* ── Formatters ─────────────────────────────────────────────── */
+const fmtPeriod = p => { const [y,m] = p.split('-'); return `${MON[+m-1]} ${y}`; };
+const fmtEmp = v => v >= 1e6 ? (v/1e6).toFixed(2)+'M' : v >= 1e3 ? (v/1e3).toFixed(1)+'K' : v.toLocaleString();
+
+/* ── KPIs ───────────────────────────────────────────────────── */
+function setKPIs(uData, eData) {
+  const lu = uData.at(-1), pu = uData.at(-2);
+  const le = eData.at(-1), pe = eData.at(-2);
+
+  // Unemployment
+  document.getElementById('kpi-unemp').textContent = lu.value.toFixed(1) + '%';
+  document.getElementById('kpi-unemp-period').textContent =
+    fmtPeriod(lu.period) + (lu.footnotes.length ? ' · Preliminary' : '');
+  if (pu) {
+    const d = lu.value - pu.value;
+    const el = document.getElementById('kpi-unemp-delta');
+    el.textContent = `${d > 0 ? '▲' : d < 0 ? '▼' : '→'} ${d > 0 ? '+' : ''}${d.toFixed(1)} pp vs prior month`;
+    el.className = `kpi-delta ${d < 0 ? 'up' : d > 0 ? 'down' : 'flat'}`;
+  }
+
+  // Employment
+  document.getElementById('kpi-emp').textContent = fmtEmp(le.value);
+  document.getElementById('kpi-emp-period').textContent =
+    fmtPeriod(le.period) + (le.footnotes.length ? ' · Preliminary' : '');
+  if (pe) {
+    const d = le.value - pe.value;
+    const el = document.getElementById('kpi-emp-delta');
+    el.textContent = `${d > 0 ? '▲' : d < 0 ? '▼' : '→'} ${d > 0 ? '+' : ''}${fmtEmp(Math.abs(d))} vs prior month`;
+    el.className = `kpi-delta ${d > 0 ? 'up' : d < 0 ? 'down' : 'flat'}`;
+  }
+
+  // 12-month avg
+  const last12 = uData.slice(-12).map(d => d.value);
+  const avg = last12.reduce((a,b) => a+b, 0) / last12.length;
+  document.getElementById('kpi-avg').textContent = avg.toFixed(2) + '%';
+  document.getElementById('kpi-avg-period').textContent =
+    `${fmtPeriod(uData.at(-12).period)} – ${fmtPeriod(lu.period)}`;
+
+  // Peak
+  const peak = uData.reduce((a,b) => b.value > a.value ? b : a);
+  document.getElementById('kpi-peak').textContent = peak.value.toFixed(1) + '%';
+  document.getElementById('kpi-peak-when').textContent = fmtPeriod(peak.period);
+}
+
+/* ── Slice helper ───────────────────────────────────────────── */
+const slice = (data, r) => r === 'all' ? data : data.slice(-parseInt(r));
+
+/* ── Tooltip defaults ───────────────────────────────────────── */
+const ttBase = {
+  backgroundColor: '#fff',
+  borderColor: '#e2e8f0',
+  borderWidth: 1,
+  titleColor: '#0f172a',
+  bodyColor: '#64748b',
+  padding: 10,
+  cornerRadius: 8,
+};
+
+/* ── Chart: Unemployment Rate ───────────────────────────────── */
+function buildUnemp(all) {
+  const ctx = document.getElementById('c-unemp').getContext('2d');
+  const grad = ctx.createLinearGradient(0,0,0,270);
+  grad.addColorStop(0, 'rgba(29,78,216,.15)');
+  grad.addColorStop(1, 'rgba(29,78,216,0)');
+
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: all.map(d => fmtPeriod(d.period)),
+      datasets: [{
+        data: all.map(d => d.value),
+        borderColor: '#1d4ed8',
+        backgroundColor: grad,
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        fill: true,
+        tension: 0.35,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: { ...ttBase, callbacks: { label: c => ` ${c.parsed.y.toFixed(1)}%` } }
+      },
+      scales: {
+        x: { grid: { color: '#f1f5f9' }, ticks: { maxTicksLimit: 10, maxRotation: 0 } },
+        y: { grid: { color: '#f1f5f9' }, ticks: { callback: v => v+'%' },
+             title: { display: true, text: 'Rate (%)', color: '#94a3b8', font: { size: 11 } } }
+      }
+    }
+  });
+  REGISTRY['unemp'] = { chart, all };
+}
+
+/* ── Chart: Employment Level ────────────────────────────────── */
+function buildEmp(all) {
+  const ctx = document.getElementById('c-emp').getContext('2d');
+  const grad = ctx.createLinearGradient(0,0,0,270);
+  grad.addColorStop(0, 'rgba(13,148,136,.15)');
+  grad.addColorStop(1, 'rgba(13,148,136,0)');
+
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: all.map(d => fmtPeriod(d.period)),
+      datasets: [{
+        data: all.map(d => d.value),
+        borderColor: '#0d9488',
+        backgroundColor: grad,
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        fill: true,
+        tension: 0.35,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: { ...ttBase, callbacks: { label: c => ` ${fmtEmp(c.parsed.y)} persons` } }
+      },
+      scales: {
+        x: { grid: { color: '#f1f5f9' }, ticks: { maxTicksLimit: 10, maxRotation: 0 } },
+        y: { grid: { color: '#f1f5f9' }, ticks: { callback: v => fmtEmp(v) },
+             title: { display: true, text: 'Persons', color: '#94a3b8', font: { size: 11 } } }
+      }
+    }
+  });
+  REGISTRY['emp'] = { chart, all };
+}
+
+/* ── Chart: Dual-axis ───────────────────────────────────────── */
+function buildDual(uAll, eAll) {
+  const ctx = document.getElementById('c-dual').getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: uAll.map(d => fmtPeriod(d.period)),
+      datasets: [
+        {
+          label: 'Unemployment Rate (%)',
+          data: uAll.map(d => d.value),
+          borderColor: '#1d4ed8',
+          backgroundColor: 'rgba(29,78,216,.06)',
+          borderWidth: 2.5,
+          pointRadius: 0, pointHoverRadius: 4,
+          fill: true, tension: 0.35, yAxisID: 'y',
+        },
+        {
+          label: 'Employment Level',
+          data: eAll.map(d => d.value),
+          borderColor: '#0d9488',
+          backgroundColor: 'rgba(13,148,136,.06)',
+          borderWidth: 2.5,
+          pointRadius: 0, pointHoverRadius: 4,
+          fill: true, tension: 0.35, yAxisID: 'y1',
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: true, position: 'top',
+          labels: { color: '#334155', boxWidth: 12, padding: 16, font: { size: 12 } } },
+        tooltip: { ...ttBase, callbacks: {
+          label: c => c.datasetIndex === 0
+            ? ` Unemp: ${c.parsed.y.toFixed(1)}%`
+            : ` Employed: ${fmtEmp(c.parsed.y)}`
+        }}
+      },
+      scales: {
+        x: { grid: { color: '#f1f5f9' }, ticks: { maxTicksLimit: 12, maxRotation: 0 } },
+        y:  { position: 'left',  grid: { color: '#f1f5f9' }, ticks: { callback: v => v+'%' },
+              title: { display: true, text: 'Unemployment Rate (%)', color: '#1d4ed8', font: { size: 11 } } },
+        y1: { position: 'right', grid: { drawOnChartArea: false }, ticks: { callback: v => fmtEmp(v) },
+              title: { display: true, text: 'Employment Level', color: '#0d9488', font: { size: 11 } } }
+      }
+    }
+  });
+  REGISTRY['dual'] = { chart, uAll, eAll };
+}
+
+/* ── Chart: YoY ─────────────────────────────────────────────── */
+function buildYoY(uData) {
+  const pts = [];
+  for (const cur of uData) {
+    const prior = uData.find(d => d.year === cur.year - 1 && d.month === cur.month);
+    if (prior) pts.push({ period: cur.period, value: +(cur.value - prior.value).toFixed(2) });
+  }
+  const ctx = document.getElementById('c-yoy').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: pts.map(d => fmtPeriod(d.period)),
+      datasets: [{
+        data: pts.map(d => d.value),
+        backgroundColor: pts.map(d => d.value < 0 ? 'rgba(13,148,136,.75)' : 'rgba(220,38,38,.75)'),
+        borderColor:     pts.map(d => d.value < 0 ? '#0d9488' : '#dc2626'),
+        borderWidth: 1, borderRadius: 2,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: { ...ttBase, callbacks: { label: c => ` ${c.parsed.y > 0 ? '+' : ''}${c.parsed.y.toFixed(2)} pp` } }
+      },
+      scales: {
+        x: { grid: { color: '#f1f5f9' }, ticks: { maxTicksLimit: 10, maxRotation: 0 } },
+        y: { grid: { color: '#f1f5f9' }, ticks: { callback: v => (v > 0 ? '+' : '') + v + ' pp' } }
+      }
+    }
+  });
+}
+
+/* ── Chart: Seasonal ────────────────────────────────────────── */
+function buildSeasonal(uData) {
+  const byMon = Array.from({ length: 12 }, (_, i) => {
+    const vals = uData.filter(d => d.month === i + 1).map(d => d.value);
+    return vals.length ? vals.reduce((a,b) => a+b, 0) / vals.length : null;
+  });
+  const min = Math.min(...byMon.filter(Boolean));
+  const max = Math.max(...byMon.filter(Boolean));
+
+  const ctx = document.getElementById('c-seasonal').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: MON,
+      datasets: [{
+        data: byMon,
+        backgroundColor: byMon.map(v => {
+          if (!v) return '#e2e8f0';
+          const t = (v - min) / (max - min || 1);
+          // Interpolate blue → red
+          const r = Math.round(29 + t * 191);
+          const g = Math.round(78 - t * 40);
+          const b = Math.round(216 - t * 190);
+          return `rgba(${r},${g},${b},0.8)`;
+        }),
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { ...ttBase, callbacks: { label: c => ` Avg: ${c.parsed.y.toFixed(2)}%` } }
+      },
+      scales: {
+        x: { grid: { color: '#f1f5f9' } },
+        y: { grid: { color: '#f1f5f9' }, ticks: { callback: v => v+'%' }, suggestedMin: 0 }
+      }
+    }
+  });
+}
+
+/* ── Range filter ───────────────────────────────────────────── */
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.btn-r');
+  if (!btn) return;
+  const key = btn.dataset.chart;
+  const r   = btn.dataset.range;
+  btn.closest('.range-btns').querySelectorAll('.btn-r').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const reg = REGISTRY[key];
+  if (!reg) return;
+
+  if (key === 'dual') {
+    const us = slice(reg.uAll, r), es = slice(reg.eAll, r);
+    reg.chart.data.labels = us.map(d => fmtPeriod(d.period));
+    reg.chart.data.datasets[0].data = us.map(d => d.value);
+    reg.chart.data.datasets[1].data = es.map(d => d.value);
+  } else {
+    const s = slice(reg.all, r);
+    reg.chart.data.labels = s.map(d => fmtPeriod(d.period));
+    reg.chart.data.datasets[0].data = s.map(d => d.value);
+  }
+  reg.chart.update('active');
+});
+
+/* ── Table ──────────────────────────────────────────────────── */
+function buildTable(uData, eData) {
+  const eMap = {}, uMap = {};
+  eData.forEach(d => eMap[d.period] = d);
+  uData.forEach(d => uMap[d.period] = d);
+
+  const tbody = document.getElementById('tbl-body');
+  tbody.innerHTML = '';
+
+  [...uData].slice(-24).reverse().forEach(u => {
+    const e = eMap[u.period];
+    const py = `${u.year-1}-${String(u.month).padStart(2,'0')}`;
+    const pu = uMap[py], pe = eMap[py];
+    const uYoY = pu ? +(u.value - pu.value).toFixed(2) : null;
+    const eYoY = (e && pe) ? e.value - pe.value : null;
+    const prelim = u.footnotes.some(f => f.toLowerCase().includes('prelim'));
+
+    const uColor = uYoY === null ? '' : uYoY < 0 ? 'color:#16a34a' : uYoY > 0 ? 'color:#dc2626' : '';
+    const eColor = eYoY === null ? '' : eYoY > 0 ? 'color:#16a34a' : eYoY < 0 ? 'color:#dc2626' : '';
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="mono">${u.period}</td>
+      <td>${MON_FULL[u.month-1]} ${u.year}${prelim ? '<span class="tag-p">P</span>' : ''}</td>
+      <td class="mono">${u.value.toFixed(1)}%</td>
+      <td class="mono">${e ? fmtEmp(e.value) : '—'}</td>
+      <td class="mono" style="${uColor}">${uYoY !== null ? (uYoY > 0 ? '+' : '') + uYoY + ' pp' : '—'}</td>
+      <td class="mono" style="${eColor}">${eYoY !== null ? (eYoY > 0 ? '+' : '') + fmtEmp(Math.abs(eYoY)) : '—'}</td>
+      <td style="color:var(--muted);font-size:.72rem">${prelim ? 'Preliminary' : 'Final'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+/* ── Init ───────────────────────────────────────────────────── */
+async function init() {
+  try {
+    const resp = await fetch('jobs_data.json');
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+
+    const keys = Object.keys(data.series);
+    const uKey = keys.find(k => data.series[k].label.toLowerCase().includes('unemployment'));
+    const eKey = keys.find(k =>
+      data.series[k].label.toLowerCase().includes('employment') &&
+      !data.series[k].label.toLowerCase().includes('unemployment')
+    );
+    if (!uKey || !eKey) throw new Error('Required series not found in jobs_data.json');
+
+    const uData = data.series[uKey].data;
+    const eData = data.series[eKey].data;
+    if (!uData.length || !eData.length) throw new Error('No data records found');
+
+    // Header timestamp
+    const ts = new Date(data.metadata.last_updated);
+    document.getElementById('last-updated').textContent =
+      `Updated ${ts.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' })} ` +
+      `${ts.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit', timeZoneName:'short' })}`;
+
+    setKPIs(uData, eData);
+    buildUnemp(uData);
+    buildEmp(eData);
+    buildDual(uData, eData);
+    buildYoY(uData);
+    buildSeasonal(uData);
+    buildTable(uData, eData);
+
+    const ov = document.getElementById('loading');
+    ov.classList.add('out');
+    setTimeout(() => ov.remove(), 400);
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById('loading').classList.add('out');
+    const box = document.getElementById('error-box');
+    box.style.display = 'block';
+    box.innerHTML = `<strong>⚠ Failed to load data:</strong> ${err.message}<br>
+      <small>Run <code>python3 execution/fetch_bls_jobs.py</code> to generate <code>jobs_data.json</code>, 
+      then serve this page via HTTP (not file://).</small>`;
+  }
+}
+
+init();
+</script>
+</body>
+</html>
