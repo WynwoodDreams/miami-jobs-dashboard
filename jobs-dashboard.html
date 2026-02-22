@@ -207,12 +207,10 @@
     #error-box { display: none; background: var(--red-pale); border: 1px solid #fca5a5; color: var(--red); border-radius: 10px; padding: 1rem 1.5rem; margin-bottom: 1.25rem; font-size: .82rem; }
 
     /* ══════════════════════════════════════════════════════════
-       MIAMI VS. NATION SECTION
+       MIAMI VS. NATION SECTION (dark band — top of Market Stats)
     ══════════════════════════════════════════════════════════ */
-
     .nation-section {
       background: #0f172a;
-      margin: 0;
       padding: 2.5rem 0 3rem;
       position: relative;
     }
@@ -286,33 +284,126 @@
     .nation-card-desc { font-size: .7rem; color: rgba(255,255,255,.4); margin-top: .2rem; }
     .nation-card-body { padding: 1.1rem 1.4rem; }
     .nation-chart-wrap { position: relative; height: 260px; }
-    .nation-chart-wrap.tall { height: 300px; }
     .nation-note {
       font-size: .68rem; color: rgba(255,255,255,.3); margin-top: 1.25rem;
       padding-top: .75rem; border-top: 1px solid rgba(255,255,255,.08);
       line-height: 1.6;
     }
-    .spread-badge {
-      display: inline-flex; align-items: center; gap: .3rem;
-      font-size: .7rem; font-weight: 700; padding: .2rem .55rem;
-      border-radius: 5px; flex-shrink: 0;
+    /* Dark section range buttons */
+    .nation-section .btn-r {
+      background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.15); color: rgba(255,255,255,.5);
     }
-    .spread-better { background: rgba(52,211,153,.15); color: #34d399; border: 1px solid rgba(52,211,153,.3); }
-    .spread-worse  { background: rgba(248,113,113,.15); color: #f87171; border: 1px solid rgba(248,113,113,.3); }
+    .nation-section .btn-r:hover { border-color: #38bdf8; color: #38bdf8; }
+    .nation-section .btn-r.active { background: #38bdf8; border-color: #38bdf8; color: #0f172a; }
+
+    /* Section separator between nation section and market stats charts */
+    .stats-section-inner { max-width: 1440px; margin: 0 auto; padding: 1.75rem 2rem 3rem; }
+
+    /* ══════════════════════════════════════════════════════════
+       AI & SIGNALS PAGE STYLES
+    ══════════════════════════════════════════════════════════ */
+    .ai-hero {
+      background: linear-gradient(135deg, #0c0f1a 0%, #1a1040 50%, #0f172a 100%);
+      border-radius: 16px; padding: 2.5rem; margin-bottom: 1.75rem;
+      color: #fff; position: relative; overflow: hidden;
+      border: 1px solid rgba(124,58,237,.3);
+    }
+    .ai-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(124,58,237,.15) 0%, transparent 70%);
+    }
+    .ai-hero-content { position: relative; z-index: 1; }
+    .ai-hero-eyebrow { font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #a78bfa; margin-bottom: .5rem; }
+    .ai-hero-title { font-size: 1.9rem; font-weight: 900; letter-spacing: -.04em; line-height: 1.1; margin-bottom: .75rem; }
+    .ai-hero-title span { color: #a78bfa; }
+    .ai-hero-desc { font-size: .88rem; color: rgba(255,255,255,.75); max-width: 680px; line-height: 1.7; }
+    .ai-hero-stats { display: flex; gap: 2.5rem; margin-top: 1.5rem; flex-wrap: wrap; }
+    .ai-hero-stat .val { font-size: 1.6rem; font-weight: 900; letter-spacing: -.03em; color: #a78bfa; }
+    .ai-hero-stat .lbl { font-size: .68rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-top: 2px; }
+
+    /* AI Exposure section */
+    .ai-exposure-grid {
+      display: grid; grid-template-columns: 1fr 1.4fr; gap: 1rem; margin-bottom: 1rem;
+    }
+    @media(max-width:900px){.ai-exposure-grid{grid-template-columns:1fr}}
+
+    .exposure-bar-list { display: flex; flex-direction: column; gap: .65rem; padding: .25rem 0; }
+    .exp-row { display: flex; flex-direction: column; gap: .3rem; }
+    .exp-row-top { display: flex; align-items: center; justify-content: space-between; }
+    .exp-role { font-size: .82rem; font-weight: 600; color: var(--text); }
+    .exp-count { font-size: .72rem; color: var(--muted); }
+    .exp-bar-track { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .exp-bar-fill { height: 100%; border-radius: 4px; transition: width .6s ease; }
+    .exp-bar-fill.high   { background: linear-gradient(90deg, #dc2626, #f87171); }
+    .exp-bar-fill.medium { background: linear-gradient(90deg, #d97706, #fbbf24); }
+    .exp-bar-fill.low    { background: linear-gradient(90deg, #16a34a, #4ade80); }
+    .exp-meta { font-size: .68rem; color: var(--muted); }
+
+    /* Risk level legend */
+    .risk-legend { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .risk-dot { display: inline-flex; align-items: center; gap: .35rem; font-size: .72rem; font-weight: 600; color: var(--text2); }
+    .risk-dot::before { content: ''; width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .risk-dot.high::before { background: #dc2626; }
+    .risk-dot.medium::before { background: #d97706; }
+    .risk-dot.low::before { background: #16a34a; }
+
+    /* Startup signals */
+    .startup-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-bottom: 1rem; }
+    @media(max-width:1024px){.startup-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:640px){.startup-grid{grid-template-columns:1fr}}
+    .startup-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.25rem; box-shadow: var(--shadow-sm); transition: box-shadow .2s, transform .2s;
+      position: relative; overflow: hidden;
+    }
+    .startup-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .startup-card::before { content: ''; position: absolute; top:0;left:0;right:0; height: 3px; }
+    .startup-card.raised::before { background: linear-gradient(90deg, #16a34a, #4ade80); }
+    .startup-card.series::before { background: linear-gradient(90deg, #1d4ed8, #60a5fa); }
+    .startup-card.seed::before { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+    .startup-name { font-size: .95rem; font-weight: 800; color: var(--text); margin-bottom: .2rem; }
+    .startup-sector { font-size: .72rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .65rem; }
+    .startup-raise {
+      display: inline-flex; align-items: center; gap: .3rem;
+      font-size: .78rem; font-weight: 700; padding: .25rem .65rem;
+      border-radius: 6px; margin-bottom: .75rem;
+    }
+    .startup-raise.raised { background: var(--green-pale); color: var(--green); }
+    .startup-raise.series { background: var(--blue-pale); color: var(--blue); }
+    .startup-raise.seed { background: var(--purple-pale); color: var(--purple); }
+    .startup-desc { font-size: .78rem; color: var(--text2); line-height: 1.6; margin-bottom: .75rem; }
+    .startup-hiring { font-size: .72rem; font-weight: 600; color: var(--teal); display: flex; align-items: center; gap: .3rem; }
+    .startup-hiring::before { content: '●'; font-size: 8px; color: var(--teal); animation: blink 2s ease-in-out infinite; }
+
+    /* AI sector table */
+    .sector-table-wrap { overflow-x: auto; }
+    .sector-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+    .sector-table th { background: var(--surface2); padding: .65rem 1rem; text-align: left; font-size: .7rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); border-bottom: 2px solid var(--border); }
+    .sector-table td { padding: .7rem 1rem; border-bottom: 1px solid var(--border); color: var(--text2); }
+    .sector-table tr:last-child td { border-bottom: none; }
+    .sector-table tr:hover td { background: var(--surface2); }
+    .risk-badge { display: inline-flex; align-items: center; font-size: .68rem; font-weight: 700; padding: .2rem .55rem; border-radius: 5px; letter-spacing: .04em; text-transform: uppercase; }
+    .risk-badge.high   { background: var(--red-pale); color: var(--red); border: 1px solid #fca5a5; }
+    .risk-badge.medium { background: var(--amber-pale); color: var(--amber); border: 1px solid #fde68a; }
+    .risk-badge.low    { background: var(--green-pale); color: var(--green); border: 1px solid #bbf7d0; }
+    .risk-badge.emerging { background: var(--purple-pale); color: var(--purple); border: 1px solid #ddd6fe; }
+
+    /* Disclaimer box */
+    .disclaimer-box {
+      background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
+      padding: 1rem 1.25rem; font-size: .72rem; color: var(--muted); line-height: 1.7;
+      margin-top: 1rem;
+    }
+    .disclaimer-box strong { color: var(--text2); }
 
     /* ══════════════════════════════════════════════════════════
        JOB ROLE EVOLUTION PAGE STYLES
     ══════════════════════════════════════════════════════════ */
-
-    /* Hero banner */
     .evo-hero {
       background: linear-gradient(135deg, #1e3a5f 0%, #1d4ed8 50%, #0d9488 100%);
-      border-radius: 16px;
-      padding: 2.5rem 2.5rem;
-      margin-bottom: 1.75rem;
-      color: #fff;
-      position: relative;
-      overflow: hidden;
+      border-radius: 16px; padding: 2.5rem; margin-bottom: 1.75rem;
+      color: #fff; position: relative; overflow: hidden;
     }
     .evo-hero::before {
       content: '';
@@ -324,17 +415,11 @@
     .evo-hero-title { font-size: 1.9rem; font-weight: 900; letter-spacing: -.04em; line-height: 1.1; margin-bottom: .75rem; }
     .evo-hero-title span { opacity: .7; }
     .evo-hero-desc { font-size: .88rem; opacity: .85; max-width: 680px; line-height: 1.7; }
-    .evo-hero-stats {
-      display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap;
-    }
-    .evo-hero-stat { text-align: center; }
+    .evo-hero-stats { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
     .evo-hero-stat .val { font-size: 1.6rem; font-weight: 900; letter-spacing: -.03em; }
     .evo-hero-stat .lbl { font-size: .68rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; opacity: .7; margin-top: 2px; }
 
-    /* Role filter tabs */
-    .role-filter {
-      display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.5rem;
-    }
+    .role-filter { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
     .role-btn {
       display: flex; align-items: center; gap: .4rem;
       background: var(--surface); border: 1px solid var(--border);
@@ -346,19 +431,15 @@
     .role-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
     .role-btn .ri { font-size: 14px; }
 
-    /* Role cards */
     .role-cards { display: flex; flex-direction: column; gap: 1.5rem; }
     .role-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow-sm); overflow: hidden; }
     .role-card.hidden { display: none; }
-
     .role-card-header {
       display: flex; align-items: center; justify-content: space-between;
       padding: 1.5rem 2rem; cursor: pointer;
-      border-bottom: 1px solid var(--border);
-      gap: 1rem;
+      border-bottom: 1px solid var(--border); gap: 1rem;
     }
     .role-card-header:hover { background: var(--surface2); }
-
     .role-header-left { display: flex; align-items: center; gap: 1rem; }
     .role-icon {
       width: 48px; height: 48px; border-radius: 12px;
@@ -371,108 +452,67 @@
     .role-icon.amber  { background: var(--amber-pale); }
     .role-icon.red    { background: var(--red-pale); }
     .role-icon.green  { background: var(--green-pale); }
-
     .role-name { font-size: 1.05rem; font-weight: 800; color: var(--text); letter-spacing: -.02em; }
     .role-tagline { font-size: .78rem; color: var(--muted); margin-top: 2px; }
-
     .role-header-right { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
-    .role-shift-badge {
-      font-size: .7rem; font-weight: 700; padding: .3rem .75rem;
-      border-radius: 999px; letter-spacing: .04em; white-space: nowrap;
-    }
+    .role-shift-badge { font-size: .7rem; font-weight: 700; padding: .3rem .75rem; border-radius: 999px; letter-spacing: .04em; white-space: nowrap; }
     .shift-major { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
     .shift-radical { background: #fce7f3; color: #9d174d; border: 1px solid #fbcfe8; }
     .shift-significant { background: var(--blue-pale); color: var(--blue); border: 1px solid #bfdbfe; }
-
     .collapse-icon { font-size: 18px; color: var(--muted); transition: transform .25s; }
     .role-card.open .collapse-icon { transform: rotate(180deg); }
-
     .role-card-body { display: none; padding: 0; }
     .role-card.open .role-card-body { display: block; }
 
-    /* Before/After split */
-    .ba-grid {
-      display: grid; grid-template-columns: 1fr 1fr;
-      border-bottom: 1px solid var(--border);
-    }
+    .ba-grid { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--border); }
     @media(max-width:768px){.ba-grid{grid-template-columns:1fr}}
-
     .ba-col { padding: 1.75rem 2rem; }
     .ba-col:first-child { border-right: 1px solid var(--border); }
     @media(max-width:768px){.ba-col:first-child{border-right:none;border-bottom:1px solid var(--border)}}
-
-    .ba-era {
-      display: inline-flex; align-items: center; gap: .4rem;
-      font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-      padding: .25rem .65rem; border-radius: 6px; margin-bottom: 1rem;
-    }
-    .era-before { background: #f1f5f9; color: var(--muted); border: 1px solid var(--border2); }
+    .ba-era { font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: .3rem .75rem; border-radius: 6px; display: inline-block; margin-bottom: .85rem; }
+    .era-before { background: #f1f5f9; color: var(--muted); border: 1px solid var(--border); }
     .era-after  { background: var(--blue-pale); color: var(--blue); border: 1px solid #bfdbfe; }
-
-    .ba-headline { font-size: .95rem; font-weight: 700; color: var(--text); margin-bottom: .6rem; }
-    .ba-desc { font-size: .8rem; color: var(--text2); line-height: 1.65; margin-bottom: 1rem; }
-
+    .ba-headline { font-size: 1.05rem; font-weight: 800; color: var(--text); margin-bottom: .5rem; letter-spacing: -.02em; }
+    .ba-desc { font-size: .82rem; color: var(--text2); line-height: 1.7; margin-bottom: 1rem; }
     .skill-list { display: flex; flex-direction: column; gap: .4rem; }
-    .skill-item {
-      display: flex; align-items: flex-start; gap: .5rem;
-      font-size: .78rem; color: var(--text2); line-height: 1.5;
-    }
-    .skill-item::before { content: '•'; color: var(--faint); flex-shrink: 0; margin-top: 1px; }
-    .skill-item.highlight::before { content: '★'; color: var(--amber); }
-    .skill-item.new::before { content: '✦'; color: var(--blue); }
+    .skill-item { font-size: .8rem; color: var(--text2); padding: .4rem .65rem; background: var(--surface2); border-radius: 6px; border-left: 3px solid var(--border2); }
+    .skill-item.new { border-left-color: var(--blue); background: var(--blue-pale); color: var(--text); }
+    .skill-item.highlight { border-left-color: var(--amber); background: var(--amber-pale); color: var(--text); font-weight: 600; }
 
-    /* Org Reality table */
     .org-section { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); }
-    .org-section-title { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: .9rem; }
+    .org-section-title { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: .85rem; }
     .org-table { width: 100%; border-collapse: collapse; font-size: .8rem; }
-    .org-table th { background: var(--surface2); padding: .5rem 1rem; text-align: left; font-size: .68rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); }
-    .org-table td { padding: .55rem 1rem; border-bottom: 1px solid var(--border); color: var(--text2); }
+    .org-table th { text-align: left; padding: .45rem .75rem; font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); }
+    .org-table td { padding: .5rem .75rem; border-bottom: 1px solid var(--border); color: var(--text2); }
     .org-table tr:last-child td { border-bottom: none; }
-    .org-table tr:hover td { background: var(--surface2); }
-    .org-yes { display: inline-flex; align-items: center; gap: .3rem; color: var(--green); font-weight: 600; font-size: .75rem; }
-    .org-partial { display: inline-flex; align-items: center; gap: .3rem; color: var(--amber); font-weight: 600; font-size: .75rem; }
+    .org-yes     { color: var(--green); font-weight: 600; font-size: .78rem; }
+    .org-partial { color: var(--amber); font-weight: 600; font-size: .78rem; }
+    .org-no      { color: var(--muted); font-size: .78rem; }
 
-    /* Bottom line */
-    .bottom-line {
-      padding: 1.5rem 2rem;
-      display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;
-    }
-    @media(max-width:768px){.bottom-line{grid-template-columns:1fr}}
-
-    .bl-card {
-      border-radius: 10px; padding: 1.1rem 1.25rem;
-    }
-    .bl-card.before { background: #f8fafc; border: 1px solid var(--border); }
-    .bl-card.after  { background: var(--blue-pale); border: 1px solid #bfdbfe; }
+    .bottom-line { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+    @media(max-width:640px){.bottom-line{grid-template-columns:1fr}}
+    .bl-card { padding: 1.25rem 2rem; }
+    .bl-card.before { background: var(--surface2); border-right: 1px solid var(--border); }
+    .bl-card.after  { background: var(--blue-pale); }
+    @media(max-width:640px){.bl-card.before{border-right:none;border-bottom:1px solid var(--border)}}
     .bl-label { font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: .4rem; }
     .bl-card.after .bl-label { color: var(--blue); }
-    .bl-text { font-size: .82rem; color: var(--text2); line-height: 1.6; font-style: italic; }
-    .bl-card.after .bl-text { color: var(--blue); font-weight: 500; }
+    .bl-text { font-size: .85rem; font-style: italic; color: var(--text2); line-height: 1.65; }
+    .bl-card.after .bl-text { color: var(--text); font-weight: 500; }
 
-    /* Conclusion */
     .conclusion-card {
-      background: linear-gradient(135deg, #f0f9ff 0%, #f0fdf4 100%);
-      border: 1px solid #bae6fd; border-radius: 16px;
-      padding: 2rem 2.5rem; margin-top: 1.5rem;
+      background: linear-gradient(135deg, #1e3a5f 0%, #1d4ed8 100%);
+      border-radius: 16px; padding: 2rem 2.5rem; margin-top: 1.5rem; color: #fff;
     }
-    .conclusion-title { font-size: 1.1rem; font-weight: 800; color: var(--text); margin-bottom: .75rem; letter-spacing: -.02em; }
-    .conclusion-text { font-size: .85rem; color: var(--text2); line-height: 1.75; }
-    .conclusion-text strong { color: var(--blue); }
-
-    @media(max-width:640px){
-      .page-inner{padding:1rem}
-      .evo-hero{padding:1.5rem}
-      .evo-hero-title{font-size:1.4rem}
-      .role-card-header{padding:1rem 1.25rem}
-      .ba-col,.org-section,.bottom-line{padding:1.25rem}
-    }
+    .conclusion-title { font-size: 1.2rem; font-weight: 900; letter-spacing: -.03em; margin-bottom: .75rem; }
+    .conclusion-text { font-size: .88rem; opacity: .9; line-height: 1.8; }
   </style>
 </head>
 <body>
 
 <div id="loading">
   <div class="spin"></div>
-  <div class="load-text">Loading Job Stats Miami…</div>
+  <div class="load-text">Loading BLS data…</div>
 </div>
 
 <!-- ══ HEADER ══════════════════════════════════════════════════ -->
@@ -490,6 +530,9 @@
       <button class="nav-tab active" data-tab="stats" onclick="switchTab('stats')">
         <span class="tab-icon">📈</span> Market Stats
       </button>
+      <button class="nav-tab" data-tab="ai" onclick="switchTab('ai')">
+        <span class="tab-icon">🤖</span> AI &amp; Signals
+      </button>
       <button class="nav-tab" data-tab="evolution" onclick="switchTab('evolution')">
         <span class="tab-icon">🔄</span> Job Role Evolution
       </button>
@@ -504,7 +547,107 @@
 
 <!-- ══ PAGE 1: MARKET STATS ════════════════════════════════════ -->
 <div id="page-stats" class="page active">
-  <div class="page-inner">
+
+  <!-- ── MIAMI VS. THE NATION (dark section — top of page) ── -->
+  <div class="nation-section" id="nation-section">
+    <div class="nation-inner">
+
+      <div class="nation-eyebrow">
+        <span class="nation-eyebrow-line"></span>
+        <span class="nation-eyebrow-label">Context · Miami vs. The Nation</span>
+        <span class="nation-eyebrow-line"></span>
+      </div>
+
+      <div class="nation-title">How Does Miami Stack Up <span>Against the Nation?</span></div>
+      <div class="nation-desc">Miami metro unemployment benchmarked against the U.S. national average — 20 years of data. Miami is not seasonally adjusted (LAUS); U.S. national is seasonally adjusted (CPS). A lower unemployment rate than the national average signals a stronger local labor market. The spread and index charts are most useful for long-run trend analysis.</div>
+
+      <div class="nation-kpi-strip">
+        <div class="nation-kpi">
+          <div class="nation-kpi-label">Miami Unemployment</div>
+          <div class="nation-kpi-value sky" id="n-miami-unemp">—</div>
+          <div class="nation-kpi-sub" id="n-miami-unemp-period">—</div>
+        </div>
+        <div class="nation-kpi">
+          <div class="nation-kpi-label">US Unemployment</div>
+          <div class="nation-kpi-value emerald" id="n-us-unemp">—</div>
+          <div class="nation-kpi-sub" id="n-us-unemp-period">—</div>
+        </div>
+        <div class="nation-kpi">
+          <div class="nation-kpi-label">Miami vs. US Spread</div>
+          <div class="nation-kpi-value amber" id="n-spread">—</div>
+          <div class="nation-kpi-delta same" id="n-spread-badge">—</div>
+          <div class="nation-kpi-sub">pp difference · negative = Miami outperforming</div>
+        </div>
+        <div class="nation-kpi">
+          <div class="nation-kpi-label">Miami Employment</div>
+          <div class="nation-kpi-value rose" id="n-miami-emp">—</div>
+          <div class="nation-kpi-sub" id="n-miami-emp-period">—</div>
+        </div>
+      </div>
+
+      <div class="nation-grid-2">
+        <div class="nation-card">
+          <div class="nation-card-head">
+            <div>
+              <div class="nation-card-title">Unemployment Rate — Miami vs. US</div>
+              <div class="nation-card-desc">Monthly · Miami not seasonally adjusted · US seasonally adjusted</div>
+            </div>
+            <div class="range-btns">
+              <button class="btn-r" data-chart="n-unemp" data-range="24">2Y</button>
+              <button class="btn-r" data-chart="n-unemp" data-range="60">5Y</button>
+              <button class="btn-r" data-chart="n-unemp" data-range="120">10Y</button>
+              <button class="btn-r active" data-chart="n-unemp" data-range="all">All</button>
+            </div>
+          </div>
+          <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-unemp"></canvas></div></div>
+        </div>
+        <div class="nation-card">
+          <div class="nation-card-head">
+            <div>
+              <div class="nation-card-title">Unemployment Spread — Miami minus US</div>
+              <div class="nation-card-desc">Percentage point gap · negative = Miami outperforming nation</div>
+            </div>
+          </div>
+          <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-spread"></canvas></div></div>
+        </div>
+      </div>
+
+      <div class="nation-grid-2">
+        <div class="nation-card">
+          <div class="nation-card-head">
+            <div>
+              <div class="nation-card-title">Miami Unemployment — Indexed to US (US = 100)</div>
+              <div class="nation-card-desc">Values below 100 mean Miami unemployment is lower than the national rate</div>
+            </div>
+            <div class="range-btns">
+              <button class="btn-r" data-chart="n-index" data-range="24">2Y</button>
+              <button class="btn-r" data-chart="n-index" data-range="60">5Y</button>
+              <button class="btn-r" data-chart="n-index" data-range="120">10Y</button>
+              <button class="btn-r active" data-chart="n-index" data-range="all">All</button>
+            </div>
+          </div>
+          <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-index"></canvas></div></div>
+        </div>
+        <div class="nation-card">
+          <div class="nation-card-head">
+            <div>
+              <div class="nation-card-title">YoY Change — Miami vs. US Unemployment</div>
+              <div class="nation-card-desc">Percentage point change vs. same month prior year</div>
+            </div>
+          </div>
+          <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-yoy"></canvas></div></div>
+        </div>
+      </div>
+
+      <div class="nation-note">
+        ⚠ Methodology: Miami–Fort Lauderdale–West Palm Beach data (LAUMT123310000000003 &amp; LAUMT123310000000005) is <strong>not seasonally adjusted</strong>. U.S. national data (LNS14000000 &amp; LNS12000000) is <strong>seasonally adjusted</strong>. Account for Miami's seasonal employment patterns (tourism, hospitality) when comparing month-to-month.
+      </div>
+
+    </div>
+  </div><!-- /nation-section -->
+
+  <!-- ── MIAMI LOCAL STATS ── -->
+  <div class="stats-section-inner">
 
     <div id="error-box"></div>
 
@@ -540,7 +683,7 @@
     </div>
 
     <div class="section-head">
-      <span class="section-title">Monthly Trends</span>
+      <span class="section-title">Monthly Trends — Miami Metro</span>
       <span class="section-divider"></span>
     </div>
     <div class="grid-2">
@@ -638,105 +781,232 @@
   </div>
 </div><!-- /page-stats -->
 
-<!-- ══ MIAMI VS. THE NATION SECTION (always visible below Market Stats) ══ -->
-<div class="nation-section" id="nation-section" style="display:none" data-pending="true">
-  <div class="nation-inner">
+<!-- ══ PAGE 2: AI & SIGNALS ════════════════════════════════════ -->
+<div id="page-ai" class="page">
+  <div class="page-inner">
 
-    <div class="nation-eyebrow">
-      <span class="nation-eyebrow-line"></span>
-      <span class="nation-eyebrow-label">Context · Miami vs. The Nation</span>
-      <span class="nation-eyebrow-line"></span>
-    </div>
-
-    <div class="nation-title">How Does Miami Stack Up <span>Against the Nation?</span></div>
-    <div class="nation-desc">Miami metro unemployment and employment benchmarked against the U.S. national average. Miami data is not seasonally adjusted (LAUS); national data is seasonally adjusted (CPS). A lower unemployment rate than the national average signals a stronger local labor market.</div>
-
-    <div class="nation-kpi-strip">
-      <div class="nation-kpi">
-        <div class="nation-kpi-label">Miami Unemployment</div>
-        <div class="nation-kpi-value sky" id="n-miami-unemp">—</div>
-        <div class="nation-kpi-sub" id="n-miami-unemp-period">—</div>
-      </div>
-      <div class="nation-kpi">
-        <div class="nation-kpi-label">US Unemployment</div>
-        <div class="nation-kpi-value emerald" id="n-us-unemp">—</div>
-        <div class="nation-kpi-sub" id="n-us-unemp-period">—</div>
-      </div>
-      <div class="nation-kpi">
-        <div class="nation-kpi-label">Miami vs. US Spread</div>
-        <div class="nation-kpi-value amber" id="n-spread">—</div>
-        <div class="nation-kpi-delta same" id="n-spread-badge">—</div>
-        <div class="nation-kpi-sub">pp difference (negative = Miami better)</div>
-      </div>
-      <div class="nation-kpi">
-        <div class="nation-kpi-label">Miami Employment</div>
-        <div class="nation-kpi-value rose" id="n-miami-emp">—</div>
-        <div class="nation-kpi-sub" id="n-miami-emp-period">—</div>
+    <!-- Hero -->
+    <div class="ai-hero">
+      <div class="ai-hero-content">
+        <div class="ai-hero-eyebrow">Forward Intelligence · 2026</div>
+        <div class="ai-hero-title">AI Job Exposure &amp; <span>Miami Startup Signals</span></div>
+        <div class="ai-hero-desc">Which Miami job categories face the greatest AI automation risk — and which companies are actively growing their headcount right now. Data sourced from BLS OEWS, Microsoft AI Applicability Research, and Miami startup funding signals.</div>
+        <div class="ai-hero-stats">
+          <div class="ai-hero-stat"><div class="val">127,260</div><div class="lbl">Miami Jobs at Risk</div></div>
+          <div class="ai-hero-stat"><div class="val">447K+</div><div class="lbl">Florida Jobs Exposed</div></div>
+          <div class="ai-hero-stat"><div class="val">44%</div><div class="lbl">Peak AI Score (Cust. Svc)</div></div>
+          <div class="ai-hero-stat"><div class="val">2026</div><div class="lbl">Data Vintage</div></div>
+        </div>
       </div>
     </div>
 
-    <div class="nation-grid-2">
-      <div class="nation-card">
-        <div class="nation-card-head">
+    <!-- AI Exposure Map -->
+    <div class="section-head">
+      <span class="section-title">AI Job Exposure Map — Miami Metro</span>
+      <span class="section-divider"></span>
+    </div>
+
+    <div class="risk-legend">
+      <span class="risk-dot high">High Exposure (40%+)</span>
+      <span class="risk-dot medium">Medium Exposure (30–39%)</span>
+      <span class="risk-dot low">Lower Exposure (&lt;30%)</span>
+    </div>
+
+    <div class="ai-exposure-grid">
+      <div class="card">
+        <div class="card-head">
           <div>
-            <div class="nation-card-title">Unemployment Rate — Miami vs. US</div>
-            <div class="nation-card-desc">Monthly · Miami not seasonally adjusted · US seasonally adjusted</div>
-          </div>
-          <div class="range-btns">
-            <button class="btn-r" data-chart="n-unemp" data-range="24">2Y</button>
-            <button class="btn-r" data-chart="n-unemp" data-range="60">5Y</button>
-            <button class="btn-r" data-chart="n-unemp" data-range="120">10Y</button>
-            <button class="btn-r active" data-chart="n-unemp" data-range="all">All</button>
+            <div class="card-title">Top 5 Exposed Roles — Miami MSA</div>
+            <div class="card-desc">Ranked by AI exposure score · Source: BLS OEWS + Microsoft AI Applicability Study (2026)</div>
           </div>
         </div>
-        <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-unemp"></canvas></div></div>
+        <div class="card-body">
+          <div class="exposure-bar-list">
+            <div class="exp-row">
+              <div class="exp-row-top">
+                <span class="exp-role">Customer Service Representatives</span>
+                <span class="exp-count">65,550 workers</span>
+              </div>
+              <div class="exp-bar-track"><div class="exp-bar-fill high" style="width:44%"></div></div>
+              <div class="exp-meta">AI Exposure Score: 44% · Avg Wage: $42,460 · <strong style="color:var(--red)">High Risk</strong></div>
+            </div>
+            <div class="exp-row">
+              <div class="exp-row-top">
+                <span class="exp-role">Management Analysts</span>
+                <span class="exp-count">21,480 workers</span>
+              </div>
+              <div class="exp-bar-track"><div class="exp-bar-fill medium" style="width:35%"></div></div>
+              <div class="exp-meta">AI Exposure Score: 35% · Avg Wage: $107,670 · <strong style="color:var(--amber)">Medium Risk</strong></div>
+            </div>
+            <div class="exp-row">
+              <div class="exp-row-top">
+                <span class="exp-role">Counter &amp; Rental Clerks</span>
+                <span class="exp-count">9,350 workers</span>
+              </div>
+              <div class="exp-bar-track"><div class="exp-bar-fill medium" style="width:36%"></div></div>
+              <div class="exp-meta">AI Exposure Score: 36% · Avg Wage: $49,340 · <strong style="color:var(--amber)">Medium Risk</strong></div>
+            </div>
+            <div class="exp-row">
+              <div class="exp-row-top">
+                <span class="exp-role">Personal Financial Advisors</span>
+                <span class="exp-count">7,180 workers</span>
+              </div>
+              <div class="exp-bar-track"><div class="exp-bar-fill medium" style="width:35%"></div></div>
+              <div class="exp-meta">AI Exposure Score: 35% · Avg Wage: $169,270 · <strong style="color:var(--amber)">Medium Risk</strong></div>
+            </div>
+            <div class="exp-row">
+              <div class="exp-row-top">
+                <span class="exp-role">Public Relations Specialists</span>
+                <span class="exp-count">5,530 workers</span>
+              </div>
+              <div class="exp-bar-track"><div class="exp-bar-fill medium" style="width:36%"></div></div>
+              <div class="exp-meta">AI Exposure Score: 36% · Avg Wage: $72,880 · <strong style="color:var(--amber)">Medium Risk</strong></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="nation-card">
-        <div class="nation-card-head">
+
+      <div class="card">
+        <div class="card-head">
           <div>
-            <div class="nation-card-title">Unemployment Spread — Miami minus US</div>
-            <div class="nation-card-desc">Percentage point gap · negative = Miami outperforming nation</div>
+            <div class="card-title">AI Exposure by Sector — Miami Economy</div>
+            <div class="card-desc">Sector-level risk assessment based on task automation applicability · 2026</div>
           </div>
         </div>
-        <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-spread"></canvas></div></div>
+        <div class="card-body">
+          <div class="sector-table-wrap">
+            <table class="sector-table">
+              <thead>
+                <tr>
+                  <th>Sector</th>
+                  <th>Miami Workers</th>
+                  <th>AI Risk Level</th>
+                  <th>Primary Driver</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Hospitality &amp; Tourism</strong></td>
+                  <td>~280,000</td>
+                  <td><span class="risk-badge high">High</span></td>
+                  <td>Concierge, front desk, booking automation</td>
+                </tr>
+                <tr>
+                  <td><strong>Financial Services</strong></td>
+                  <td>~95,000</td>
+                  <td><span class="risk-badge high">High</span></td>
+                  <td>Advisory, compliance, reporting automation</td>
+                </tr>
+                <tr>
+                  <td><strong>Contact Centers / BPO</strong></td>
+                  <td>~65,550</td>
+                  <td><span class="risk-badge high">High</span></td>
+                  <td>Customer service AI (44% exposure score)</td>
+                </tr>
+                <tr>
+                  <td><strong>Healthcare</strong></td>
+                  <td>~220,000</td>
+                  <td><span class="risk-badge medium">Medium</span></td>
+                  <td>Admin/billing tasks; clinical roles protected</td>
+                </tr>
+                <tr>
+                  <td><strong>Real Estate</strong></td>
+                  <td>~45,000</td>
+                  <td><span class="risk-badge medium">Medium</span></td>
+                  <td>Listings, research, document processing</td>
+                </tr>
+                <tr>
+                  <td><strong>Construction &amp; Trades</strong></td>
+                  <td>~180,000</td>
+                  <td><span class="risk-badge low">Lower</span></td>
+                  <td>Physical labor largely AI-resistant near-term</td>
+                </tr>
+                <tr>
+                  <td><strong>Technology / Software</strong></td>
+                  <td>~55,000</td>
+                  <td><span class="risk-badge emerging">Emerging</span></td>
+                  <td>Code generation augments but reshapes roles</td>
+                </tr>
+                <tr>
+                  <td><strong>Creative / Media</strong></td>
+                  <td>~30,000</td>
+                  <td><span class="risk-badge high">High</span></td>
+                  <td>Generative AI disrupting content production</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="nation-grid-2">
-      <div class="nation-card">
-        <div class="nation-card-head">
-          <div>
-            <div class="nation-card-title">Miami Unemployment — Indexed to US (US = 100)</div>
-            <div class="nation-card-desc">Values below 100 mean Miami unemployment is lower than the national rate</div>
-          </div>
-          <div class="range-btns">
-            <button class="btn-r" data-chart="n-index" data-range="24">2Y</button>
-            <button class="btn-r" data-chart="n-index" data-range="60">5Y</button>
-            <button class="btn-r" data-chart="n-index" data-range="120">10Y</button>
-            <button class="btn-r active" data-chart="n-index" data-range="all">All</button>
-          </div>
-        </div>
-        <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-index"></canvas></div></div>
+    <div class="disclaimer-box">
+      <strong>Data Sources &amp; Methodology:</strong> AI exposure scores are derived from Microsoft's <em>Working with AI: Measuring the Occupational Implications of Generative AI</em> study, cross-referenced with BLS Occupational Employment and Wage Statistics (OEWS) for the Miami–Fort Lauderdale–West Palm Beach MSA. Scores represent task-level automation applicability — not predicted job loss. Coverage = share of tasks AI can assist; Completion = rate AI can fully perform tasks end-to-end. Miami metro accounts for approximately <strong>127,260 of Florida's 447,170 AI-exposed jobs</strong> (Feb 2026 estimate).
+    </div>
+
+    <!-- Startup Hiring Signals -->
+    <div class="section-head" style="margin-top:2rem">
+      <span class="section-title">Miami Startup Hiring Signals</span>
+      <span class="section-divider"></span>
+    </div>
+
+    <div style="font-size:.82rem;color:var(--muted);margin-bottom:1rem;line-height:1.7">
+      Miami-based companies that have recently raised funding and are actively expanding headcount. Recent capital raises are a leading indicator of near-term hiring activity.
+    </div>
+
+    <div class="startup-grid">
+      <div class="startup-card raised">
+        <div class="startup-name">Rokk3r</div>
+        <div class="startup-sector">Venture Studio · Tech</div>
+        <div class="startup-raise raised">💰 Active Portfolio Expansion</div>
+        <div class="startup-desc">Miami's leading venture studio building AI-native companies. Actively co-founding and staffing new ventures across fintech, health tech, and enterprise AI — creating recurring hiring demand across engineering and product roles.</div>
+        <div class="startup-hiring">Actively hiring — Engineering, Product, Operations</div>
       </div>
-      <div class="nation-card">
-        <div class="nation-card-head">
-          <div>
-            <div class="nation-card-title">YoY Change — Miami vs. US Unemployment</div>
-            <div class="nation-card-desc">Percentage point change vs. same month prior year</div>
-          </div>
-        </div>
-        <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-yoy"></canvas></div></div>
+      <div class="startup-card series">
+        <div class="startup-name">Reef Technology</div>
+        <div class="startup-sector">Logistics · Last-Mile</div>
+        <div class="startup-raise series">📈 Series C+</div>
+        <div class="startup-desc">Miami-headquartered proximity-as-a-service platform operating parking, logistics, and delivery hubs. Raised $700M+ and expanding operations teams as urban logistics demand accelerates post-pandemic.</div>
+        <div class="startup-hiring">Actively hiring — Operations, Logistics, Tech</div>
+      </div>
+      <div class="startup-card seed">
+        <div class="startup-name">Pipe</div>
+        <div class="startup-sector">Fintech · Revenue Finance</div>
+        <div class="startup-raise seed">🌱 Restructured &amp; Growing</div>
+        <div class="startup-desc">Miami fintech enabling companies to trade recurring revenue for upfront capital. After restructuring, the company is rebuilding its engineering and sales teams with a leaner, AI-augmented product approach.</div>
+        <div class="startup-hiring">Hiring — Engineering, Finance, Sales</div>
+      </div>
+      <div class="startup-card raised">
+        <div class="startup-name">Magic Leap</div>
+        <div class="startup-sector">Spatial Computing · AR/MR</div>
+        <div class="startup-raise raised">💰 Enterprise Pivot</div>
+        <div class="startup-desc">Plantation, FL-based spatial computing company pivoting to enterprise AR applications in healthcare, manufacturing, and defense. Actively hiring for its next-generation headset platform and enterprise software stack.</div>
+        <div class="startup-hiring">Hiring — Hardware Eng, Software, Enterprise Sales</div>
+      </div>
+      <div class="startup-card series">
+        <div class="startup-name">Brightline</div>
+        <div class="startup-sector">Transportation · Rail</div>
+        <div class="startup-raise series">📈 Expansion Phase</div>
+        <div class="startup-desc">Florida's private intercity rail operator expanding from Miami to Orlando and beyond. Major infrastructure buildout driving sustained hiring across operations, technology, hospitality, and corporate functions.</div>
+        <div class="startup-hiring">Actively hiring — Operations, Tech, Hospitality</div>
+      </div>
+      <div class="startup-card seed">
+        <div class="startup-name">Kaseya</div>
+        <div class="startup-sector">IT Management · SaaS</div>
+        <div class="startup-raise seed">🌱 Private Equity Backed</div>
+        <div class="startup-desc">Miami-headquartered IT management software company serving MSPs globally. Backed by Insight Partners and Temasek with $6.2B valuation. Consistently one of Miami's largest tech employers with ongoing engineering and sales hiring.</div>
+        <div class="startup-hiring">Actively hiring — Engineering, Sales, Support</div>
       </div>
     </div>
 
-    <div class="nation-note">
-      ⚠ Methodology note: Miami–Fort Lauderdale–West Palm Beach data (LAUS series LAUMT123310000000003 &amp; LAUMT123310000000005) is <strong>not seasonally adjusted</strong> and reflects local area estimates. U.S. national data (CPS series LNS14000000 &amp; LNS12000000) is <strong>seasonally adjusted</strong>. Direct month-to-month comparisons should account for Miami's seasonal employment patterns (tourism, hospitality). The spread and index charts are most useful for long-run trend analysis.
+    <div class="disclaimer-box">
+      <strong>Signal Disclaimer:</strong> Startup hiring signals are based on publicly available funding announcements, company growth indicators, and job posting activity as of early 2026. This is not a real-time job board — it is a directional signal of which Miami companies are in active growth phases. Verify current openings directly on company career pages.
     </div>
 
   </div>
-</div><!-- /nation-section -->
+</div><!-- /page-ai -->
 
-<!-- ══ PAGE 2: JOB ROLE EVOLUTION ═════════════════════════════ -->
+<!-- ══ PAGE 3: JOB ROLE EVOLUTION ═════════════════════════════ -->
 <div id="page-evolution" class="page">
   <div class="page-inner">
 
@@ -1205,7 +1475,7 @@
     </div>
 
     <div style="margin-top:1rem;font-size:.72rem;color:var(--muted);padding:.75rem 0;border-top:1px solid var(--border)">
-      Sources: Tetra Tech, Havertys Furniture, FIS, Giga, Stripe, IBM, HealthStream, Concurrent, TeamLogic IT job postings (2026) · 
+      Sources: Tetra Tech, Havertys Furniture, FIS, Giga, Stripe, IBM, HealthStream, Concurrent, TeamLogic IT job postings (2026) ·
       Academic references: Dong &amp; Triche (2020), ISCAP (2019), Lightcast (2025), Pragmatic Engineer (2020)
     </div>
 
@@ -1223,7 +1493,7 @@
 
 <script>
 /* ═══════════════════════════════════════════════════════════════
-   Job Stats Miami — Dashboard Script
+   Job Stats Miami — Dashboard Script v3
 ═══════════════════════════════════════════════════════════════ */
 
 const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -1341,10 +1611,12 @@ function buildSeasonal(uData) {
   new Chart(ctx, { type:'bar', data:{ labels:MON, datasets:[{ data:byMon, backgroundColor:byMon.map(v=>{ if(!v)return'#e2e8f0'; const t=(v-min)/(max-min||1); const r=Math.round(29+t*191),g=Math.round(78-t*40),b=Math.round(216-t*190); return `rgba(${r},${g},${b},0.8)`; }), borderRadius:4 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},tooltip:{...ttBase,callbacks:{label:c=>` Avg: ${c.parsed.y.toFixed(2)}%`}}}, scales:{ x:{grid:{color:'#f1f5f9'}}, y:{grid:{color:'#f1f5f9'},ticks:{callback:v=>v+'%'},suggestedMin:0} } } });
 }
 
+/* ── Range button handler (light + dark sections) ── */
 document.addEventListener('click', e => {
   const btn = e.target.closest('.btn-r');
   if (!btn) return;
   const key = btn.dataset.chart, r = btn.dataset.range;
+  if (!key || !r) return;
   btn.closest('.range-btns').querySelectorAll('.btn-r').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   const reg = REGISTRY[key];
@@ -1354,6 +1626,18 @@ document.addEventListener('click', e => {
     reg.chart.data.labels=us.map(d=>fmtPeriod(d.period));
     reg.chart.data.datasets[0].data=us.map(d=>d.value);
     reg.chart.data.datasets[1].data=es.map(d=>d.value);
+  } else if (key === 'n-unemp') {
+    const s = r === 'all' ? reg.shared : reg.shared.slice(-parseInt(r));
+    const mMap = {}; reg.mAll.forEach(d => mMap[d.period] = d.value);
+    reg.chart.data.labels = s.map(d => fmtPeriod(d.period));
+    reg.chart.data.datasets[0].data = s.map(d => mMap[d.period]);
+    reg.chart.data.datasets[1].data = s.map(d => d.value);
+  } else if (key === 'n-index') {
+    const s = r === 'all' ? reg.shared : reg.shared.slice(-parseInt(r));
+    const mMap = {}; reg.mAll.forEach(d => mMap[d.period] = d.value);
+    reg.chart.data.labels = s.map(d => fmtPeriod(d.period));
+    reg.chart.data.datasets[0].data = s.map(d => d.value > 0 ? +((mMap[d.period] / d.value) * 100).toFixed(1) : null);
+    reg.chart.data.datasets[1].data = s.map(() => 100);
   } else {
     const s=slice(reg.all,r);
     reg.chart.data.labels=s.map(d=>fmtPeriod(d.period));
@@ -1383,20 +1667,18 @@ function buildTable(uData, eData) {
   });
 }
 
-/* ── National comparison charts ── */
-function buildNationSection(mData, nuData, neData) {
-  // KPIs
+/* ── National comparison section ── */
+function buildNationSection(mData, nuData) {
   const lm = mData.at(-1);
   const lu = nuData.at(-1);
-  const le = neData.at(-1);
+
   document.getElementById('n-miami-unemp').textContent = lm.value.toFixed(1) + '%';
   document.getElementById('n-miami-unemp-period').textContent = fmtPeriod(lm.period);
   document.getElementById('n-us-unemp').textContent = lu.value.toFixed(1) + '%';
   document.getElementById('n-us-unemp-period').textContent = fmtPeriod(lu.period) + ' · SA';
-  document.getElementById('n-miami-emp').textContent = fmtEmp(lm.value * 1000 < 1e6 ? lm.value : lm.value);
+  document.getElementById('n-miami-emp').textContent = fmtEmp(lm.value);
   document.getElementById('n-miami-emp-period').textContent = fmtPeriod(lm.period);
 
-  // Find matching period for spread
   const matchedUS = nuData.find(d => d.period === lm.period) || lu;
   const spread = +(lm.value - matchedUS.value).toFixed(2);
   const spreadEl = document.getElementById('n-spread');
@@ -1407,7 +1689,6 @@ function buildNationSection(mData, nuData, neData) {
   else if (spread > 0) { badgeEl.textContent = '▲ Miami above US — lagging'; badgeEl.className = 'nation-kpi-delta worse'; }
   else { badgeEl.textContent = '→ At parity with US'; badgeEl.className = 'nation-kpi-delta same'; }
 
-  // Align series on shared periods
   const mMap = {}; mData.forEach(d => mMap[d.period] = d.value);
   const uMap = {}; nuData.forEach(d => uMap[d.period] = d.value);
   const shared = nuData.filter(d => mMap[d.period] !== undefined);
@@ -1418,90 +1699,66 @@ function buildNationSection(mData, nuData, neData) {
   const spreadVals = shared.map(d => +(mMap[d.period] - d.value).toFixed(2));
   const indexVals = shared.map(d => d.value > 0 ? +((mMap[d.period] / d.value) * 100).toFixed(1) : null);
 
-  // YoY for both
   const mYoY = [], uYoY = [], yoyLabels = [];
   for (const d of shared) {
     const py = `${d.year - 1}-${String(d.month).padStart(2,'0')}`;
     const pm = mMap[py], pu = uMap[py];
     if (pm !== undefined && pu !== undefined) {
       mYoY.push(+(mMap[d.period] - pm).toFixed(2));
-      uYoY.push(+(d.value - pu).toFixed(2));
+      uYoY.push(+(d
+.value - pu).toFixed(2));
       yoyLabels.push(fmtPeriod(d.period));
     }
   }
 
-  const darkTt = { backgroundColor:'#1e293b', borderColor:'rgba(255,255,255,.15)', borderWidth:1, titleColor:'#f1f5f9', bodyColor:'#94a3b8', padding:10, cornerRadius:8 };
-  const darkGrid = { color:'rgba(255,255,255,.07)' };
-  const darkTick = { color:'rgba(255,255,255,.35)' };
-
-  // Chart 1: Dual line — Miami vs US unemployment
+  /* Chart 1 — dual line */
   const ctx1 = document.getElementById('c-n-unemp').getContext('2d');
-  const chart1 = new Chart(ctx1, { type:'line', data:{ labels:sharedLabels, datasets:[
-    { label:'Miami', data:mVals, borderColor:'#38bdf8', backgroundColor:'rgba(56,189,248,.08)', borderWidth:2.5, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35 },
-    { label:'US National', data:uVals, borderColor:'#34d399', backgroundColor:'rgba(52,211,153,.06)', borderWidth:2, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35, borderDash:[5,3] }
-  ]}, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{ legend:{display:true,position:'top',labels:{color:'rgba(255,255,255,.6)',boxWidth:12,padding:14,font:{size:11}}}, tooltip:{...darkTt,callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y.toFixed(1)}%`}} }, scales:{ x:{grid:darkGrid,ticks:{...darkTick,maxTicksLimit:10,maxRotation:0}}, y:{grid:darkGrid,ticks:{...darkTick,callback:v=>v+'%'}} } } });
-  REGISTRY['n-unemp'] = { chart:chart1, mAll:mData, uAll:nuData, shared };
+  const c1 = new Chart(ctx1, { type:'line', data:{ labels:sharedLabels, datasets:[
+    { label:'Miami', data:mVals, borderColor:'#38bdf8', backgroundColor:'rgba(56,189,248,.1)', borderWidth:2.5, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35 },
+    { label:'US National', data:uVals, borderColor:'#34d399', backgroundColor:'rgba(52,211,153,.05)', borderWidth:2, borderDash:[5,4], pointRadius:0, pointHoverRadius:4, fill:false, tension:0.35 }
+  ]}, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{ legend:{display:true,position:'top',labels:{color:'rgba(255,255,255,.7)',boxWidth:12,padding:14,font:{size:11}}}, tooltip:{backgroundColor:'#1e293b',borderColor:'rgba(255,255,255,.1)',borderWidth:1,titleColor:'#fff',bodyColor:'rgba(255,255,255,.75)',padding:10,cornerRadius:8,callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y.toFixed(1)}%`}} }, scales:{ x:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'rgba(255,255,255,.4)',maxTicksLimit:10,maxRotation:0}}, y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'rgba(255,255,255,.4)',callback:v=>v+'%'}} } } });
+  REGISTRY['n-unemp'] = { chart:c1, shared, mAll:mData };
 
-  // Chart 2: Spread bar
+  /* Chart 2 — spread bars */
   const ctx2 = document.getElementById('c-n-spread').getContext('2d');
-  new Chart(ctx2, { type:'bar', data:{ labels:sharedLabels, datasets:[{ data:spreadVals, backgroundColor:spreadVals.map(v=>v<0?'rgba(52,211,153,.7)':'rgba(248,113,113,.7)'), borderColor:spreadVals.map(v=>v<0?'#34d399':'#f87171'), borderWidth:1, borderRadius:2 }]}, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{ legend:{display:false}, tooltip:{...darkTt,callbacks:{label:c=>` Spread: ${c.parsed.y>0?'+':''}${c.parsed.y.toFixed(2)} pp`}} }, scales:{ x:{grid:darkGrid,ticks:{...darkTick,maxTicksLimit:10,maxRotation:0}}, y:{grid:darkGrid,ticks:{...darkTick,callback:v=>(v>0?'+':'')+v+' pp'}} } } });
+  new Chart(ctx2, { type:'bar', data:{ labels:sharedLabels, datasets:[{ data:spreadVals, backgroundColor:spreadVals.map(v=>v<0?'rgba(52,211,153,.7)':'rgba(248,113,113,.7)'), borderColor:spreadVals.map(v=>v<0?'#34d399':'#f87171'), borderWidth:1, borderRadius:2 }] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{ legend:{display:false}, tooltip:{backgroundColor:'#1e293b',borderColor:'rgba(255,255,255,.1)',borderWidth:1,titleColor:'#fff',bodyColor:'rgba(255,255,255,.75)',padding:10,cornerRadius:8,callbacks:{label:c=>` Spread: ${c.parsed.y>0?'+':''}${c.parsed.y.toFixed(2)} pp`}} }, scales:{ x:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'rgba(255,255,255,.4)',maxTicksLimit:10,maxRotation:0}}, y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'rgba(255,255,255,.4)',callback:v=>(v>0?'+':'')+v+' pp'}} } } });
 
-  // Chart 3: Index
+  /* Chart 3 — index */
   const ctx3 = document.getElementById('c-n-index').getContext('2d');
-  const grad3 = ctx3.createLinearGradient(0,0,0,260);
-  grad3.addColorStop(0,'rgba(251,191,36,.15)'); grad3.addColorStop(1,'rgba(251,191,36,0)');
-  const chart3 = new Chart(ctx3, { type:'line', data:{ labels:sharedLabels, datasets:[
-    { label:'Miami Index (US=100)', data:indexVals, borderColor:'#fbbf24', backgroundColor:grad3, borderWidth:2.5, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35 },
-    { label:'Parity (100)', data:sharedLabels.map(()=>100), borderColor:'rgba(255,255,255,.2)', borderWidth:1, pointRadius:0, borderDash:[4,4], fill:false }
-  ]}, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{ legend:{display:true,position:'top',labels:{color:'rgba(255,255,255,.6)',boxWidth:12,padding:14,font:{size:11},filter:i=>i.datasetIndex===0}}, tooltip:{...darkTt,callbacks:{label:c=>c.datasetIndex===0?` Index: ${c.parsed.y.toFixed(1)} (${c.parsed.y<100?'below':'above'} US avg)`:null}} }, scales:{ x:{grid:darkGrid,ticks:{...darkTick,maxTicksLimit:10,maxRotation:0}}, y:{grid:darkGrid,ticks:{...darkTick,callback:v=>v},title:{display:true,text:'Index (US=100)',color:'rgba(255,255,255,.3)',font:{size:11}}} } } });
-  REGISTRY['n-index'] = { chart:chart3, mAll:mData, uAll:nuData, shared };
+  const c3 = new Chart(ctx3, { type:'line', data:{ labels:sharedLabels, datasets:[
+    { label:'Miami Index', data:indexVals, borderColor:'#fbbf24', backgroundColor:'rgba(251,191,36,.08)', borderWidth:2.5, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35 },
+    { label:'US = 100', data:sharedLabels.map(()=>100), borderColor:'rgba(255,255,255,.25)', borderWidth:1.5, borderDash:[4,3], pointRadius:0, fill:false }
+  ]}, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{ legend:{display:true,position:'top',labels:{color:'rgba(255,255,255,.7)',boxWidth:12,padding:14,font:{size:11}}}, tooltip:{backgroundColor:'#1e293b',borderColor:'rgba(255,255,255,.1)',borderWidth:1,titleColor:'#fff',bodyColor:'rgba(255,255,255,.75)',padding:10,cornerRadius:8,callbacks:{label:c=>c.datasetIndex===0?` Miami Index: ${c.parsed.y.toFixed(1)}`:` US Baseline: 100`}} }, scales:{ x:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'rgba(255,255,255,.4)',maxTicksLimit:10,maxRotation:0}}, y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'rgba(255,255,255,.4)',callback:v=>v}} } } });
+  REGISTRY['n-index'] = { chart:c3, shared, mAll:mData };
 
-  // Chart 4: YoY comparison
+  /* Chart 4 — YoY comparison */
   const ctx4 = document.getElementById('c-n-yoy').getContext('2d');
-  new Chart(ctx4, { type:'line', data:{ labels:yoyLabels, datasets:[
-    { label:'Miami YoY Δ', data:mYoY, borderColor:'#38bdf8', backgroundColor:'transparent', borderWidth:2, pointRadius:0, pointHoverRadius:4, tension:0.35 },
-    { label:'US YoY Δ', data:uYoY, borderColor:'#34d399', backgroundColor:'transparent', borderWidth:2, pointRadius:0, pointHoverRadius:4, tension:0.35, borderDash:[5,3] }
-  ]}, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{ legend:{display:true,position:'top',labels:{color:'rgba(255,255,255,.6)',boxWidth:12,padding:14,font:{size:11}}}, tooltip:{...darkTt,callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y>0?'+':''}${c.parsed.y.toFixed(2)} pp`}} }, scales:{ x:{grid:darkGrid,ticks:{...darkTick,maxTicksLimit:10,maxRotation:0}}, y:{grid:darkGrid,ticks:{...darkTick,callback:v=>(v>0?'+':'')+v+' pp'}} } } });
+  new Chart(ctx4, { type:'bar', data:{ labels:yoyLabels, datasets:[
+    { label:'Miami YoY', data:mYoY, backgroundColor:'rgba(56,189,248,.6)', borderColor:'#38bdf8', borderWidth:1, borderRadius:2 },
+    { label:'US YoY', data:uYoY, backgroundColor:'rgba(52,211,153,.5)', borderColor:'#34d399', borderWidth:1, borderRadius:2 }
+  ]}, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{ legend:{display:true,position:'top',labels:{color:'rgba(255,255,255,.7)',boxWidth:12,padding:14,font:{size:11}}}, tooltip:{backgroundColor:'#1e293b',borderColor:'rgba(255,255,255,.1)',borderWidth:1,titleColor:'#fff',bodyColor:'rgba(255,255,255,.75)',padding:10,cornerRadius:8,callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y>0?'+':''}${c.parsed.y.toFixed(2)} pp`}} }, scales:{ x:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'rgba(255,255,255,.4)',maxTicksLimit:10,maxRotation:0}}, y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'rgba(255,255,255,.4)',callback:v=>(v>0?'+':'')+v+' pp'}} } } });
 }
 
-// Range filter handler for national charts
-document.addEventListener('click', e => {
-  const btn = e.target.closest('.btn-r[data-chart^="n-"]');
-  if (!btn) return;
-  const key = btn.dataset.chart, r = btn.dataset.range;
-  btn.closest('.range-btns').querySelectorAll('.btn-r').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const reg = REGISTRY[key];
-  if (!reg) return;
-  const s = r === 'all' ? reg.shared : reg.shared.slice(-parseInt(r));
-  const mMap = {}; reg.mAll.forEach(d => mMap[d.period] = d.value);
-  reg.chart.data.labels = s.map(d => fmtPeriod(d.period));
-  if (key === 'n-unemp') {
-    reg.chart.data.datasets[0].data = s.map(d => mMap[d.period]);
-    reg.chart.data.datasets[1].data = s.map(d => d.value);
-  } else if (key === 'n-index') {
-    reg.chart.data.datasets[0].data = s.map(d => d.value > 0 ? +((mMap[d.period] / d.value) * 100).toFixed(1) : null);
-    reg.chart.data.datasets[1].data = s.map(() => 100);
-  }
-  reg.chart.update('active');
-});
-
+/* ── Main init ── */
 async function init() {
   try {
-    const resp = await fetch('jobs_data.json');
+    const resp = await fetch('jobs_data.json?v=' + Date.now());
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();
     const keys = Object.keys(data.series);
-    // Miami-scoped series (scope field present) or fall back to first matching label
+
     const miamiKeys = keys.filter(k => (data.series[k].scope || 'miami') === 'miami');
     const uKey = miamiKeys.find(k => data.series[k].label.toLowerCase().includes('unemployment'));
     const eKey = miamiKeys.find(k => data.series[k].label.toLowerCase().includes('employment') && !data.series[k].label.toLowerCase().includes('unemployment'));
     if (!uKey || !eKey) throw new Error('Required Miami series not found');
+
     const uData = data.series[uKey].data;
     const eData = data.series[eKey].data;
     if (!uData.length || !eData.length) throw new Error('No data records found');
+
     const ts = new Date(data.metadata.last_updated);
-    document.getElementById('last-updated').textContent = `Updated ${ts.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} ${ts.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',timeZoneName:'short'})}`;
+    document.getElementById('last-updated').textContent = `Updated ${ts.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`;
+
     setKPIs(uData, eData);
     buildUnemp(uData);
     buildEmp(eData);
@@ -1510,17 +1767,12 @@ async function init() {
     buildSeasonal(uData);
     buildTable(uData, eData);
 
-    // National comparison series
-    const nKeys = Object.keys(data.series).filter(k => data.series[k].scope === 'national');
+    /* National comparison */
+    const nKeys = keys.filter(k => data.series[k].scope === 'national');
     const nuKey = nKeys.find(k => data.series[k].label.toLowerCase().includes('unemployment'));
-    const neKey = nKeys.find(k => data.series[k].label.toLowerCase().includes('employment') && !data.series[k].label.toLowerCase().includes('unemployment'));
-    if (nuKey && neKey) {
+    if (nuKey) {
       const nuData = data.series[nuKey].data;
-      const neData = data.series[neKey].data;
-      buildNationSection(uData, nuData, neData);
-      const ns = document.getElementById('nation-section');
-      ns.style.display = '';
-      ns.removeAttribute('data-pending');
+      buildNationSection(uData, nuData);
     }
 
     const ov = document.getElementById('loading');
