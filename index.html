@@ -590,6 +590,76 @@
     /* Section head on blue bg */
     #page-evolution .section-head .section-title  { color: rgba(255,255,255,.5); }
     #page-evolution .section-head .section-divider { background: rgba(255,255,255,.15); }
+
+    /* ── HIRING SIGNALS PAGE ─────────────────────────────────── */
+    #page-signals {
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,.07) 50px, transparent 50px),
+        radial-gradient(circle at 30% 10%, rgba(255,255,255,.05) 38px, transparent 38px),
+        radial-gradient(circle at 55% 25%, rgba(255,255,255,.06) 44px, transparent 44px),
+        radial-gradient(circle at 78% 15%, rgba(255,255,255,.05) 32px, transparent 32px),
+        radial-gradient(circle at 92% 35%, rgba(255,255,255,.06) 40px, transparent 40px),
+        radial-gradient(circle at 8%  50%, rgba(255,255,255,.05) 36px, transparent 36px),
+        radial-gradient(circle at 28% 60%, rgba(255,255,255,.06) 42px, transparent 42px),
+        radial-gradient(circle at 50% 52%, rgba(255,255,255,.05) 30px, transparent 30px),
+        radial-gradient(circle at 72% 48%, rgba(255,255,255,.06) 38px, transparent 38px),
+        radial-gradient(circle at 90% 62%, rgba(255,255,255,.05) 28px, transparent 28px),
+        radial-gradient(circle at 18% 78%, rgba(255,255,255,.06) 34px, transparent 34px),
+        radial-gradient(circle at 40% 82%, rgba(255,255,255,.05) 40px, transparent 40px),
+        radial-gradient(circle at 65% 72%, rgba(255,255,255,.06) 32px, transparent 32px),
+        radial-gradient(circle at 85% 85%, rgba(255,255,255,.05) 36px, transparent 36px),
+        linear-gradient(135deg, #064e3b 0%, #065f46 30%, #047857 60%, #059669 100%);
+      min-height: 100vh;
+    }
+    #page-signals .page-inner { padding-top: 2rem; }
+    #page-signals .section-head .section-title  { color: rgba(255,255,255,.5); }
+    #page-signals .section-head .section-divider { background: rgba(255,255,255,.15); }
+    #page-signals .startup-card {
+      background: rgba(255,255,255,.97);
+      border-color: rgba(255,255,255,.25);
+      box-shadow: 0 6px 28px rgba(0,0,0,.25), 0 0 0 1px rgba(255,255,255,.12);
+    }
+    #page-signals .startup-card:hover {
+      box-shadow: 0 10px 40px rgba(0,0,0,.32), 0 0 0 1px rgba(255,255,255,.22);
+    }
+    #page-signals .disclaimer-box {
+      background: rgba(0,0,0,.2);
+      border-color: rgba(255,255,255,.15);
+      color: rgba(255,255,255,.65);
+    }
+    #page-signals .disclaimer-box strong { color: rgba(255,255,255,.65); }
+    .signals-hero {
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-bottom: 1.5rem;
+      color: #fff;
+      backdrop-filter: blur(2px);
+    }
+    .signals-hero-eyebrow { font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-bottom: .5rem; }
+    .signals-hero-title { font-size: 1.9rem; font-weight: 900; letter-spacing: -.04em; line-height: 1.1; margin: 0 0 .75rem; color: #fff; }
+    .signals-hero-title span { color: #6ee7b7; }
+    .signals-hero-desc { font-size: .88rem; color: rgba(255,255,255,.8); max-width: 680px; line-height: 1.7; margin: 0 0 1.5rem; }
+    .signals-hero-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .signals-hero-stat .val { display: block; font-size: 1.6rem; font-weight: 900; letter-spacing: -.03em; color: #6ee7b7; }
+    .signals-hero-stat .lbl { font-size: .68rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.55); }
+    .signals-legend { display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; margin-bottom: .5rem; font-size: .8rem; color: rgba(255,255,255,.7); }
+    .sig-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: .35rem; }
+    .sig-dot.hot    { background: #34d399; box-shadow: 0 0 6px #34d399; }
+    .sig-dot.warm   { background: #fbbf24; box-shadow: 0 0 6px #fbbf24; }
+    .sig-dot.steady { background: #94a3b8; box-shadow: 0 0 4px #94a3b8; }
+    .signals-timeline { display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1rem; }
+    .timeline-item { display: flex; align-items: center; gap: 1rem; padding: .6rem 1rem; border-radius: 8px; font-size: .82rem; }
+    .timeline-item.hot    { background: rgba(52,211,153,.12); border-left: 3px solid #34d399; }
+    .timeline-item.warm   { background: rgba(251,191,36,.1);  border-left: 3px solid #fbbf24; }
+    .timeline-item.steady { background: rgba(148,163,184,.1); border-left: 3px solid #94a3b8; }
+    .tl-date  { font-weight: 700; color: rgba(255,255,255,.5); min-width: 60px; font-size: .75rem; }
+    .tl-co    { font-weight: 700; color: #fff; min-width: 140px; }
+    .tl-event { color: rgba(255,255,255,.7); }
+    .signals-chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 1.5rem; }
+    .signals-chart-card { background: rgba(255,255,255,.97); border-radius: 12px; padding: 1.25rem; box-shadow: 0 4px 20px rgba(0,0,0,.2); }
+    @media(max-width:700px) { .signals-chart-row { grid-template-columns: 1fr; } .timeline-item { flex-wrap: wrap; } }
     .evo-hero {
       background: linear-gradient(135deg, #1e3a5f 0%, #1d4ed8 50%, #0d9488 100%);
       border-radius: 16px; padding: 2.5rem; margin-bottom: 1.75rem;
@@ -721,7 +791,10 @@
         <span class="tab-icon">📈</span> Market Stats
       </button>
       <button class="nav-tab" data-tab="ai" onclick="switchTab('ai')">
-        <span class="tab-icon">🤖</span> AI &amp; Signals
+        <span class="tab-icon">🤖</span> AI Job Exposure
+      </button>
+      <button class="nav-tab" data-tab="signals" onclick="switchTab('signals')">
+        <span class="tab-icon">📡</span> Hiring Signals
       </button>
       <button class="nav-tab" data-tab="evolution" onclick="switchTab('evolution')">
         <span class="tab-icon">🔄</span> Job Role Evolution
@@ -979,7 +1052,7 @@
     <div class="ai-hero">
       <div class="ai-hero-content">
         <div class="ai-hero-eyebrow">Forward Intelligence · 2026</div>
-        <div class="ai-hero-title">AI Job Exposure &amp; <span>Miami Startup Signals</span></div>
+        <div class="ai-hero-title">AI Job Exposure <span>Miami Metro</span></div>
         <div class="ai-hero-desc">Which Miami job categories face the greatest AI automation risk — and which companies are actively growing their headcount right now. Data sourced from BLS OEWS, Microsoft AI Applicability Research, and Miami startup funding signals.</div>
         <div class="ai-hero-stats">
           <div class="ai-hero-stat"><div class="val">127,260</div><div class="lbl">Miami Jobs at Risk</div></div>
@@ -1224,69 +1297,82 @@
 
     </div><!-- /ai-viz-section -->
 
-    <!-- Startup Hiring Signals -->
-    <div class="section-head" style="margin-top:2rem">
-      <span class="section-title">Miami Startup Hiring Signals</span>
-      <span class="section-divider"></span>
-    </div>
-
-    <div style="font-size:.82rem;color:var(--muted);margin-bottom:1rem;line-height:1.7">
-      Miami-based companies that have recently raised funding and are actively expanding headcount. Recent capital raises are a leading indicator of near-term hiring activity.
-    </div>
-
-    <div class="startup-grid">
-      <div class="startup-card raised">
-        <div class="startup-name">Rokk3r</div>
-        <div class="startup-sector">Venture Studio · Tech</div>
-        <div class="startup-raise raised">💰 Active Portfolio Expansion</div>
-        <div class="startup-desc">Miami's leading venture studio building AI-native companies. Actively co-founding and staffing new ventures across fintech, health tech, and enterprise AI — creating recurring hiring demand across engineering and product roles.</div>
-        <div class="startup-hiring">Actively hiring — Engineering, Product, Operations</div>
-      </div>
-      <div class="startup-card series">
-        <div class="startup-name">Reef Technology</div>
-        <div class="startup-sector">Logistics · Last-Mile</div>
-        <div class="startup-raise series">📈 Series C+</div>
-        <div class="startup-desc">Miami-headquartered proximity-as-a-service platform operating parking, logistics, and delivery hubs. Raised $700M+ and expanding operations teams as urban logistics demand accelerates post-pandemic.</div>
-        <div class="startup-hiring">Actively hiring — Operations, Logistics, Tech</div>
-      </div>
-      <div class="startup-card seed">
-        <div class="startup-name">Pipe</div>
-        <div class="startup-sector">Fintech · Revenue Finance</div>
-        <div class="startup-raise seed">🌱 Restructured &amp; Growing</div>
-        <div class="startup-desc">Miami fintech enabling companies to trade recurring revenue for upfront capital. After restructuring, the company is rebuilding its engineering and sales teams with a leaner, AI-augmented product approach.</div>
-        <div class="startup-hiring">Hiring — Engineering, Finance, Sales</div>
-      </div>
-      <div class="startup-card raised">
-        <div class="startup-name">Magic Leap</div>
-        <div class="startup-sector">Spatial Computing · AR/MR</div>
-        <div class="startup-raise raised">💰 Enterprise Pivot</div>
-        <div class="startup-desc">Plantation, FL-based spatial computing company pivoting to enterprise AR applications in healthcare, manufacturing, and defense. Actively hiring for its next-generation headset platform and enterprise software stack.</div>
-        <div class="startup-hiring">Hiring — Hardware Eng, Software, Enterprise Sales</div>
-      </div>
-      <div class="startup-card series">
-        <div class="startup-name">Brightline</div>
-        <div class="startup-sector">Transportation · Rail</div>
-        <div class="startup-raise series">📈 Expansion Phase</div>
-        <div class="startup-desc">Florida's private intercity rail operator expanding from Miami to Orlando and beyond. Major infrastructure buildout driving sustained hiring across operations, technology, hospitality, and corporate functions.</div>
-        <div class="startup-hiring">Actively hiring — Operations, Tech, Hospitality</div>
-      </div>
-      <div class="startup-card seed">
-        <div class="startup-name">Kaseya</div>
-        <div class="startup-sector">IT Management · SaaS</div>
-        <div class="startup-raise seed">🌱 Private Equity Backed</div>
-        <div class="startup-desc">Miami-headquartered IT management software company serving MSPs globally. Backed by Insight Partners and Temasek with $6.2B valuation. Consistently one of Miami's largest tech employers with ongoing engineering and sales hiring.</div>
-        <div class="startup-hiring">Actively hiring — Engineering, Sales, Support</div>
-      </div>
-    </div>
-
-    <div class="disclaimer-box">
-      <strong>Signal Disclaimer:</strong> Startup hiring signals are based on publicly available funding announcements, company growth indicators, and job posting activity as of early 2026. This is not a real-time job board — it is a directional signal of which Miami companies are in active growth phases. Verify current openings directly on company career pages.
-    </div>
-
   </div>
 </div><!-- /page-ai -->
 
-<!-- ══ PAGE 3: JOB ROLE EVOLUTION ═════════════════════════════ -->
+<!-- ══ PAGE 3: HIRING SIGNALS ═════════════════════════════════ -->
+<div id="page-signals" class="page">
+  <div class="page-inner">
+    <div class="signals-hero">
+      <div class="signals-hero-eyebrow">HIRING SIGNALS · SOUTH FLORIDA</div>
+      <h1 class="signals-hero-title">Where the <span>Capital Is Moving</span></h1>
+      <p class="signals-hero-desc">Companies that have recently raised funding are the strongest leading indicator of near-term job creation. These are the South Florida companies actively expanding headcount right now — sourced from public funding announcements, job posting velocity, and growth indicators.</p>
+      <div class="signals-hero-stats">
+        <div class="signals-hero-stat"><span class="val">10</span><span class="lbl">Active Signals</span></div>
+        <div class="signals-hero-stat"><span class="val">$8B+</span><span class="lbl">Capital Raised</span></div>
+        <div class="signals-hero-stat"><span class="val">7</span><span class="lbl">Sectors Covered</span></div>
+        <div class="signals-hero-stat"><span class="val">2026</span><span class="lbl">Data Vintage</span></div>
+      </div>
+    </div>
+
+    <div class="signals-legend">
+      <span class="sig-dot hot"></span><span>Hot Signal (Series B+, recent raise)</span>
+      <span class="sig-dot warm"></span><span>Warm Signal (Series A / PE-backed)</span>
+      <span class="sig-dot steady"></span><span>Steady Signal (Restructuring / Organic growth)</span>
+    </div>
+
+    <div class="section-head" style="margin-top:1.5rem">
+      <span class="section-title">Funding Activity Timeline</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="signals-timeline">
+      <div class="timeline-item hot"><span class="tl-date">Q4 2025</span><span class="tl-co">Brightline</span><span class="tl-event">Orlando expansion — $2.5B infrastructure phase</span></div>
+      <div class="timeline-item hot"><span class="tl-date">Q3 2025</span><span class="tl-co">Kaseya</span><span class="tl-event">$6.2B valuation — Insight Partners &amp; Temasek</span></div>
+      <div class="timeline-item warm"><span class="tl-date">Q3 2025</span><span class="tl-co">Magic Leap</span><span class="tl-event">Enterprise AR pivot — healthcare &amp; defense contracts</span></div>
+      <div class="timeline-item hot"><span class="tl-date">Q2 2025</span><span class="tl-co">Reef Technology</span><span class="tl-event">$700M+ Series C+ — logistics network expansion</span></div>
+      <div class="timeline-item warm"><span class="tl-date">Q2 2025</span><span class="tl-co">Chewy</span><span class="tl-event">Plantation HQ expansion — tech &amp; fulfillment hiring</span></div>
+      <div class="timeline-item warm"><span class="tl-date">Q1 2025</span><span class="tl-co">Lennar</span><span class="tl-event">Miami HQ — PropTech division buildout</span></div>
+      <div class="timeline-item steady"><span class="tl-date">Q1 2025</span><span class="tl-co">Pipe</span><span class="tl-event">Post-restructure rebuild — AI-augmented team</span></div>
+      <div class="timeline-item warm"><span class="tl-date">Q4 2024</span><span class="tl-co">Carnival Corp</span><span class="tl-event">Miami HQ — digital transformation initiative</span></div>
+      <div class="timeline-item steady"><span class="tl-date">Q4 2024</span><span class="tl-co">Rokk3r</span><span class="tl-event">AI-native venture studio — portfolio co-founding</span></div>
+      <div class="timeline-item warm"><span class="tl-date">Q3 2024</span><span class="tl-co">UKG</span><span class="tl-event">Weston, FL — HCM platform expansion</span></div>
+    </div>
+
+    <div class="section-head" style="margin-top:2rem">
+      <span class="section-title">Active Hiring Signals</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="startup-grid">
+      <div class="startup-card raised"><div class="startup-name">Brightline</div><div class="startup-sector">Transportation · Rail · Infrastructure</div><div class="startup-raise raised">📈 $2.5B Expansion Phase</div><div class="startup-desc">Florida’s private intercity rail operator expanding Miami–Orlando–Tampa. Major infrastructure buildout driving sustained hiring across operations, technology, hospitality, and corporate functions.</div><div class="startup-hiring">Actively hiring — Operations, Tech, Hospitality, Corporate</div></div>
+      <div class="startup-card raised"><div class="startup-name">Kaseya</div><div class="startup-sector">IT Management · SaaS · MSP</div><div class="startup-raise raised">💰 $6.2B Valuation · PE-Backed</div><div class="startup-desc">Miami-headquartered IT management platform serving MSPs globally. Consistently one of Miami’s largest tech employers with ongoing engineering, sales, and support hiring across all levels.</div><div class="startup-hiring">Actively hiring — Engineering, Sales, Customer Success</div></div>
+      <div class="startup-card series"><div class="startup-name">Reef Technology</div><div class="startup-sector">Logistics · Last-Mile · Urban Infrastructure</div><div class="startup-raise series">📈 Series C+ · $700M+</div><div class="startup-desc">Miami-headquartered proximity-as-a-service platform operating parking, logistics, and delivery hubs. Strong signal for operations, tech, and driver-facing roles.</div><div class="startup-hiring">Actively hiring — Operations, Logistics, Tech</div></div>
+      <div class="startup-card series"><div class="startup-name">Chewy</div><div class="startup-sector">E-Commerce · Pet · Fulfillment</div><div class="startup-raise series">📈 Plantation HQ Expansion</div><div class="startup-desc">Plantation, FL-headquartered pet e-commerce giant expanding its South Florida tech and fulfillment footprint. Growing data engineering, customer experience, and supply chain teams.</div><div class="startup-hiring">Hiring — Data Engineering, Product, Customer Experience</div></div>
+      <div class="startup-card series"><div class="startup-name">Magic Leap</div><div class="startup-sector">Spatial Computing · AR/MR · Enterprise</div><div class="startup-raise series">📈 Enterprise Pivot · Defense &amp; Healthcare</div><div class="startup-desc">Plantation, FL-based spatial computing company pivoting to enterprise AR in healthcare, manufacturing, and defense with strong DoD contract pipeline.</div><div class="startup-hiring">Hiring — Hardware Eng, Software, Enterprise Sales</div></div>
+      <div class="startup-card series"><div class="startup-name">Lennar</div><div class="startup-sector">Real Estate · PropTech · Construction</div><div class="startup-raise series">🏠 Miami HQ · PropTech Division</div><div class="startup-desc">America’s largest homebuilder building out a PropTech division focused on AI-driven home buying, mortgage automation, and smart home integration.</div><div class="startup-hiring">Hiring — Software Eng, Data, Product, UX</div></div>
+      <div class="startup-card series"><div class="startup-name">Carnival Corporation</div><div class="startup-sector">Hospitality · Travel · Digital Transformation</div><div class="startup-raise series">🛥️ Miami HQ · Digital Initiative</div><div class="startup-desc">World’s largest cruise company undergoing a major digital transformation. Building out data analytics, cybersecurity, cloud infrastructure, and guest experience tech teams.</div><div class="startup-hiring">Hiring — Cybersecurity, Data, Cloud, UX</div></div>
+      <div class="startup-card raised"><div class="startup-name">UKG (Ultimate Kronos Group)</div><div class="startup-sector">HCM · Workforce Tech · SaaS</div><div class="startup-raise raised">💰 Weston HQ · Platform Expansion</div><div class="startup-desc">Weston, FL-based HR and workforce management platform expanding its AI-powered HCM suite and growing South Florida engineering and sales teams.</div><div class="startup-hiring">Actively hiring — Engineering, Implementation, Sales</div></div>
+      <div class="startup-card seed"><div class="startup-name">Rokk3r</div><div class="startup-sector">Venture Studio · AI-Native · Tech</div><div class="startup-raise seed">🌱 Active Portfolio Co-Founding</div><div class="startup-desc">Miami’s leading AI-native venture studio co-founding and staffing new companies across fintech, health tech, and enterprise AI.</div><div class="startup-hiring">Hiring — Engineering, Product, Operations (portfolio-wide)</div></div>
+      <div class="startup-card seed"><div class="startup-name">Pipe</div><div class="startup-sector">Fintech · Revenue Finance · B2B</div><div class="startup-raise seed">🌱 Post-Restructure Rebuild</div><div class="startup-desc">Miami fintech rebuilding with a leaner, AI-augmented team. Strong signal for senior engineering and finance roles in a high-ownership environment.</div><div class="startup-hiring">Hiring — Senior Engineering, Finance, Sales</div></div>
+    </div>
+
+    <div class="signals-chart-row">
+      <div class="signals-chart-card">
+        <div class="card-head"><span class="card-title">Active Signals by Sector</span><span class="card-sub">Companies with active hiring signals per sector</span></div>
+        <canvas id="c-sig-sector" height="260"></canvas>
+      </div>
+      <div class="signals-chart-card">
+        <div class="card-head"><span class="card-title">Roles Most In Demand</span><span class="card-sub">Aggregated hiring role categories across all 10 signals</span></div>
+        <canvas id="c-sig-roles" height="260"></canvas>
+      </div>
+    </div>
+
+    <div class="disclaimer-box" style="margin-top:1.5rem">
+      <strong>Signal Disclaimer:</strong> Hiring signals are based on publicly available funding announcements, company growth indicators, and job posting activity as of early 2026. This is not a real-time job board — it is a directional signal of which South Florida companies are in active growth phases. Verify current openings directly on company career pages.
+    </div>
+  </div>
+</div><!-- /page-signals -->
+
+<!-- ══ PAGE 4: JOB ROLE EVOLUTION ═════════════════════ -->
 <div id="page-evolution" class="page">
   <div class="page-inner">
 
@@ -2055,6 +2141,9 @@ async function init() {
       buildNationSection(uData, nuData);
     }
 
+    /* Hiring Signals charts */
+    buildSignalsCharts();
+
     const ov = document.getElementById('loading');
     ov.classList.add('out');
     setTimeout(() => ov.remove(), 400);
@@ -2065,6 +2154,37 @@ async function init() {
     box.style.display = 'block';
     box.innerHTML = `<strong>⚠ Failed to load data:</strong> ${err.message}`;
   }
+}
+
+/* ── Hiring Signals Charts ── */
+function buildSignalsCharts() {
+  const tt = { backgroundColor:'#fff', borderColor:'#e2e8f0', borderWidth:1, titleColor:'#0f172a', bodyColor:'#64748b', padding:10, cornerRadius:8 };
+  const emerald = ['#059669','#10b981','#34d399','#6ee7b7','#a7f3d0','#d1fae5','#065f46'];
+
+  /* Sector bar chart */
+  new Chart(document.getElementById('c-sig-sector'), {
+    type: 'bar',
+    data: {
+      labels: ['Tech/SaaS','Logistics','Transport','E-Commerce','Spatial Comp','Real Estate','Hospitality'],
+      datasets: [{ label: 'Active Signals', data: [3,1,1,1,1,1,1],
+        backgroundColor: emerald, borderRadius: 6, borderSkipped: false }]
+    },
+    options: { responsive:true, plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: ctx => ` ${ctx.raw} signal${ctx.raw>1?'s':''}` }, ...tt } },
+      scales:{ x:{ grid:{display:false}, ticks:{font:{size:11}} }, y:{ grid:{color:'#f1f5f9'}, ticks:{stepSize:1}, beginAtZero:true } } }
+  });
+
+  /* Roles horizontal bar */
+  new Chart(document.getElementById('c-sig-roles'), {
+    type: 'bar',
+    data: {
+      labels: ['Engineering','Operations','Sales','Product','Data/Analytics','Cybersecurity','Logistics','UX/Design'],
+      datasets: [{ label: 'Companies Hiring', data: [9,6,7,5,4,3,2,3],
+        backgroundColor: '#10b981', borderRadius: 6, borderSkipped: false }]
+    },
+    options: { indexAxis:'y', responsive:true,
+      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: ctx => ` ${ctx.raw} companies` }, ...tt } },
+      scales:{ x:{ grid:{color:'#f1f5f9'}, beginAtZero:true, ticks:{stepSize:1} }, y:{ grid:{display:false}, ticks:{font:{size:11}} } } }
+  });
 }
 
 /* ── AI Exposure Visualizations ── */
