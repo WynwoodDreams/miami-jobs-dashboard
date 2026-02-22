@@ -302,6 +302,89 @@
     /* ══════════════════════════════════════════════════════════
        AI & SIGNALS PAGE STYLES
     ══════════════════════════════════════════════════════════ */
+
+    /* Full-page deep purple background for AI tab */
+    #page-ai {
+      background: linear-gradient(160deg, #0c0f1a 0%, #130d2e 40%, #1a1040 70%, #0f172a 100%);
+      min-height: 100vh;
+    }
+    #page-ai .page-inner {
+      padding-top: 2rem;
+    }
+
+    /* Section headings on dark bg */
+    #page-ai .section-head .section-title {
+      color: rgba(255,255,255,.45);
+    }
+    #page-ai .section-head .section-divider {
+      background: rgba(255,255,255,.1);
+    }
+    #page-ai .risk-legend .risk-dot {
+      color: rgba(255,255,255,.6);
+    }
+
+    /* Cards stay white/light but get a subtle purple-tinted border */
+    #page-ai .card {
+      background: #ffffff;
+      border-color: rgba(167,139,250,.2);
+      box-shadow: 0 4px 24px rgba(0,0,0,.35), 0 0 0 1px rgba(167,139,250,.1);
+    }
+    #page-ai .card-head {
+      border-bottom-color: rgba(167,139,250,.12);
+    }
+
+    /* Disclaimer box on dark bg */
+    #page-ai .disclaimer-box {
+      background: rgba(255,255,255,.06);
+      border-color: rgba(167,139,250,.2);
+      color: rgba(255,255,255,.45);
+    }
+    #page-ai .disclaimer-box strong { color: rgba(255,255,255,.65); }
+    #page-ai .disclaimer-box em { color: #a78bfa; }
+
+    /* Viz section separator */
+    #page-ai .ai-viz-section-title { color: rgba(255,255,255,.35); }
+    #page-ai .ai-viz-section-line  { background: rgba(255,255,255,.1); }
+
+    /* Insight KPI cards on dark bg — keep white surface */
+    #page-ai .ai-insight-card {
+      background: rgba(255,255,255,.05);
+      border-color: rgba(167,139,250,.2);
+      box-shadow: 0 4px 16px rgba(0,0,0,.3);
+    }
+    #page-ai .ai-insight-card .ai-insight-label { color: rgba(255,255,255,.4); }
+    #page-ai .ai-insight-card .ai-insight-sub   { color: rgba(255,255,255,.45); }
+    /* Keep the colored values but brighten them slightly */
+    #page-ai .ai-insight-card.purple .ai-insight-value { color: #c4b5fd; }
+    #page-ai .ai-insight-card.red    .ai-insight-value { color: #fca5a5; }
+    #page-ai .ai-insight-card.amber  .ai-insight-value { color: #fcd34d; }
+    #page-ai .ai-insight-card.teal   .ai-insight-value { color: #5eead4; }
+
+    /* Startup cards on dark bg */
+    #page-ai .startup-card {
+      background: rgba(255,255,255,.05);
+      border-color: rgba(167,139,250,.2);
+      box-shadow: 0 4px 16px rgba(0,0,0,.3);
+    }
+    #page-ai .startup-card:hover {
+      background: rgba(255,255,255,.08);
+      box-shadow: 0 8px 32px rgba(0,0,0,.4);
+      transform: translateY(-2px);
+    }
+    #page-ai .startup-name   { color: #f1f5f9; }
+    #page-ai .startup-sector { color: rgba(255,255,255,.4); }
+    #page-ai .startup-desc   { color: rgba(255,255,255,.65); }
+    #page-ai .startup-hiring { color: #5eead4; }
+    #page-ai .startup-hiring::before { color: #5eead4; }
+    #page-ai .startup-raise.raised { background: rgba(22,163,74,.2);  color: #86efac; }
+    #page-ai .startup-raise.series { background: rgba(29,78,216,.2);  color: #93c5fd; }
+    #page-ai .startup-raise.seed   { background: rgba(124,58,237,.25); color: #c4b5fd; }
+
+    /* Sector table on dark bg (inside white card — no change needed) */
+
+    /* Footer on dark bg */
+    #page-ai + footer, #page-ai ~ footer { background: #0c0f1a; }
+
     .ai-hero {
       background: linear-gradient(135deg, #0c0f1a 0%, #1a1040 50%, #0f172a 100%);
       border-radius: 16px; padding: 2.5rem; margin-bottom: 1.75rem;
