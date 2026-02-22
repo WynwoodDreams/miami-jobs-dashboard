@@ -2,13 +2,18 @@
 """
 BLS API Data Fetch Tool
 ========================
-Fetches monthly employment and unemployment data for the
-Miami–Fort Lauderdale–West Palm Beach, FL Metro Area (CBSA: 33100)
-from the U.S. Bureau of Labor Statistics (BLS) API v2.
+Fetches monthly employment and unemployment data for:
+  1. Miami–Fort Lauderdale–West Palm Beach, FL Metro Area (CBSA: 33100)
+  2. United States National (for Miami vs. Nation comparison)
 
 Series pulled:
-  - LAUMT123310000000003  →  Unemployment Rate (%)
-  - LAUMT123310000000005  →  Total Employment Level (persons)
+  Miami Metro:
+    - LAUMT123310000000003  →  Unemployment Rate (%)
+    - LAUMT123310000000005  →  Total Employment Level (persons)
+
+  National:
+    - LNS14000000            →  US Unemployment Rate (%) — seasonally adjusted
+    - LNS12000000            →  US Civilian Employment Level (thousands of persons)
 
 Output:
   - ../jobs_data.json  (project root)
@@ -17,7 +22,7 @@ Usage:
   python3 fetch_bls_jobs.py [--years N]
 
 Options:
-  --years N   Number of years of history to fetch (default: 10, max: 20)
+  --years N   Number of years of history to fetch (default: 20, max: 20)
 """
 
 import os
@@ -42,11 +47,25 @@ SERIES = {
         "label": "Unemployment Rate",
         "unit": "%",
         "description": "Monthly unemployment rate for the Miami–Fort Lauderdale–West Palm Beach, FL Metro Area",
+        "scope": "miami",
     },
     "LAUMT123310000000005": {
         "label": "Total Employment Level",
         "unit": "persons",
         "description": "Total employed persons for the Miami–Fort Lauderdale–West Palm Beach, FL Metro Area",
+        "scope": "miami",
+    },
+    "LNS14000000": {
+        "label": "US Unemployment Rate",
+        "unit": "%",
+        "description": "National civilian unemployment rate, seasonally adjusted",
+        "scope": "national",
+    },
+    "LNS12000000": {
+        "label": "US Employment Level",
+        "unit": "thousands of persons",
+        "description": "National civilian employment level (thousands), seasonally adjusted",
+        "scope": "national",
     },
 }
 
@@ -122,7 +141,7 @@ def fetch_series(series_ids, start_year, end_year, api_key, retries=3, backoff=2
 
     for attempt in range(1, retries + 1):
         try:
-            log.info(f"Fetching BLS data (attempt {attempt}/{retries}): years={start_year}–{end_year}")
+            log.info(f"Fetching BLS data (attempt {attempt}/{retries}): years={start_year}–{end_year}, series={series_ids}")
             resp = requests.post(BLS_API_URL, json=payload, headers=headers, timeout=30)
             resp.raise_for_status()
             data = resp.json()
@@ -180,11 +199,20 @@ def build_output(api_response):
 
     output = {
         "metadata": {
-            "source": "U.S. Bureau of Labor Statistics (BLS) Local Area Unemployment Statistics",
+            "source": "U.S. Bureau of Labor Statistics (BLS)",
             "api_version": "v2",
             "metro_area": METRO,
+            "national": {
+                "name": "United States",
+                "note": "National series are seasonally adjusted (CPS). Miami series are not seasonally adjusted (LAUS)."
+            },
             "series_definitions": {
-                sid: {"label": info["label"], "unit": info["unit"], "description": info["description"]}
+                sid: {
+                    "label": info["label"],
+                    "unit": info["unit"],
+                    "description": info["description"],
+                    "scope": info["scope"],
+                }
                 for sid, info in SERIES.items()
             },
             "last_updated": datetime.now(timezone.utc).isoformat(),
@@ -198,6 +226,7 @@ def build_output(api_response):
         output["series"][sid] = {
             "label": info["label"],
             "unit": info["unit"],
+            "scope": info["scope"],
             "data": records,
             "record_count": len(records),
             "latest": records[-1] if records else None,
@@ -220,10 +249,10 @@ def save_output(data, path):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Fetch BLS employment data for Miami–Fort Lauderdale–West Palm Beach metro area."
+        description="Fetch BLS employment data for Miami metro + US national comparison."
     )
-    parser.add_argument("--years", type=int, default=10, metavar="N",
-                        help="Number of years of history to fetch (default: 10, max: 20)")
+    parser.add_argument("--years", type=int, default=20, metavar="N",
+                        help="Number of years of history to fetch (default: 20, max: 20)")
     args = parser.parse_args()
 
     current_year = datetime.now().year
@@ -235,8 +264,7 @@ def main():
     series_ids = list(SERIES.keys())
 
     log.info("=" * 60)
-    log.info("BLS Job Market Data Fetch — Miami–Fort Lauderdale–West Palm Beach")
-    log.info(f"  CBSA Code       : {METRO['cbsa_code']}")
+    log.info("BLS Job Market Data Fetch — Miami Metro + US National")
     log.info(f"  Series          : {', '.join(series_ids)}")
     log.info(f"  Date Range      : {start_year} – {end_year}")
     log.info(f"  Output File     : {OUTPUT_FILE.resolve()}")
@@ -254,6 +282,8 @@ def main():
             if sid in all_raw_series:
                 all_raw_series[sid].extend(raw_series.get("data", []))
         chunk_start = chunk_end + 1
+        if chunk_start <= end_year:
+            time.sleep(1)  # be polite to BLS API
 
     synthetic_response = {
         "Results": {

@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Job Stats Miami</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -202,6 +205,100 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     .load-text { font-size: .82rem; color: var(--muted); }
     #error-box { display: none; background: var(--red-pale); border: 1px solid #fca5a5; color: var(--red); border-radius: 10px; padding: 1rem 1.5rem; margin-bottom: 1.25rem; font-size: .82rem; }
+
+    /* ══════════════════════════════════════════════════════════
+       MIAMI VS. NATION SECTION
+    ══════════════════════════════════════════════════════════ */
+
+    .nation-section {
+      background: #0f172a;
+      margin: 0;
+      padding: 2.5rem 0 3rem;
+      position: relative;
+    }
+    .nation-section::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, #1d4ed8 0%, #0d9488 50%, #7c3aed 100%);
+    }
+    .nation-inner {
+      max-width: 1440px; margin: 0 auto; padding: 0 2rem;
+    }
+    .nation-eyebrow {
+      display: flex; align-items: center; gap: .75rem; margin-bottom: 1.5rem;
+    }
+    .nation-eyebrow-line {
+      flex: 1; height: 1px; background: rgba(255,255,255,.1);
+    }
+    .nation-eyebrow-label {
+      font-size: .68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      color: rgba(255,255,255,.4);
+    }
+    .nation-title {
+      font-size: 1.6rem; font-weight: 900; color: #fff; letter-spacing: -.04em;
+      line-height: 1.1; margin-bottom: .5rem;
+    }
+    .nation-title span { color: #38bdf8; }
+    .nation-desc {
+      font-size: .82rem; color: rgba(255,255,255,.55); line-height: 1.7;
+      max-width: 640px; margin-bottom: 1.75rem;
+    }
+    .nation-kpi-strip {
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+    @media(max-width:1024px){.nation-kpi-strip{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:560px){.nation-kpi-strip{grid-template-columns:1fr}}
+    .nation-kpi {
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 12px; padding: 1.1rem 1.4rem;
+      transition: background .2s;
+    }
+    .nation-kpi:hover { background: rgba(255,255,255,.08); }
+    .nation-kpi-label { font-size: .68rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: rgba(255,255,255,.4); margin-bottom: .3rem; }
+    .nation-kpi-value { font-size: 1.75rem; font-weight: 800; letter-spacing: -.03em; line-height: 1.1; }
+    .nation-kpi-value.sky { color: #38bdf8; }
+    .nation-kpi-value.emerald { color: #34d399; }
+    .nation-kpi-value.amber { color: #fbbf24; }
+    .nation-kpi-value.rose { color: #f87171; }
+    .nation-kpi-sub { font-size: .7rem; color: rgba(255,255,255,.35); margin-top: .3rem; }
+    .nation-kpi-delta {
+      display: inline-flex; align-items: center; gap: .25rem;
+      font-size: .7rem; font-weight: 600; padding: .15rem .4rem;
+      border-radius: 4px; margin-top: .25rem;
+    }
+    .nation-kpi-delta.better { background: rgba(52,211,153,.15); color: #34d399; }
+    .nation-kpi-delta.worse  { background: rgba(248,113,113,.15); color: #f87171; }
+    .nation-kpi-delta.same   { background: rgba(255,255,255,.08); color: rgba(255,255,255,.4); }
+    .nation-grid-2 {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;
+    }
+    @media(max-width:900px){.nation-grid-2{grid-template-columns:1fr}}
+    .nation-card {
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 12px; overflow: hidden;
+    }
+    .nation-card-head {
+      padding: 1rem 1.4rem .85rem; border-bottom: 1px solid rgba(255,255,255,.08);
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+    }
+    .nation-card-title { font-size: .88rem; font-weight: 700; color: #fff; }
+    .nation-card-desc { font-size: .7rem; color: rgba(255,255,255,.4); margin-top: .2rem; }
+    .nation-card-body { padding: 1.1rem 1.4rem; }
+    .nation-chart-wrap { position: relative; height: 260px; }
+    .nation-chart-wrap.tall { height: 300px; }
+    .nation-note {
+      font-size: .68rem; color: rgba(255,255,255,.3); margin-top: 1.25rem;
+      padding-top: .75rem; border-top: 1px solid rgba(255,255,255,.08);
+      line-height: 1.6;
+    }
+    .spread-badge {
+      display: inline-flex; align-items: center; gap: .3rem;
+      font-size: .7rem; font-weight: 700; padding: .2rem .55rem;
+      border-radius: 5px; flex-shrink: 0;
+    }
+    .spread-better { background: rgba(52,211,153,.15); color: #34d399; border: 1px solid rgba(52,211,153,.3); }
+    .spread-worse  { background: rgba(248,113,113,.15); color: #f87171; border: 1px solid rgba(248,113,113,.3); }
 
     /* ══════════════════════════════════════════════════════════
        JOB ROLE EVOLUTION PAGE STYLES
@@ -540,6 +637,104 @@
 
   </div>
 </div><!-- /page-stats -->
+
+<!-- ══ MIAMI VS. THE NATION SECTION (always visible below Market Stats) ══ -->
+<div class="nation-section" id="nation-section" style="display:none" data-pending="true">
+  <div class="nation-inner">
+
+    <div class="nation-eyebrow">
+      <span class="nation-eyebrow-line"></span>
+      <span class="nation-eyebrow-label">Context · Miami vs. The Nation</span>
+      <span class="nation-eyebrow-line"></span>
+    </div>
+
+    <div class="nation-title">How Does Miami Stack Up <span>Against the Nation?</span></div>
+    <div class="nation-desc">Miami metro unemployment and employment benchmarked against the U.S. national average. Miami data is not seasonally adjusted (LAUS); national data is seasonally adjusted (CPS). A lower unemployment rate than the national average signals a stronger local labor market.</div>
+
+    <div class="nation-kpi-strip">
+      <div class="nation-kpi">
+        <div class="nation-kpi-label">Miami Unemployment</div>
+        <div class="nation-kpi-value sky" id="n-miami-unemp">—</div>
+        <div class="nation-kpi-sub" id="n-miami-unemp-period">—</div>
+      </div>
+      <div class="nation-kpi">
+        <div class="nation-kpi-label">US Unemployment</div>
+        <div class="nation-kpi-value emerald" id="n-us-unemp">—</div>
+        <div class="nation-kpi-sub" id="n-us-unemp-period">—</div>
+      </div>
+      <div class="nation-kpi">
+        <div class="nation-kpi-label">Miami vs. US Spread</div>
+        <div class="nation-kpi-value amber" id="n-spread">—</div>
+        <div class="nation-kpi-delta same" id="n-spread-badge">—</div>
+        <div class="nation-kpi-sub">pp difference (negative = Miami better)</div>
+      </div>
+      <div class="nation-kpi">
+        <div class="nation-kpi-label">Miami Employment</div>
+        <div class="nation-kpi-value rose" id="n-miami-emp">—</div>
+        <div class="nation-kpi-sub" id="n-miami-emp-period">—</div>
+      </div>
+    </div>
+
+    <div class="nation-grid-2">
+      <div class="nation-card">
+        <div class="nation-card-head">
+          <div>
+            <div class="nation-card-title">Unemployment Rate — Miami vs. US</div>
+            <div class="nation-card-desc">Monthly · Miami not seasonally adjusted · US seasonally adjusted</div>
+          </div>
+          <div class="range-btns">
+            <button class="btn-r" data-chart="n-unemp" data-range="24">2Y</button>
+            <button class="btn-r" data-chart="n-unemp" data-range="60">5Y</button>
+            <button class="btn-r" data-chart="n-unemp" data-range="120">10Y</button>
+            <button class="btn-r active" data-chart="n-unemp" data-range="all">All</button>
+          </div>
+        </div>
+        <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-unemp"></canvas></div></div>
+      </div>
+      <div class="nation-card">
+        <div class="nation-card-head">
+          <div>
+            <div class="nation-card-title">Unemployment Spread — Miami minus US</div>
+            <div class="nation-card-desc">Percentage point gap · negative = Miami outperforming nation</div>
+          </div>
+        </div>
+        <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-spread"></canvas></div></div>
+      </div>
+    </div>
+
+    <div class="nation-grid-2">
+      <div class="nation-card">
+        <div class="nation-card-head">
+          <div>
+            <div class="nation-card-title">Miami Unemployment — Indexed to US (US = 100)</div>
+            <div class="nation-card-desc">Values below 100 mean Miami unemployment is lower than the national rate</div>
+          </div>
+          <div class="range-btns">
+            <button class="btn-r" data-chart="n-index" data-range="24">2Y</button>
+            <button class="btn-r" data-chart="n-index" data-range="60">5Y</button>
+            <button class="btn-r" data-chart="n-index" data-range="120">10Y</button>
+            <button class="btn-r active" data-chart="n-index" data-range="all">All</button>
+          </div>
+        </div>
+        <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-index"></canvas></div></div>
+      </div>
+      <div class="nation-card">
+        <div class="nation-card-head">
+          <div>
+            <div class="nation-card-title">YoY Change — Miami vs. US Unemployment</div>
+            <div class="nation-card-desc">Percentage point change vs. same month prior year</div>
+          </div>
+        </div>
+        <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-yoy"></canvas></div></div>
+      </div>
+    </div>
+
+    <div class="nation-note">
+      ⚠ Methodology note: Miami–Fort Lauderdale–West Palm Beach data (LAUS series LAUMT123310000000003 &amp; LAUMT123310000000005) is <strong>not seasonally adjusted</strong> and reflects local area estimates. U.S. national data (CPS series LNS14000000 &amp; LNS12000000) is <strong>seasonally adjusted</strong>. Direct month-to-month comparisons should account for Miami's seasonal employment patterns (tourism, hospitality). The spread and index charts are most useful for long-run trend analysis.
+    </div>
+
+  </div>
+</div><!-- /nation-section -->
 
 <!-- ══ PAGE 2: JOB ROLE EVOLUTION ═════════════════════════════ -->
 <div id="page-evolution" class="page">
@@ -1188,15 +1383,120 @@ function buildTable(uData, eData) {
   });
 }
 
+/* ── National comparison charts ── */
+function buildNationSection(mData, nuData, neData) {
+  // KPIs
+  const lm = mData.at(-1);
+  const lu = nuData.at(-1);
+  const le = neData.at(-1);
+  document.getElementById('n-miami-unemp').textContent = lm.value.toFixed(1) + '%';
+  document.getElementById('n-miami-unemp-period').textContent = fmtPeriod(lm.period);
+  document.getElementById('n-us-unemp').textContent = lu.value.toFixed(1) + '%';
+  document.getElementById('n-us-unemp-period').textContent = fmtPeriod(lu.period) + ' · SA';
+  document.getElementById('n-miami-emp').textContent = fmtEmp(lm.value * 1000 < 1e6 ? lm.value : lm.value);
+  document.getElementById('n-miami-emp-period').textContent = fmtPeriod(lm.period);
+
+  // Find matching period for spread
+  const matchedUS = nuData.find(d => d.period === lm.period) || lu;
+  const spread = +(lm.value - matchedUS.value).toFixed(2);
+  const spreadEl = document.getElementById('n-spread');
+  spreadEl.textContent = (spread > 0 ? '+' : '') + spread + ' pp';
+  spreadEl.className = 'nation-kpi-value ' + (spread < 0 ? 'emerald' : spread > 0 ? 'rose' : 'amber');
+  const badgeEl = document.getElementById('n-spread-badge');
+  if (spread < 0) { badgeEl.textContent = '▼ Miami below US — outperforming'; badgeEl.className = 'nation-kpi-delta better'; }
+  else if (spread > 0) { badgeEl.textContent = '▲ Miami above US — lagging'; badgeEl.className = 'nation-kpi-delta worse'; }
+  else { badgeEl.textContent = '→ At parity with US'; badgeEl.className = 'nation-kpi-delta same'; }
+
+  // Align series on shared periods
+  const mMap = {}; mData.forEach(d => mMap[d.period] = d.value);
+  const uMap = {}; nuData.forEach(d => uMap[d.period] = d.value);
+  const shared = nuData.filter(d => mMap[d.period] !== undefined);
+
+  const sharedLabels = shared.map(d => fmtPeriod(d.period));
+  const mVals = shared.map(d => mMap[d.period]);
+  const uVals = shared.map(d => d.value);
+  const spreadVals = shared.map(d => +(mMap[d.period] - d.value).toFixed(2));
+  const indexVals = shared.map(d => d.value > 0 ? +((mMap[d.period] / d.value) * 100).toFixed(1) : null);
+
+  // YoY for both
+  const mYoY = [], uYoY = [], yoyLabels = [];
+  for (const d of shared) {
+    const py = `${d.year - 1}-${String(d.month).padStart(2,'0')}`;
+    const pm = mMap[py], pu = uMap[py];
+    if (pm !== undefined && pu !== undefined) {
+      mYoY.push(+(mMap[d.period] - pm).toFixed(2));
+      uYoY.push(+(d.value - pu).toFixed(2));
+      yoyLabels.push(fmtPeriod(d.period));
+    }
+  }
+
+  const darkTt = { backgroundColor:'#1e293b', borderColor:'rgba(255,255,255,.15)', borderWidth:1, titleColor:'#f1f5f9', bodyColor:'#94a3b8', padding:10, cornerRadius:8 };
+  const darkGrid = { color:'rgba(255,255,255,.07)' };
+  const darkTick = { color:'rgba(255,255,255,.35)' };
+
+  // Chart 1: Dual line — Miami vs US unemployment
+  const ctx1 = document.getElementById('c-n-unemp').getContext('2d');
+  const chart1 = new Chart(ctx1, { type:'line', data:{ labels:sharedLabels, datasets:[
+    { label:'Miami', data:mVals, borderColor:'#38bdf8', backgroundColor:'rgba(56,189,248,.08)', borderWidth:2.5, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35 },
+    { label:'US National', data:uVals, borderColor:'#34d399', backgroundColor:'rgba(52,211,153,.06)', borderWidth:2, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35, borderDash:[5,3] }
+  ]}, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{ legend:{display:true,position:'top',labels:{color:'rgba(255,255,255,.6)',boxWidth:12,padding:14,font:{size:11}}}, tooltip:{...darkTt,callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y.toFixed(1)}%`}} }, scales:{ x:{grid:darkGrid,ticks:{...darkTick,maxTicksLimit:10,maxRotation:0}}, y:{grid:darkGrid,ticks:{...darkTick,callback:v=>v+'%'}} } } });
+  REGISTRY['n-unemp'] = { chart:chart1, mAll:mData, uAll:nuData, shared };
+
+  // Chart 2: Spread bar
+  const ctx2 = document.getElementById('c-n-spread').getContext('2d');
+  new Chart(ctx2, { type:'bar', data:{ labels:sharedLabels, datasets:[{ data:spreadVals, backgroundColor:spreadVals.map(v=>v<0?'rgba(52,211,153,.7)':'rgba(248,113,113,.7)'), borderColor:spreadVals.map(v=>v<0?'#34d399':'#f87171'), borderWidth:1, borderRadius:2 }]}, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{ legend:{display:false}, tooltip:{...darkTt,callbacks:{label:c=>` Spread: ${c.parsed.y>0?'+':''}${c.parsed.y.toFixed(2)} pp`}} }, scales:{ x:{grid:darkGrid,ticks:{...darkTick,maxTicksLimit:10,maxRotation:0}}, y:{grid:darkGrid,ticks:{...darkTick,callback:v=>(v>0?'+':'')+v+' pp'}} } } });
+
+  // Chart 3: Index
+  const ctx3 = document.getElementById('c-n-index').getContext('2d');
+  const grad3 = ctx3.createLinearGradient(0,0,0,260);
+  grad3.addColorStop(0,'rgba(251,191,36,.15)'); grad3.addColorStop(1,'rgba(251,191,36,0)');
+  const chart3 = new Chart(ctx3, { type:'line', data:{ labels:sharedLabels, datasets:[
+    { label:'Miami Index (US=100)', data:indexVals, borderColor:'#fbbf24', backgroundColor:grad3, borderWidth:2.5, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35 },
+    { label:'Parity (100)', data:sharedLabels.map(()=>100), borderColor:'rgba(255,255,255,.2)', borderWidth:1, pointRadius:0, borderDash:[4,4], fill:false }
+  ]}, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{ legend:{display:true,position:'top',labels:{color:'rgba(255,255,255,.6)',boxWidth:12,padding:14,font:{size:11},filter:i=>i.datasetIndex===0}}, tooltip:{...darkTt,callbacks:{label:c=>c.datasetIndex===0?` Index: ${c.parsed.y.toFixed(1)} (${c.parsed.y<100?'below':'above'} US avg)`:null}} }, scales:{ x:{grid:darkGrid,ticks:{...darkTick,maxTicksLimit:10,maxRotation:0}}, y:{grid:darkGrid,ticks:{...darkTick,callback:v=>v},title:{display:true,text:'Index (US=100)',color:'rgba(255,255,255,.3)',font:{size:11}}} } } });
+  REGISTRY['n-index'] = { chart:chart3, mAll:mData, uAll:nuData, shared };
+
+  // Chart 4: YoY comparison
+  const ctx4 = document.getElementById('c-n-yoy').getContext('2d');
+  new Chart(ctx4, { type:'line', data:{ labels:yoyLabels, datasets:[
+    { label:'Miami YoY Δ', data:mYoY, borderColor:'#38bdf8', backgroundColor:'transparent', borderWidth:2, pointRadius:0, pointHoverRadius:4, tension:0.35 },
+    { label:'US YoY Δ', data:uYoY, borderColor:'#34d399', backgroundColor:'transparent', borderWidth:2, pointRadius:0, pointHoverRadius:4, tension:0.35, borderDash:[5,3] }
+  ]}, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{ legend:{display:true,position:'top',labels:{color:'rgba(255,255,255,.6)',boxWidth:12,padding:14,font:{size:11}}}, tooltip:{...darkTt,callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y>0?'+':''}${c.parsed.y.toFixed(2)} pp`}} }, scales:{ x:{grid:darkGrid,ticks:{...darkTick,maxTicksLimit:10,maxRotation:0}}, y:{grid:darkGrid,ticks:{...darkTick,callback:v=>(v>0?'+':'')+v+' pp'}} } } });
+}
+
+// Range filter handler for national charts
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.btn-r[data-chart^="n-"]');
+  if (!btn) return;
+  const key = btn.dataset.chart, r = btn.dataset.range;
+  btn.closest('.range-btns').querySelectorAll('.btn-r').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const reg = REGISTRY[key];
+  if (!reg) return;
+  const s = r === 'all' ? reg.shared : reg.shared.slice(-parseInt(r));
+  const mMap = {}; reg.mAll.forEach(d => mMap[d.period] = d.value);
+  reg.chart.data.labels = s.map(d => fmtPeriod(d.period));
+  if (key === 'n-unemp') {
+    reg.chart.data.datasets[0].data = s.map(d => mMap[d.period]);
+    reg.chart.data.datasets[1].data = s.map(d => d.value);
+  } else if (key === 'n-index') {
+    reg.chart.data.datasets[0].data = s.map(d => d.value > 0 ? +((mMap[d.period] / d.value) * 100).toFixed(1) : null);
+    reg.chart.data.datasets[1].data = s.map(() => 100);
+  }
+  reg.chart.update('active');
+});
+
 async function init() {
   try {
     const resp = await fetch('jobs_data.json');
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();
     const keys = Object.keys(data.series);
-    const uKey = keys.find(k => data.series[k].label.toLowerCase().includes('unemployment'));
-    const eKey = keys.find(k => data.series[k].label.toLowerCase().includes('employment') && !data.series[k].label.toLowerCase().includes('unemployment'));
-    if (!uKey || !eKey) throw new Error('Required series not found');
+    // Miami-scoped series (scope field present) or fall back to first matching label
+    const miamiKeys = keys.filter(k => (data.series[k].scope || 'miami') === 'miami');
+    const uKey = miamiKeys.find(k => data.series[k].label.toLowerCase().includes('unemployment'));
+    const eKey = miamiKeys.find(k => data.series[k].label.toLowerCase().includes('employment') && !data.series[k].label.toLowerCase().includes('unemployment'));
+    if (!uKey || !eKey) throw new Error('Required Miami series not found');
     const uData = data.series[uKey].data;
     const eData = data.series[eKey].data;
     if (!uData.length || !eData.length) throw new Error('No data records found');
@@ -1209,6 +1509,20 @@ async function init() {
     buildYoY(uData);
     buildSeasonal(uData);
     buildTable(uData, eData);
+
+    // National comparison series
+    const nKeys = Object.keys(data.series).filter(k => data.series[k].scope === 'national');
+    const nuKey = nKeys.find(k => data.series[k].label.toLowerCase().includes('unemployment'));
+    const neKey = nKeys.find(k => data.series[k].label.toLowerCase().includes('employment') && !data.series[k].label.toLowerCase().includes('unemployment'));
+    if (nuKey && neKey) {
+      const nuData = data.series[nuKey].data;
+      const neData = data.series[neKey].data;
+      buildNationSection(uData, nuData, neData);
+      const ns = document.getElementById('nation-section');
+      ns.style.display = '';
+      ns.removeAttribute('data-pending');
+    }
+
     const ov = document.getElementById('loading');
     ov.classList.add('out');
     setTimeout(() => ov.remove(), 400);
