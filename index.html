@@ -523,6 +523,73 @@
     /* ══════════════════════════════════════════════════════════
        JOB ROLE EVOLUTION PAGE STYLES
     ══════════════════════════════════════════════════════════ */
+
+    /* Full-page blue-to-teal gradient with bokeh dot pattern */
+    #page-evolution {
+      background:
+        radial-gradient(circle at 12% 18%, rgba(255,255,255,.09) 38px, transparent 38px),
+        radial-gradient(circle at 35% 8%,  rgba(255,255,255,.07) 30px, transparent 30px),
+        radial-gradient(circle at 58% 22%, rgba(255,255,255,.08) 42px, transparent 42px),
+        radial-gradient(circle at 80% 12%, rgba(255,255,255,.06) 28px, transparent 28px),
+        radial-gradient(circle at 95% 30%, rgba(255,255,255,.07) 36px, transparent 36px),
+        radial-gradient(circle at 5%  45%, rgba(255,255,255,.07) 34px, transparent 34px),
+        radial-gradient(circle at 25% 55%, rgba(255,255,255,.06) 40px, transparent 40px),
+        radial-gradient(circle at 48% 48%, rgba(255,255,255,.08) 32px, transparent 32px),
+        radial-gradient(circle at 70% 42%, rgba(255,255,255,.07) 38px, transparent 38px),
+        radial-gradient(circle at 88% 58%, rgba(255,255,255,.06) 30px, transparent 30px),
+        radial-gradient(circle at 15% 72%, rgba(255,255,255,.07) 36px, transparent 36px),
+        radial-gradient(circle at 38% 78%, rgba(255,255,255,.08) 44px, transparent 44px),
+        radial-gradient(circle at 62% 68%, rgba(255,255,255,.06) 28px, transparent 28px),
+        radial-gradient(circle at 82% 80%, rgba(255,255,255,.07) 38px, transparent 38px),
+        radial-gradient(circle at 50% 92%, rgba(255,255,255,.06) 32px, transparent 32px),
+        radial-gradient(circle at 20% 95%, rgba(255,255,255,.05) 26px, transparent 26px),
+        radial-gradient(circle at 75% 95%, rgba(255,255,255,.06) 34px, transparent 34px),
+        linear-gradient(135deg, #3b5bdb 0%, #4263eb 25%, #3b82c4 55%, #1a9e8f 100%);
+      min-height: 100vh;
+    }
+    #page-evolution .page-inner { padding-top: 2rem; }
+
+    /* Hero banner on blue bg */
+    #page-evolution .evo-hero {
+      background: rgba(0,0,0,.18);
+      border-color: rgba(255,255,255,.15);
+      backdrop-filter: blur(2px);
+    }
+    #page-evolution .evo-hero-eyebrow { color: rgba(255,255,255,.6); }
+    #page-evolution .evo-hero-title   { color: #fff; }
+    #page-evolution .evo-hero-desc    { color: rgba(255,255,255,.8); }
+    #page-evolution .evo-hero-stat .val { color: #fff; }
+    #page-evolution .evo-hero-stat .lbl { color: rgba(255,255,255,.55); }
+
+    /* Role filter tabs on blue bg */
+    #page-evolution .role-filter-bar { background: rgba(0,0,0,.15); border-color: rgba(255,255,255,.12); }
+    #page-evolution .role-filter-btn { color: rgba(255,255,255,.65); background: transparent; border-color: rgba(255,255,255,.15); }
+    #page-evolution .role-filter-btn:hover { background: rgba(255,255,255,.1); color: #fff; }
+    #page-evolution .role-filter-btn.active { background: rgba(255,255,255,.18); color: #fff; border-color: rgba(255,255,255,.4); }
+
+    /* Role cards on blue bg — keep white surface */
+    #page-evolution .role-card {
+      background: rgba(255,255,255,.97);
+      border-color: rgba(255,255,255,.3);
+      box-shadow: 0 6px 28px rgba(0,0,0,.22), 0 0 0 1px rgba(255,255,255,.15);
+    }
+    #page-evolution .role-card:hover {
+      box-shadow: 0 10px 40px rgba(0,0,0,.28), 0 0 0 1px rgba(255,255,255,.25);
+    }
+
+    /* Conclusion section on blue bg */
+    #page-evolution .evo-conclusion {
+      background: rgba(0,0,0,.18);
+      border-color: rgba(255,255,255,.15);
+      color: rgba(255,255,255,.85);
+    }
+    #page-evolution .evo-conclusion h2 { color: #fff; }
+    #page-evolution .evo-conclusion p  { color: rgba(255,255,255,.8); }
+    #page-evolution .evo-conclusion strong { color: #fff; }
+
+    /* Section head on blue bg */
+    #page-evolution .section-head .section-title  { color: rgba(255,255,255,.5); }
+    #page-evolution .section-head .section-divider { background: rgba(255,255,255,.15); }
     .evo-hero {
       background: linear-gradient(135deg, #1e3a5f 0%, #1d4ed8 50%, #0d9488 100%);
       border-radius: 16px; padding: 2.5rem; margin-bottom: 1.75rem;
