@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Stats Miami</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #f0f4f8;
+      --surface:    #ffffff;
+      --surface2:   #f8fafc;
+      --border:     #e2e8f0;
+      --border2:    #cbd5e1;
+      --blue:       #1d4ed8;
+      --blue-l:     #3b82f6;
+      --blue-pale:  #eff6ff;
+      --teal:       #0d9488;
+      --teal-l:     #14b8a6;
+      --teal-pale:  #f0fdfa;
+      --amber:      #d97706;
+      --amber-pale: #fffbeb;
+      --red:        #dc2626;
+      --red-pale:   #fef2f2;
+      --green:      #16a34a;
+      --green-pale: #f0fdf4;
+      --purple:     #7c3aed;
+      --purple-pale:#f5f3ff;
+      --text:       #0f172a;
+      --text2:      #334155;
+      --muted:      #64748b;
+      --faint:      #94a3b8;
+      --shadow-sm:  0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+      --shadow:     0 4px 6px -1px rgba(0,0,0,.08), 0 2px 4px -1px rgba(0,0,0,.05);
+      --shadow-md:  0 10px 15px -3px rgba(0,0,0,.08), 0 4px 6px -2px rgba(0,0,0,.04);
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.6; min-height: 100vh; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .header-inner {
+      max-width: 1440px; margin: 0 auto; padding: 0 2rem;
+      display: flex; align-items: stretch; justify-content: space-between; gap: 1rem;
+    }
+    .header-brand {
+      display: flex; align-items: center; gap: .85rem; padding: .85rem 0;
+    }
+    .brand-logo {
+      width: 38px; height: 38px; background: var(--blue); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .brand-name {
+      font-size: 1.15rem; font-weight: 900; color: var(--text); letter-spacing: -.03em;
+      line-height: 1.1;
+    }
+    .brand-name span { color: var(--blue); }
+    .brand-sub { font-size: .7rem; color: var(--muted); margin-top: 2px; }
+
+    /* ── NAV TABS ── */
+    .nav-tabs {
+      display: flex; align-items: stretch; gap: 0;
+    }
+    .nav-tab {
+      display: flex; align-items: center; gap: .45rem;
+      padding: 0 1.25rem; font-size: .82rem; font-weight: 600;
+      color: var(--muted); cursor: pointer; border: none; background: none;
+      border-bottom: 3px solid transparent; font-family: inherit;
+      transition: color .15s, border-color .15s;
+      white-space: nowrap;
+    }
+    .nav-tab:hover { color: var(--text); }
+    .nav-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+    .nav-tab .tab-icon { font-size: 15px; }
+
+    .header-right {
+      display: flex; align-items: center; gap: .75rem; padding: .85rem 0;
+    }
+    #last-updated { font-size: .7rem; color: var(--muted); }
+    .badge {
+      display: inline-flex; align-items: center; gap: .35rem;
+      font-size: .67rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+      padding: .22rem .65rem; border-radius: 999px;
+    }
+    .badge-bls { background: var(--blue-pale); color: var(--blue); border: 1px solid #bfdbfe; }
+    .badge-bls::before {
+      content: ''; width: 6px; height: 6px; background: var(--blue-l);
+      border-radius: 50%; animation: blink 2.5s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    /* ── PAGES ── */
+    .page { display: none; }
+    .page.active { display: block; }
+    .page-inner { max-width: 1440px; margin: 0 auto; padding: 1.75rem 2rem 3rem; }
+
+    /* ── SECTION HEADS ── */
+    .section-head { display: flex; align-items: baseline; gap: .5rem; margin-bottom: 1rem; }
+    .section-title { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+    .section-divider { flex: 1; height: 1px; background: var(--border); }
+
+    /* ── KPI STRIP ── */
+    .kpi-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    @media(max-width:1024px){.kpi-strip{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:560px){.kpi-strip{grid-template-columns:1fr}}
+    .kpi {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.25rem 1.5rem; box-shadow: var(--shadow-sm);
+      display: flex; flex-direction: column; gap: .25rem;
+      position: relative; overflow: hidden; transition: box-shadow .2s, transform .2s;
+    }
+    .kpi:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+    .kpi::after {
+      content: ''; position: absolute; left:0;top:0;bottom:0; width: 4px;
+      border-radius: 12px 0 0 12px;
+    }
+    .kpi.blue::after  { background: var(--blue); }
+    .kpi.teal::after  { background: var(--teal); }
+    .kpi.amber::after { background: var(--amber); }
+    .kpi.red::after   { background: var(--red); }
+    .kpi-label { font-size: .7rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+    .kpi-value { font-size: 2rem; font-weight: 800; letter-spacing: -.03em; line-height: 1.1; }
+    .kpi.blue .kpi-value  { color: var(--blue); }
+    .kpi.teal .kpi-value  { color: var(--teal); }
+    .kpi.amber .kpi-value { color: var(--amber); }
+    .kpi.red .kpi-value   { color: var(--red); }
+    .kpi-delta {
+      display: inline-flex; align-items: center; gap: .25rem;
+      font-size: .72rem; font-weight: 600; padding: .18rem .45rem;
+      border-radius: 5px; width: fit-content; margin-top: .1rem;
+    }
+    .kpi-delta.up   { background: var(--green-pale); color: var(--green); }
+    .kpi-delta.down { background: var(--red-pale);   color: var(--red); }
+    .kpi-delta.flat { background: var(--surface2);   color: var(--muted); }
+    .kpi-period { font-size: .68rem; color: var(--faint); margin-top: .15rem; }
+
+    /* ── CARDS ── */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow-sm); overflow: hidden; transition: box-shadow .2s; }
+    .card:hover { box-shadow: var(--shadow); }
+    .card-head { padding: 1.1rem 1.5rem .9rem; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+    .card-title { font-size: .88rem; font-weight: 700; color: var(--text); }
+    .card-desc { font-size: .72rem; color: var(--muted); margin-top: .2rem; }
+    .card-body { padding: 1.25rem 1.5rem; }
+
+    /* ── RANGE BUTTONS ── */
+    .range-btns { display: flex; gap: .3rem; flex-shrink: 0; }
+    .btn-r {
+      background: var(--surface2); border: 1px solid var(--border); color: var(--muted);
+      font-size: .68rem; font-weight: 600; padding: .22rem .55rem; border-radius: 5px;
+      cursor: pointer; transition: all .15s; letter-spacing: .04em; font-family: inherit;
+    }
+    .btn-r:hover { border-color: var(--blue-l); color: var(--blue); }
+    .btn-r.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+    /* ── CHART GRIDS ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    @media(max-width:900px){.grid-2{grid-template-columns:1fr}}
+    .grid-1 { margin-bottom: 1rem; }
+    .chart-wrap { position: relative; height: 270px; }
+    .chart-wrap.tall { height: 320px; }
+
+    /* ── DATA TABLE ── */
+    .table-wrap { overflow-x: auto; max-height: 360px; overflow-y: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    thead th {
+      background: var(--surface2); padding: .65rem 1.25rem; text-align: left;
+      font-size: .68rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+      color: var(--muted); border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 1;
+    }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--surface2); }
+    tbody td { padding: .6rem 1.25rem; color: var(--text2); }
+    td.mono { font-family: 'SF Mono','Fira Code','Consolas',monospace; font-size: .78rem; }
+    .tag-p { display: inline-block; background: #fef3c7; color: #92400e; font-size: .62rem; font-weight: 700; padding: .08rem .35rem; border-radius: 4px; letter-spacing: .04em; text-transform: uppercase; margin-left: .35rem; vertical-align: middle; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); background: var(--surface); padding: 1.25rem 2rem; font-size: .72rem; color: var(--muted); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
+    footer a { color: var(--blue); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── LOADING / ERROR ── */
+    #loading { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; gap: .75rem; transition: opacity .35s; }
+    #loading.out { opacity: 0; pointer-events: none; }
+    .spin { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--blue); border-radius: 50%; animation: spin .9s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .load-text { font-size: .82rem; color: var(--muted); }
+    #error-box { display: none; background: var(--red-pale); border: 1px solid #fca5a5; color: var(--red); border-radius: 10px; padding: 1rem 1.5rem; margin-bottom: 1.25rem; font-size: .82rem; }
+
+    /* ══════════════════════════════════════════════════════════
+       JOB ROLE EVOLUTION PAGE STYLES
+    ══════════════════════════════════════════════════════════ */
+
+    /* Hero banner */
+    .evo-hero {
+      background: linear-gradient(135deg, #1e3a5f 0%, #1d4ed8 50%, #0d9488 100%);
+      border-radius: 16px;
+      padding: 2.5rem 2.5rem;
+      margin-bottom: 1.75rem;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .evo-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .evo-hero-content { position: relative; z-index: 1; }
+    .evo-hero-eyebrow { font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; opacity: .75; margin-bottom: .5rem; }
+    .evo-hero-title { font-size: 1.9rem; font-weight: 900; letter-spacing: -.04em; line-height: 1.1; margin-bottom: .75rem; }
+    .evo-hero-title span { opacity: .7; }
+    .evo-hero-desc { font-size: .88rem; opacity: .85; max-width: 680px; line-height: 1.7; }
+    .evo-hero-stats {
+      display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap;
+    }
+    .evo-hero-stat { text-align: center; }
+    .evo-hero-stat .val { font-size: 1.6rem; font-weight: 900; letter-spacing: -.03em; }
+    .evo-hero-stat .lbl { font-size: .68rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; opacity: .7; margin-top: 2px; }
+
+    /* Role filter tabs */
+    .role-filter {
+      display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.5rem;
+    }
+    .role-btn {
+      display: flex; align-items: center; gap: .4rem;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text2); font-size: .78rem; font-weight: 600;
+      padding: .45rem 1rem; border-radius: 8px; cursor: pointer;
+      transition: all .15s; font-family: inherit;
+    }
+    .role-btn:hover { border-color: var(--blue-l); color: var(--blue); }
+    .role-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .role-btn .ri { font-size: 14px; }
+
+    /* Role cards */
+    .role-cards { display: flex; flex-direction: column; gap: 1.5rem; }
+    .role-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow-sm); overflow: hidden; }
+    .role-card.hidden { display: none; }
+
+    .role-card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.5rem 2rem; cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      gap: 1rem;
+    }
+    .role-card-header:hover { background: var(--surface2); }
+
+    .role-header-left { display: flex; align-items: center; gap: 1rem; }
+    .role-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .role-icon.blue   { background: var(--blue-pale); }
+    .role-icon.teal   { background: var(--teal-pale); }
+    .role-icon.purple { background: var(--purple-pale); }
+    .role-icon.amber  { background: var(--amber-pale); }
+    .role-icon.red    { background: var(--red-pale); }
+    .role-icon.green  { background: var(--green-pale); }
+
+    .role-name { font-size: 1.05rem; font-weight: 800; color: var(--text); letter-spacing: -.02em; }
+    .role-tagline { font-size: .78rem; color: var(--muted); margin-top: 2px; }
+
+    .role-header-right { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
+    .role-shift-badge {
+      font-size: .7rem; font-weight: 700; padding: .3rem .75rem;
+      border-radius: 999px; letter-spacing: .04em; white-space: nowrap;
+    }
+    .shift-major { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+    .shift-radical { background: #fce7f3; color: #9d174d; border: 1px solid #fbcfe8; }
+    .shift-significant { background: var(--blue-pale); color: var(--blue); border: 1px solid #bfdbfe; }
+
+    .collapse-icon { font-size: 18px; color: var(--muted); transition: transform .25s; }
+    .role-card.open .collapse-icon { transform: rotate(180deg); }
+
+    .role-card-body { display: none; padding: 0; }
+    .role-card.open .role-card-body { display: block; }
+
+    /* Before/After split */
+    .ba-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--border);
+    }
+    @media(max-width:768px){.ba-grid{grid-template-columns:1fr}}
+
+    .ba-col { padding: 1.75rem 2rem; }
+    .ba-col:first-child { border-right: 1px solid var(--border); }
+    @media(max-width:768px){.ba-col:first-child{border-right:none;border-bottom:1px solid var(--border)}}
+
+    .ba-era {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      padding: .25rem .65rem; border-radius: 6px; margin-bottom: 1rem;
+    }
+    .era-before { background: #f1f5f9; color: var(--muted); border: 1px solid var(--border2); }
+    .era-after  { background: var(--blue-pale); color: var(--blue); border: 1px solid #bfdbfe; }
+
+    .ba-headline { font-size: .95rem; font-weight: 700; color: var(--text); margin-bottom: .6rem; }
+    .ba-desc { font-size: .8rem; color: var(--text2); line-height: 1.65; margin-bottom: 1rem; }
+
+    .skill-list { display: flex; flex-direction: column; gap: .4rem; }
+    .skill-item {
+      display: flex; align-items: flex-start; gap: .5rem;
+      font-size: .78rem; color: var(--text2); line-height: 1.5;
+    }
+    .skill-item::before { content: '•'; color: var(--faint); flex-shrink: 0; margin-top: 1px; }
+    .skill-item.highlight::before { content: '★'; color: var(--amber); }
+    .skill-item.new::before { content: '✦'; color: var(--blue); }
+
+    /* Org Reality table */
+    .org-section { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); }
+    .org-section-title { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: .9rem; }
+    .org-table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    .org-table th { background: var(--surface2); padding: .5rem 1rem; text-align: left; font-size: .68rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); }
+    .org-table td { padding: .55rem 1rem; border-bottom: 1px solid var(--border); color: var(--text2); }
+    .org-table tr:last-child td { border-bottom: none; }
+    .org-table tr:hover td { background: var(--surface2); }
+    .org-yes { display: inline-flex; align-items: center; gap: .3rem; color: var(--green); font-weight: 600; font-size: .75rem; }
+    .org-partial { display: inline-flex; align-items: center; gap: .3rem; color: var(--amber); font-weight: 600; font-size: .75rem; }
+
+    /* Bottom line */
+    .bottom-line {
+      padding: 1.5rem 2rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;
+    }
+    @media(max-width:768px){.bottom-line{grid-template-columns:1fr}}
+
+    .bl-card {
+      border-radius: 10px; padding: 1.1rem 1.25rem;
+    }
+    .bl-card.before { background: #f8fafc; border: 1px solid var(--border); }
+    .bl-card.after  { background: var(--blue-pale); border: 1px solid #bfdbfe; }
+    .bl-label { font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: .4rem; }
+    .bl-card.after .bl-label { color: var(--blue); }
+    .bl-text { font-size: .82rem; color: var(--text2); line-height: 1.6; font-style: italic; }
+    .bl-card.after .bl-text { color: var(--blue); font-weight: 500; }
+
+    /* Conclusion */
+    .conclusion-card {
+      background: linear-gradient(135deg, #f0f9ff 0%, #f0fdf4 100%);
+      border: 1px solid #bae6fd; border-radius: 16px;
+      padding: 2rem 2.5rem; margin-top: 1.5rem;
+    }
+    .conclusion-title { font-size: 1.1rem; font-weight: 800; color: var(--text); margin-bottom: .75rem; letter-spacing: -.02em; }
+    .conclusion-text { font-size: .85rem; color: var(--text2); line-height: 1.75; }
+    .conclusion-text strong { color: var(--blue); }
+
+    @media(max-width:640px){
+      .page-inner{padding:1rem}
+      .evo-hero{padding:1.5rem}
+      .evo-hero-title{font-size:1.4rem}
+      .role-card-header{padding:1rem 1.25rem}
+      .ba-col,.org-section,.bottom-line{padding:1.25rem}
+    }
+  </style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="spin"></div>
+  <div class="load-text">Loading Job Stats Miami…</div>
+</div>
+
+<!-- ══ HEADER ══════════════════════════════════════════════════ -->
+<header>
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="brand-logo">📊</div>
+      <div>
+        <div class="brand-name">Job Stats <span>Miami</span></div>
+        <div class="brand-sub">Miami–Fort Lauderdale–West Palm Beach, FL · BLS LAUS Data</div>
+      </div>
+    </div>
+
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-tab="stats" onclick="switchTab('stats')">
+        <span class="tab-icon">📈</span> Market Stats
+      </button>
+      <button class="nav-tab" data-tab="evolution" onclick="switchTab('evolution')">
+        <span class="tab-icon">🔄</span> Job Role Evolution
+      </button>
+    </nav>
+
+    <div class="header-right">
+      <span id="last-updated"></span>
+      <span class="badge badge-bls">BLS Live</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══ PAGE 1: MARKET STATS ════════════════════════════════════ -->
+<div id="page-stats" class="page active">
+  <div class="page-inner">
+
+    <div id="error-box"></div>
+
+    <div class="section-head">
+      <span class="section-title">Key Indicators — Latest Month</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="kpi-strip">
+      <div class="kpi blue">
+        <div class="kpi-label">Unemployment Rate</div>
+        <div class="kpi-value" id="kpi-unemp">—</div>
+        <div class="kpi-delta flat" id="kpi-unemp-delta">—</div>
+        <div class="kpi-period" id="kpi-unemp-period">—</div>
+      </div>
+      <div class="kpi teal">
+        <div class="kpi-label">Total Employment</div>
+        <div class="kpi-value" id="kpi-emp">—</div>
+        <div class="kpi-delta flat" id="kpi-emp-delta">—</div>
+        <div class="kpi-period" id="kpi-emp-period">—</div>
+      </div>
+      <div class="kpi amber">
+        <div class="kpi-label">12-Month Avg Unemployment</div>
+        <div class="kpi-value" id="kpi-avg">—</div>
+        <div class="kpi-delta flat">trailing 12 months</div>
+        <div class="kpi-period" id="kpi-avg-period">—</div>
+      </div>
+      <div class="kpi red">
+        <div class="kpi-label">Peak Unemployment (Dataset)</div>
+        <div class="kpi-value" id="kpi-peak">—</div>
+        <div class="kpi-delta flat" id="kpi-peak-when">—</div>
+        <div class="kpi-period">highest on record</div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <span class="section-title">Monthly Trends</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Unemployment Rate (%)</div>
+            <div class="card-desc">Monthly · Not seasonally adjusted · Miami–Fort Lauderdale–West Palm Beach MSA</div>
+          </div>
+          <div class="range-btns">
+            <button class="btn-r" data-chart="unemp" data-range="24">2Y</button>
+            <button class="btn-r" data-chart="unemp" data-range="60">5Y</button>
+            <button class="btn-r" data-chart="unemp" data-range="120">10Y</button>
+            <button class="btn-r active" data-chart="unemp" data-range="all">All</button>
+          </div>
+        </div>
+        <div class="card-body"><div class="chart-wrap"><canvas id="c-unemp"></canvas></div></div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Total Employment Level</div>
+            <div class="card-desc">Monthly persons employed · Miami–Fort Lauderdale–West Palm Beach MSA</div>
+          </div>
+          <div class="range-btns">
+            <button class="btn-r" data-chart="emp" data-range="24">2Y</button>
+            <button class="btn-r" data-chart="emp" data-range="60">5Y</button>
+            <button class="btn-r" data-chart="emp" data-range="120">10Y</button>
+            <button class="btn-r active" data-chart="emp" data-range="all">All</button>
+          </div>
+        </div>
+        <div class="card-body"><div class="chart-wrap"><canvas id="c-emp"></canvas></div></div>
+      </div>
+    </div>
+
+    <div class="grid-1">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Dual-Axis Overlay — Unemployment Rate vs. Employment Level</div>
+            <div class="card-desc">Left axis: unemployment rate (%) · Right axis: employment level (persons)</div>
+          </div>
+          <div class="range-btns">
+            <button class="btn-r" data-chart="dual" data-range="24">2Y</button>
+            <button class="btn-r" data-chart="dual" data-range="60">5Y</button>
+            <button class="btn-r" data-chart="dual" data-range="120">10Y</button>
+            <button class="btn-r active" data-chart="dual" data-range="all">All</button>
+          </div>
+        </div>
+        <div class="card-body"><div class="chart-wrap tall"><canvas id="c-dual"></canvas></div></div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Year-over-Year Change — Unemployment Rate</div>
+            <div class="card-desc">Percentage point change vs. same month prior year</div>
+          </div>
+        </div>
+        <div class="card-body"><div class="chart-wrap"><canvas id="c-yoy"></canvas></div></div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Seasonal Pattern — Avg Unemployment by Month</div>
+            <div class="card-desc">Average unemployment rate per calendar month across all years in dataset</div>
+          </div>
+        </div>
+        <div class="card-body"><div class="chart-wrap"><canvas id="c-seasonal"></canvas></div></div>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top:.5rem">
+      <span class="section-title">Recent Monthly Data — Last 24 Months</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Period</th><th>Month</th><th>Unemployment Rate</th>
+              <th>Employment Level</th><th>Unemp. YoY Δ</th><th>Emp. YoY Δ</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="tbl-body">
+            <tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted)">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /page-stats -->
+
+<!-- ══ PAGE 2: JOB ROLE EVOLUTION ═════════════════════════════ -->
+<div id="page-evolution" class="page">
+  <div class="page-inner">
+
+    <!-- Hero -->
+    <div class="evo-hero">
+      <div class="evo-hero-content">
+        <div class="evo-hero-eyebrow">Deep Dive Report · 2026</div>
+        <div class="evo-hero-title">The Great Reshuffling<br><span>How Entry-Level Tech Roles Have Transformed</span></div>
+        <div class="evo-hero-desc">A deep analysis of six key technology functions reveals a dramatic shift in skills, responsibilities, and expectations for entry-level professionals between the late 2010s and the mid-2020s. The rise of cloud computing, AI, and data-driven decision-making has reshaped the tech talent landscape.</div>
+        <div class="evo-hero-stats">
+          <div class="evo-hero-stat"><div class="val">6</div><div class="lbl">Roles Analyzed</div></div>
+          <div class="evo-hero-stat"><div class="val">~2010–18</div><div class="lbl">Historical Baseline</div></div>
+          <div class="evo-hero-stat"><div class="val">2026</div><div class="lbl">Current Standard</div></div>
+          <div class="evo-hero-stat"><div class="val">14+</div><div class="lbl">Real Job Postings</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="section-head">
+      <span class="section-title">Filter by Role</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="role-filter">
+      <button class="role-btn active" data-role="all" onclick="filterRoles('all')"><span class="ri">🔍</span> All Roles</button>
+      <button class="role-btn" data-role="data-analyst" onclick="filterRoles('data-analyst')"><span class="ri">📊</span> Data Analyst</button>
+      <button class="role-btn" data-role="cybersecurity" onclick="filterRoles('cybersecurity')"><span class="ri">🛡️</span> Cybersecurity</button>
+      <button class="role-btn" data-role="software-eng" onclick="filterRoles('software-eng')"><span class="ri">💻</span> Software Engineer</button>
+      <button class="role-btn" data-role="ai-engineer" onclick="filterRoles('ai-engineer')"><span class="ri">🤖</span> AI Engineer</button>
+      <button class="role-btn" data-role="it-support" onclick="filterRoles('it-support')"><span class="ri">🖥️</span> IT Support</button>
+      <button class="role-btn" data-role="product-mgr" onclick="filterRoles('product-mgr')"><span class="ri">🗺️</span> Product Manager</button>
+    </div>
+
+    <!-- Role Cards -->
+    <div class="role-cards">
+
+      <!-- ── 1. DATA ANALYST ── -->
+      <div class="role-card open" data-role="data-analyst" id="rc-data-analyst">
+        <div class="role-card-header" onclick="toggleCard('data-analyst')">
+          <div class="role-header-left">
+            <div class="role-icon blue">📊</div>
+            <div>
+              <div class="role-name">Data Analyst</div>
+              <div class="role-tagline">From Reporter to Oracle</div>
+            </div>
+          </div>
+          <div class="role-header-right">
+            <span class="role-shift-badge shift-radical">Radical Shift</span>
+            <span class="collapse-icon">▾</span>
+          </div>
+        </div>
+        <div class="role-card-body">
+          <div class="ba-grid">
+            <div class="ba-col">
+              <div class="ba-era era-before">⏪ Pre-2020 (~2010–2018)</div>
+              <div class="ba-headline">The Reporting Layer</div>
+              <div class="ba-desc">The entry-level Data Analyst was primarily a reporting function. Their world was defined by structured data, historical analysis, and translating business questions into SQL queries. The core job was to look at <em>what had happened</em> and present it clearly.</div>
+              <div class="skill-list">
+                <div class="skill-item">SQL querying from relational databases (SQL Server, Oracle)</div>
+                <div class="skill-item">Excel mastery — pivot tables, VLOOKUPs, macros</div>
+                <div class="skill-item">BI dashboarding in Tableau, QlikView, or SSRS</div>
+                <div class="skill-item">Descriptive analytics — KPI reporting</div>
+                <div class="skill-item">Basic ETL support for data warehouse teams</div>
+                <div class="skill-item">SPSS or SAS (optional, rarely required)</div>
+              </div>
+            </div>
+            <div class="ba-col">
+              <div class="ba-era era-after">✦ 2026 Standard</div>
+              <div class="ba-headline">The Data Plumber + Analyst Hybrid</div>
+              <div class="ba-desc">Today's analyst actively builds the infrastructure they analyze. A recent Tetra Tech posting reveals expectations that collapse multiple traditional roles into one hybrid position — analyst, engineer, and data steward simultaneously.</div>
+              <div class="skill-list">
+                <div class="skill-item new">Pipeline orchestration — building and maintaining data pipelines</div>
+                <div class="skill-item new">ETL/ELT logic design and implementation</div>
+                <div class="skill-item new">Python (Pandas, NumPy) — now a core, not optional, skill</div>
+                <div class="skill-item new">Handling unstructured data (text, logs, non-tabular formats)</div>
+                <div class="skill-item new">Data governance and institutional knowledge documentation</div>
+                <div class="skill-item highlight">Power BI / Tableau / Spotfire + SQL + Python simultaneously</div>
+              </div>
+            </div>
+          </div>
+          <div class="org-section">
+            <div class="org-section-title">Org Reality — Roles Now Absorbed Into This Position</div>
+            <table class="org-table">
+              <thead><tr><th>Old Org Unit</th><th>Now Expected?</th></tr></thead>
+              <tbody>
+                <tr><td>BI Analyst</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>Data Engineer (Junior)</td><td><span class="org-partial">◑ Partial</span></td></tr>
+                <tr><td>Data Steward / Governance</td><td><span class="org-partial">◑ Partial</span></td></tr>
+                <tr><td>Process Improvement Analyst</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bottom-line">
+            <div class="bl-card before">
+              <div class="bl-label">Mid-2010s</div>
+              <div class="bl-text">"A Data Analyst described what happened."</div>
+            </div>
+            <div class="bl-card after">
+              <div class="bl-label">2026</div>
+              <div class="bl-text">"A Data Analyst builds the systems that describe what happened, ensures the data is trustworthy, and automates the entire process."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 2. CYBERSECURITY ── -->
+      <div class="role-card" data-role="cybersecurity" id="rc-cybersecurity">
+        <div class="role-card-header" onclick="toggleCard('cybersecurity')">
+          <div class="role-header-left">
+            <div class="role-icon red">🛡️</div>
+            <div>
+              <div class="role-name">Cybersecurity Analyst</div>
+              <div class="role-tagline">From Guard to Hunter</div>
+            </div>
+          </div>
+          <div class="role-header-right">
+            <span class="role-shift-badge shift-radical">Radical Shift</span>
+            <span class="collapse-icon">▾</span>
+          </div>
+        </div>
+        <div class="role-card-body">
+          <div class="ba-grid">
+            <div class="ba-col">
+              <div class="ba-era era-before">⏪ Pre-2020 (~2010–2018)</div>
+              <div class="ba-headline">The Perimeter Gatekeeper</div>
+              <div class="ba-desc">The entry-level analyst was a reactive, compliance-driven gatekeeper. The role focused on maintaining defensive perimeters, managing access, and responding to alerts from on-premise security tools.</div>
+              <div class="skill-list">
+                <div class="skill-item">Firewall and IDS/IPS log monitoring</div>
+                <div class="skill-item">Active Directory access control management</div>
+                <div class="skill-item">Endpoint antivirus deployment and management</div>
+                <div class="skill-item">Vulnerability scanning with Nessus</div>
+                <div class="skill-item">PCI DSS / SOX compliance audits</div>
+                <div class="skill-item">Basic SIEM console monitoring (pre-defined alerts)</div>
+                <div class="skill-item">CompTIA Security+ as gold standard cert</div>
+              </div>
+            </div>
+            <div class="ba-col">
+              <div class="ba-era era-after">✦ 2026 Standard</div>
+              <div class="ba-headline">The Active Threat Hunter</div>
+              <div class="ba-desc">The perimeter has dissolved. A Havertys Furniture and FIS posting reveal a proactive, cloud-native role that absorbs responsibilities formerly held by senior SOC analysts and incident responders.</div>
+              <div class="skill-list">
+                <div class="skill-item new">Active incident response lifecycle — triage, containment, remediation</div>
+                <div class="skill-item new">Cloud security — AWS, Azure, or GCP security controls</div>
+                <div class="skill-item new">Modern SIEM/EDR — Splunk, Sentinel, CrowdStrike</div>
+                <div class="skill-item new">Web Application Firewall (WAF) — now primary attack surface</div>
+                <div class="skill-item new">SOAR automation scripting (Python, Go, or Rust)</div>
+                <div class="skill-item highlight">Basic ML/AI for anomaly detection and threat analysis</div>
+              </div>
+            </div>
+          </div>
+          <div class="org-section">
+            <div class="org-section-title">Org Reality — Roles Now Absorbed Into This Position</div>
+            <table class="org-table">
+              <thead><tr><th>Old Org Unit</th><th>Now Expected?</th></tr></thead>
+              <tbody>
+                <tr><td>Security Administrator</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>SOC Analyst (Tier 1/2)</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>Incident Responder (Junior)</td><td><span class="org-partial">◑ Partial</span></td></tr>
+                <tr><td>Compliance Analyst</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>Security Engineer (Junior)</td><td><span class="org-partial">◑ Partial</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bottom-line">
+            <div class="bl-card before">
+              <div class="bl-label">Mid-2010s</div>
+              <div class="bl-text">"A Cybersecurity Analyst guarded the castle walls."</div>
+            </div>
+            <div class="bl-card after">
+              <div class="bl-label">2026</div>
+              <div class="bl-text">"A Cybersecurity Analyst hunts for threats inside and outside the castle, understands how the castle is built in the cloud, and helps automate its defenses."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 3. SOFTWARE ENGINEER ── -->
+      <div class="role-card" data-role="software-eng" id="rc-software-eng">
+        <div class="role-card-header" onclick="toggleCard('software-eng')">
+          <div class="role-header-left">
+            <div class="role-icon teal">💻</div>
+            <div>
+              <div class="role-name">Software Engineer</div>
+              <div class="role-tagline">From Coder to Product-Builder</div>
+            </div>
+          </div>
+          <div class="role-header-right">
+            <span class="role-shift-badge shift-major">Major Shift</span>
+            <span class="collapse-icon">▾</span>
+          </div>
+        </div>
+        <div class="role-card-body">
+          <div class="ba-grid">
+            <div class="ba-col">
+              <div class="ba-era era-before">⏪ Pre-2020 (~2010–2018)</div>
+              <div class="ba-headline">The Siloed Craftsman</div>
+              <div class="ba-desc">The entry-level engineer was hired to write code within a well-defined specification. The role was siloed — separate teams handled QA, deployment, and product management. Success meant translating specs into functional code.</div>
+              <div class="skill-list">
+                <div class="skill-item">Deep proficiency in one language (Java, C++, or C#)</div>
+                <div class="skill-item">IDE mastery — Eclipse, Visual Studio, NetBeans</div>
+                <div class="skill-item">Centralized version control — SVN or TFS</div>
+                <div class="skill-item">Basic SQL for database interaction</div>
+                <div class="skill-item">Desktop or monolithic web development</div>
+                <div class="skill-item">Limited scope — coding only, no QA or Ops ownership</div>
+              </div>
+            </div>
+            <div class="ba-col">
+              <div class="ba-era era-after">✦ 2026 Standard</div>
+              <div class="ba-headline">The Full-Lifecycle Product Owner</div>
+              <div class="ba-desc">A Giga and Stripe posting reveal an engineer who owns features from conception to deployment. DevOps, cloud infrastructure, and product-led growth have collapsed the assembly line into an integrated, end-to-end process.</div>
+              <div class="skill-list">
+                <div class="skill-item new">Full lifecycle ownership — design, dev, test, deploy, maintain</div>
+                <div class="skill-item new">Polyglot stack — React, Node.js, Python simultaneously</div>
+                <div class="skill-item new">CI/CD pipelines — GitHub Actions, Jenkins</div>
+                <div class="skill-item new">Cloud-native by default — AWS, GCP, or Azure</div>
+                <div class="skill-item new">Automated testing — unit, integration, E2E</div>
+                <div class="skill-item highlight">Direct customer interaction and product sense required</div>
+              </div>
+            </div>
+          </div>
+          <div class="org-section">
+            <div class="org-section-title">Org Reality — Roles Now Absorbed Into This Position</div>
+            <table class="org-table">
+              <thead><tr><th>Old Org Unit</th><th>Now Expected?</th></tr></thead>
+              <tbody>
+                <tr><td>Software Developer</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>QA Engineer</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>DevOps Engineer (Junior)</td><td><span class="org-partial">◑ Partial</span></td></tr>
+                <tr><td>Product Manager (Junior)</td><td><span class="org-partial">◑ Partial</span></td></tr>
+                <tr><td>UI/UX Designer (Awareness)</td><td><span class="org-yes">✓ Yes — Awareness</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bottom-line">
+            <div class="bl-card before">
+              <div class="bl-label">Mid-2010s</div>
+              <div class="bl-text">"A Software Engineer was hired to write code for a feature."</div>
+            </div>
+            <div class="bl-card after">
+              <div class="bl-label">2026</div>
+              <div class="bl-text">"A Software Engineer is hired to own, build, ship, and iterate on a product for a customer."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 4. AI ENGINEER ── -->
+      <div class="role-card" data-role="ai-engineer" id="rc-ai-engineer">
+        <div class="role-card-header" onclick="toggleCard('ai-engineer')">
+          <div class="role-header-left">
+            <div class="role-icon purple">🤖</div>
+            <div>
+              <div class="role-name">AI / ML Engineer</div>
+              <div class="role-tagline">From Modeler to Full-Stack AI Builder</div>
+            </div>
+          </div>
+          <div class="role-header-right">
+            <span class="role-shift-badge shift-radical">Radical Shift</span>
+            <span class="collapse-icon">▾</span>
+          </div>
+        </div>
+        <div class="role-card-body">
+          <div class="ba-grid">
+            <div class="ba-col">
+              <div class="ba-era era-before">⏪ Pre-2020 (~2010–2018)</div>
+              <div class="ba-headline">The Lab-Coat Modeler</div>
+              <div class="ba-desc">The ML Engineer was a highly specialized, academic role focused on statistical and mathematical model building. Often requiring a Master's or Ph.D., it was a niche specialty disconnected from end-user applications and infrastructure.</div>
+              <div class="skill-list">
+                <div class="skill-item">Classification, regression, and clustering model development</div>
+                <div class="skill-item">Scikit-learn, TensorFlow, Keras</div>
+                <div class="skill-item">Python or R for statistical analysis</div>
+                <div class="skill-item">Feature engineering and hyperparameter tuning</div>
+                <div class="skill-item">Model validation and accuracy metrics</div>
+                <div class="skill-item">Handed off a pickle file — deployment was someone else's job</div>
+              </div>
+            </div>
+            <div class="ba-col">
+              <div class="ba-era era-after">✦ 2026 Standard</div>
+              <div class="ba-headline">The Generative AI Product Engineer</div>
+              <div class="ba-desc">An IBM posting makes the new reality clear: this is a product-focused engineering discipline. The value is no longer in the model alone but in the end-to-end application that uses it — including LLMs, RAG, and full MLOps.</div>
+              <div class="skill-list">
+                <div class="skill-item new">LLM integration — OpenAI, Anthropic, Llama APIs</div>
+                <div class="skill-item new">Prompt engineering and RAG architecture</div>
+                <div class="skill-item new">Vector databases — Pinecone, Chroma</div>
+                <div class="skill-item new">MLOps — Docker, cloud deployment, CI/CD for ML</div>
+                <div class="skill-item new">Model monitoring — drift, performance, cost tracking</div>
+                <div class="skill-item highlight">Full-stack software engineering skills now prerequisite</div>
+              </div>
+            </div>
+          </div>
+          <div class="org-section">
+            <div class="org-section-title">Org Reality — Roles Now Absorbed Into This Position</div>
+            <table class="org-table">
+              <thead><tr><th>Old Org Unit</th><th>Now Expected?</th></tr></thead>
+              <tbody>
+                <tr><td>Machine Learning Scientist</td><td><span class="org-partial">◑ Partial (Modeling)</span></td></tr>
+                <tr><td>Software Engineer (Backend)</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>DevOps Engineer</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>Data Engineer</td><td><span class="org-partial">◑ Partial (Pipelines)</span></td></tr>
+                <tr><td>Product Manager (AI)</td><td><span class="org-partial">◑ Partial (Prototyping)</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bottom-line">
+            <div class="bl-card before">
+              <div class="bl-label">2018</div>
+              <div class="bl-text">"An ML Engineer was hired to build a predictive model."</div>
+            </div>
+            <div class="bl-card after">
+              <div class="bl-label">2026</div>
+              <div class="bl-text">"An AI Engineer is hired to build, deploy, and maintain a full-stack application powered by generative AI."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 5. IT SUPPORT ── -->
+      <div class="role-card" data-role="it-support" id="rc-it-support">
+        <div class="role-card-header" onclick="toggleCard('it-support')">
+          <div class="role-header-left">
+            <div class="role-icon amber">🖥️</div>
+            <div>
+              <div class="role-name">IT Support Specialist</div>
+              <div class="role-tagline">From PC Medic to Cloud Concierge</div>
+            </div>
+          </div>
+          <div class="role-header-right">
+            <span class="role-shift-badge shift-major">Major Shift</span>
+            <span class="collapse-icon">▾</span>
+          </div>
+        </div>
+        <div class="role-card-body">
+          <div class="ba-grid">
+            <div class="ba-col">
+              <div class="ba-era era-before">⏪ Pre-2020 (~2010–2018)</div>
+              <div class="ba-headline">The On-Premise Hardware Medic</div>
+              <div class="ba-desc">The "IT guy" was overwhelmingly focused on tangible, on-premise hardware and software. The primary function was to fix broken things and grant access to local resources. The cloud was a distant concept.</div>
+              <div class="skill-list">
+                <div class="skill-item">Desktop support — Windows XP/7, Microsoft Office</div>
+                <div class="skill-item">Hardware repair — PCs, printers, peripherals</div>
+                <div class="skill-item">Basic LAN network troubleshooting</div>
+                <div class="skill-item">On-premise Active Directory — password resets</div>
+                <div class="skill-item">Ticket management in Remedy or Spiceworks</div>
+                <div class="skill-item">CompTIA A+ and Network+ as gold standard certs</div>
+              </div>
+            </div>
+            <div class="ba-col">
+              <div class="ba-era era-after">✦ 2026 Standard</div>
+              <div class="ba-headline">The Cloud Identity Manager</div>
+              <div class="ba-desc">A Concurrent and TeamLogic IT posting reveal a role pivoted to managing cloud services and user identity. The physical office is now just one small part of the IT landscape — the core competency has shifted to cloud-based administration.</div>
+              <div class="skill-list">
+                <div class="skill-item new">Azure Active Directory (Entra ID) or Okta — cloud IAM</div>
+                <div class="skill-item new">SaaS provisioning — M365, Box, DocuSign, and more</div>
+                <div class="skill-item new">SSO and MFA troubleshooting</div>
+                <div class="skill-item new">MDM — Intune or Jamf for remote device management</div>
+                <div class="skill-item new">Microsoft 365 / Google Workspace administration</div>
+                <div class="skill-item highlight">PowerShell scripting for Azure AD automation (major advantage)</div>
+              </div>
+            </div>
+          </div>
+          <div class="org-section">
+            <div class="org-section-title">Org Reality — Roles Now Absorbed Into This Position</div>
+            <table class="org-table">
+              <thead><tr><th>Old Org Unit</th><th>Now Expected?</th></tr></thead>
+              <tbody>
+                <tr><td>Help Desk Technician</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>Desktop Support</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>Systems Administrator (Junior)</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>Identity Management Admin</td><td><span class="org-partial">◑ Partial</span></td></tr>
+                <tr><td>Cloud Administrator (Junior)</td><td><span class="org-partial">◑ Partial</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bottom-line">
+            <div class="bl-card before">
+              <div class="bl-label">Mid-2010s</div>
+              <div class="bl-text">"An IT Support Specialist fixed your computer."</div>
+            </div>
+            <div class="bl-card after">
+              <div class="bl-label">2026</div>
+              <div class="bl-text">"An IT Support Specialist manages your digital identity and ensures you have secure access to the cloud services you need to do your job, wherever you are."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 6. PRODUCT MANAGER ── -->
+      <div class="role-card" data-role="product-mgr" id="rc-product-mgr">
+        <div class="role-card-header" onclick="toggleCard('product-mgr')">
+          <div class="role-header-left">
+            <div class="role-icon green">🗺️</div>
+            <div>
+              <div class="role-name">Product Manager</div>
+              <div class="role-tagline">From Coordinator to Data-Driven Strategist</div>
+            </div>
+          </div>
+          <div class="role-header-right">
+            <span class="role-shift-badge shift-significant">Significant Shift</span>
+            <span class="collapse-icon">▾</span>
+          </div>
+        </div>
+        <div class="role-card-body">
+          <div class="ba-grid">
+            <div class="ba-col">
+              <div class="ba-era era-before">⏪ Pre-2020 (~2010–2018)</div>
+              <div class="ba-headline">The Requirements Coordinator</div>
+              <div class="ba-desc">The entry-level PM was primarily a coordinator — gathering requirements from stakeholders, writing specs, and managing timelines. Technical depth was optional; the role was about communication and organization above all else.</div>
+              <div class="skill-list">
+                <div class="skill-item">Requirements gathering and documentation</div>
+                <div class="skill-item">Waterfall or early-Agile project management</div>
+                <div class="skill-item">Stakeholder communication and meeting facilitation</div>
+                <div class="skill-item">Basic wireframing (Visio, Balsamiq)</div>
+                <div class="skill-item">Roadmap maintenance in spreadsheets or MS Project</div>
+                <div class="skill-item">Minimal technical depth required — "translator" role</div>
+              </div>
+            </div>
+            <div class="ba-col">
+              <div class="ba-era era-after">✦ 2026 Standard</div>
+              <div class="ba-headline">The Technical Product Strategist</div>
+              <div class="ba-desc">Today's PM must be deeply technical and data-driven. They are expected to write SQL, interpret A/B test results, define AI product strategy, and work directly in engineering sprints — not just coordinate them.</div>
+              <div class="skill-list">
+                <div class="skill-item new">SQL proficiency for self-serve data analysis</div>
+                <div class="skill-item new">A/B testing design and statistical significance interpretation</div>
+                <div class="skill-item new">AI product strategy — defining LLM feature requirements</div>
+                <div class="skill-item new">Figma for high-fidelity prototyping</div>
+                <div class="skill-item new">Metrics ownership — defining and tracking OKRs and KPIs</div>
+                <div class="skill-item highlight">Technical credibility to work directly with engineering teams</div>
+              </div>
+            </div>
+          </div>
+          <div class="org-section">
+            <div class="org-section-title">Org Reality — Roles Now Absorbed Into This Position</div>
+            <table class="org-table">
+              <thead><tr><th>Old Org Unit</th><th>Now Expected?</th></tr></thead>
+              <tbody>
+                <tr><td>Business Analyst</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>Data Analyst (Basic)</td><td><span class="org-partial">◑ Partial</span></td></tr>
+                <tr><td>UX Researcher</td><td><span class="org-partial">◑ Partial</span></td></tr>
+                <tr><td>Scrum Master / Agile Coach</td><td><span class="org-yes">✓ Yes — Awareness</span></td></tr>
+                <tr><td>Growth Analyst</td><td><span class="org-partial">◑ Partial</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bottom-line">
+            <div class="bl-card before">
+              <div class="bl-label">Mid-2010s</div>
+              <div class="bl-text">"A Product Manager coordinated between business and engineering."</div>
+            </div>
+            <div class="bl-card after">
+              <div class="bl-label">2026</div>
+              <div class="bl-text">"A Product Manager owns the metrics, shapes the AI strategy, writes SQL to validate decisions, and ships features alongside engineers."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /role-cards -->
+
+    <!-- Conclusion -->
+    <div class="conclusion-card">
+      <div class="conclusion-title">The Rise of the Hybrid Technologist</div>
+      <div class="conclusion-text">
+        The evolution across these six roles points to a single, powerful trend: <strong>the collapse of silos and the rise of the hybrid technologist.</strong> The clear lines that once separated development from operations, data analysis from data engineering, and security from infrastructure have blurred into a spectrum of overlapping responsibilities.<br><br>
+        In 2026, an entry-level technologist is no longer a narrow specialist but a <strong>versatile problem-solver who understands the full lifecycle of their domain.</strong> They are expected to be more autonomous, more product-aware, and more deeply integrated into the cloud and AI-native world. The bar has been raised, but so has the potential for impact from day one.
+      </div>
+    </div>
+
+    <div style="margin-top:1rem;font-size:.72rem;color:var(--muted);padding:.75rem 0;border-top:1px solid var(--border)">
+      Sources: Tetra Tech, Havertys Furniture, FIS, Giga, Stripe, IBM, HealthStream, Concurrent, TeamLogic IT job postings (2026) · 
+      Academic references: Dong &amp; Triche (2020), ISCAP (2019), Lightcast (2025), Pragmatic Engineer (2020)
+    </div>
+
+  </div>
+</div><!-- /page-evolution -->
+
+<!-- ══ FOOTER ══════════════════════════════════════════════════ -->
+<footer>
+  <div>
+    BLS Data: <a href="https://www.bls.gov/lau/" target="_blank" rel="noopener">U.S. Bureau of Labor Statistics — Local Area Unemployment Statistics (LAUS)</a>
+    · Series LAUMT123310000000003 &amp; LAUMT123310000000005
+  </div>
+  <div>Miami–Fort Lauderdale–West Palm Beach, FL MSA · CBSA 33100 · Not seasonally adjusted</div>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   Job Stats Miami — Dashboard Script
+═══════════════════════════════════════════════════════════════ */
+
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MON_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+Chart.defaults.color = '#64748b';
+Chart.defaults.borderColor = '#e2e8f0';
+
+const REGISTRY = {};
+
+/* ── Tab switching ── */
+function switchTab(tab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + tab).classList.add('active');
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+}
+
+/* ── Role card toggle ── */
+function toggleCard(role) {
+  const card = document.getElementById('rc-' + role);
+  card.classList.toggle('open');
+}
+
+/* ── Role filter ── */
+function filterRoles(role) {
+  document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-role="${role}"]`).classList.add('active');
+  document.querySelectorAll('.role-card').forEach(card => {
+    if (role === 'all' || card.dataset.role === role) {
+      card.classList.remove('hidden');
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+}
+
+/* ── Formatters ── */
+const fmtPeriod = p => { const [y,m] = p.split('-'); return `${MON[+m-1]} ${y}`; };
+const fmtEmp = v => v >= 1e6 ? (v/1e6).toFixed(2)+'M' : v >= 1e3 ? (v/1e3).toFixed(1)+'K' : v.toLocaleString();
+
+/* ── KPIs ── */
+function setKPIs(uData, eData) {
+  const lu = uData.at(-1), pu = uData.at(-2);
+  const le = eData.at(-1), pe = eData.at(-2);
+
+  document.getElementById('kpi-unemp').textContent = lu.value.toFixed(1) + '%';
+  document.getElementById('kpi-unemp-period').textContent = fmtPeriod(lu.period) + (lu.footnotes.length ? ' · Preliminary' : '');
+  if (pu) {
+    const d = lu.value - pu.value;
+    const el = document.getElementById('kpi-unemp-delta');
+    el.textContent = `${d > 0 ? '▲' : d < 0 ? '▼' : '→'} ${d > 0 ? '+' : ''}${d.toFixed(1)} pp vs prior month`;
+    el.className = `kpi-delta ${d < 0 ? 'up' : d > 0 ? 'down' : 'flat'}`;
+  }
+
+  document.getElementById('kpi-emp').textContent = fmtEmp(le.value);
+  document.getElementById('kpi-emp-period').textContent = fmtPeriod(le.period) + (le.footnotes.length ? ' · Preliminary' : '');
+  if (pe) {
+    const d = le.value - pe.value;
+    const el = document.getElementById('kpi-emp-delta');
+    el.textContent = `${d > 0 ? '▲' : d < 0 ? '▼' : '→'} ${d > 0 ? '+' : ''}${fmtEmp(Math.abs(d))} vs prior month`;
+    el.className = `kpi-delta ${d > 0 ? 'up' : d < 0 ? 'down' : 'flat'}`;
+  }
+
+  const last12 = uData.slice(-12).map(d => d.value);
+  const avg = last12.reduce((a,b) => a+b, 0) / last12.length;
+  document.getElementById('kpi-avg').textContent = avg.toFixed(2) + '%';
+  document.getElementById('kpi-avg-period').textContent = `${fmtPeriod(uData.at(-12).period)} – ${fmtPeriod(lu.period)}`;
+
+  const peak = uData.reduce((a,b) => b.value > a.value ? b : a);
+  document.getElementById('kpi-peak').textContent = peak.value.toFixed(1) + '%';
+  document.getElementById('kpi-peak-when').textContent = fmtPeriod(peak.period);
+}
+
+const slice = (data, r) => r === 'all' ? data : data.slice(-parseInt(r));
+const ttBase = { backgroundColor:'#fff', borderColor:'#e2e8f0', borderWidth:1, titleColor:'#0f172a', bodyColor:'#64748b', padding:10, cornerRadius:8 };
+
+function buildUnemp(all) {
+  const ctx = document.getElementById('c-unemp').getContext('2d');
+  const grad = ctx.createLinearGradient(0,0,0,270);
+  grad.addColorStop(0,'rgba(29,78,216,.15)'); grad.addColorStop(1,'rgba(29,78,216,0)');
+  const chart = new Chart(ctx, { type:'line', data:{ labels:all.map(d=>fmtPeriod(d.period)), datasets:[{ data:all.map(d=>d.value), borderColor:'#1d4ed8', backgroundColor:grad, borderWidth:2, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35 }] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:false}, tooltip:{...ttBase,callbacks:{label:c=>` ${c.parsed.y.toFixed(1)}%`}}}, scales:{ x:{grid:{color:'#f1f5f9'},ticks:{maxTicksLimit:10,maxRotation:0}}, y:{grid:{color:'#f1f5f9'},ticks:{callback:v=>v+'%'},title:{display:true,text:'Rate (%)',color:'#94a3b8',font:{size:11}}} } } });
+  REGISTRY['unemp'] = { chart, all };
+}
+
+function buildEmp(all) {
+  const ctx = document.getElementById('c-emp').getContext('2d');
+  const grad = ctx.createLinearGradient(0,0,0,270);
+  grad.addColorStop(0,'rgba(13,148,136,.15)'); grad.addColorStop(1,'rgba(13,148,136,0)');
+  const chart = new Chart(ctx, { type:'line', data:{ labels:all.map(d=>fmtPeriod(d.period)), datasets:[{ data:all.map(d=>d.value), borderColor:'#0d9488', backgroundColor:grad, borderWidth:2, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35 }] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:false}, tooltip:{...ttBase,callbacks:{label:c=>` ${fmtEmp(c.parsed.y)} persons`}}}, scales:{ x:{grid:{color:'#f1f5f9'},ticks:{maxTicksLimit:10,maxRotation:0}}, y:{grid:{color:'#f1f5f9'},ticks:{callback:v=>fmtEmp(v)},title:{display:true,text:'Persons',color:'#94a3b8',font:{size:11}}} } } });
+  REGISTRY['emp'] = { chart, all };
+}
+
+function buildDual(uAll, eAll) {
+  const ctx = document.getElementById('c-dual').getContext('2d');
+  const chart = new Chart(ctx, { type:'line', data:{ labels:uAll.map(d=>fmtPeriod(d.period)), datasets:[{ label:'Unemployment Rate (%)', data:uAll.map(d=>d.value), borderColor:'#1d4ed8', backgroundColor:'rgba(29,78,216,.06)', borderWidth:2.5, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35, yAxisID:'y' }, { label:'Employment Level', data:eAll.map(d=>d.value), borderColor:'#0d9488', backgroundColor:'rgba(13,148,136,.06)', borderWidth:2.5, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35, yAxisID:'y1' }] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{ legend:{display:true,position:'top',labels:{color:'#334155',boxWidth:12,padding:16,font:{size:12}}}, tooltip:{...ttBase,callbacks:{label:c=>c.datasetIndex===0?` Unemp: ${c.parsed.y.toFixed(1)}%`:` Employed: ${fmtEmp(c.parsed.y)}`}} }, scales:{ x:{grid:{color:'#f1f5f9'},ticks:{maxTicksLimit:12,maxRotation:0}}, y:{position:'left',grid:{color:'#f1f5f9'},ticks:{callback:v=>v+'%'},title:{display:true,text:'Unemployment Rate (%)',color:'#1d4ed8',font:{size:11}}}, y1:{position:'right',grid:{drawOnChartArea:false},ticks:{callback:v=>fmtEmp(v)},title:{display:true,text:'Employment Level',color:'#0d9488',font:{size:11}}} } } });
+  REGISTRY['dual'] = { chart, uAll, eAll };
+}
+
+function buildYoY(uData) {
+  const pts = [];
+  for (const cur of uData) {
+    const prior = uData.find(d => d.year === cur.year-1 && d.month === cur.month);
+    if (prior) pts.push({ period:cur.period, value:+(cur.value-prior.value).toFixed(2) });
+  }
+  const ctx = document.getElementById('c-yoy').getContext('2d');
+  new Chart(ctx, { type:'bar', data:{ labels:pts.map(d=>fmtPeriod(d.period)), datasets:[{ data:pts.map(d=>d.value), backgroundColor:pts.map(d=>d.value<0?'rgba(13,148,136,.75)':'rgba(220,38,38,.75)'), borderColor:pts.map(d=>d.value<0?'#0d9488':'#dc2626'), borderWidth:1, borderRadius:2 }] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:false},tooltip:{...ttBase,callbacks:{label:c=>` ${c.parsed.y>0?'+':''}${c.parsed.y.toFixed(2)} pp`}}}, scales:{ x:{grid:{color:'#f1f5f9'},ticks:{maxTicksLimit:10,maxRotation:0}}, y:{grid:{color:'#f1f5f9'},ticks:{callback:v=>(v>0?'+':'')+v+' pp'}} } } });
+}
+
+function buildSeasonal(uData) {
+  const byMon = Array.from({length:12},(_,i)=>{ const vals=uData.filter(d=>d.month===i+1).map(d=>d.value); return vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null; });
+  const min=Math.min(...byMon.filter(Boolean)), max=Math.max(...byMon.filter(Boolean));
+  const ctx = document.getElementById('c-seasonal').getContext('2d');
+  new Chart(ctx, { type:'bar', data:{ labels:MON, datasets:[{ data:byMon, backgroundColor:byMon.map(v=>{ if(!v)return'#e2e8f0'; const t=(v-min)/(max-min||1); const r=Math.round(29+t*191),g=Math.round(78-t*40),b=Math.round(216-t*190); return `rgba(${r},${g},${b},0.8)`; }), borderRadius:4 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},tooltip:{...ttBase,callbacks:{label:c=>` Avg: ${c.parsed.y.toFixed(2)}%`}}}, scales:{ x:{grid:{color:'#f1f5f9'}}, y:{grid:{color:'#f1f5f9'},ticks:{callback:v=>v+'%'},suggestedMin:0} } } });
+}
+
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.btn-r');
+  if (!btn) return;
+  const key = btn.dataset.chart, r = btn.dataset.range;
+  btn.closest('.range-btns').querySelectorAll('.btn-r').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const reg = REGISTRY[key];
+  if (!reg) return;
+  if (key === 'dual') {
+    const us=slice(reg.uAll,r), es=slice(reg.eAll,r);
+    reg.chart.data.labels=us.map(d=>fmtPeriod(d.period));
+    reg.chart.data.datasets[0].data=us.map(d=>d.value);
+    reg.chart.data.datasets[1].data=es.map(d=>d.value);
+  } else {
+    const s=slice(reg.all,r);
+    reg.chart.data.labels=s.map(d=>fmtPeriod(d.period));
+    reg.chart.data.datasets[0].data=s.map(d=>d.value);
+  }
+  reg.chart.update('active');
+});
+
+function buildTable(uData, eData) {
+  const eMap={}, uMap={};
+  eData.forEach(d=>eMap[d.period]=d);
+  uData.forEach(d=>uMap[d.period]=d);
+  const tbody = document.getElementById('tbl-body');
+  tbody.innerHTML = '';
+  [...uData].slice(-24).reverse().forEach(u => {
+    const e=eMap[u.period];
+    const py=`${u.year-1}-${String(u.month).padStart(2,'0')}`;
+    const pu=uMap[py], pe=eMap[py];
+    const uYoY=pu?+(u.value-pu.value).toFixed(2):null;
+    const eYoY=(e&&pe)?e.value-pe.value:null;
+    const prelim=u.footnotes.some(f=>f.toLowerCase().includes('prelim'));
+    const uColor=uYoY===null?'':uYoY<0?'color:#16a34a':uYoY>0?'color:#dc2626':'';
+    const eColor=eYoY===null?'':eYoY>0?'color:#16a34a':eYoY<0?'color:#dc2626':'';
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="mono">${u.period}</td><td>${MON_FULL[u.month-1]} ${u.year}${prelim?'<span class="tag-p">P</span>':''}</td><td class="mono">${u.value.toFixed(1)}%</td><td class="mono">${e?fmtEmp(e.value):'—'}</td><td class="mono" style="${uColor}">${uYoY!==null?(uYoY>0?'+':'')+uYoY+' pp':'—'}</td><td class="mono" style="${eColor}">${eYoY!==null?(eYoY>0?'+':'')+fmtEmp(Math.abs(eYoY)):'—'}</td><td style="color:var(--muted);font-size:.72rem">${prelim?'Preliminary':'Final'}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+async function init() {
+  try {
+    const resp = await fetch('jobs_data.json');
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    const keys = Object.keys(data.series);
+    const uKey = keys.find(k => data.series[k].label.toLowerCase().includes('unemployment'));
+    const eKey = keys.find(k => data.series[k].label.toLowerCase().includes('employment') && !data.series[k].label.toLowerCase().includes('unemployment'));
+    if (!uKey || !eKey) throw new Error('Required series not found');
+    const uData = data.series[uKey].data;
+    const eData = data.series[eKey].data;
+    if (!uData.length || !eData.length) throw new Error('No data records found');
+    const ts = new Date(data.metadata.last_updated);
+    document.getElementById('last-updated').textContent = `Updated ${ts.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} ${ts.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',timeZoneName:'short'})}`;
+    setKPIs(uData, eData);
+    buildUnemp(uData);
+    buildEmp(eData);
+    buildDual(uData, eData);
+    buildYoY(uData);
+    buildSeasonal(uData);
+    buildTable(uData, eData);
+    const ov = document.getElementById('loading');
+    ov.classList.add('out');
+    setTimeout(() => ov.remove(), 400);
+  } catch (err) {
+    console.error(err);
+    document.getElementById('loading').classList.add('out');
+    const box = document.getElementById('error-box');
+    box.style.display = 'block';
+    box.innerHTML = `<strong>⚠ Failed to load data:</strong> ${err.message}`;
+  }
+}
+
+init();
+</script>
+</body>
+</html>
