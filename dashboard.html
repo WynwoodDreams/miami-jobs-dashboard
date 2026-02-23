@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>South Florida Pulse — Jobs Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div id="loading">
+  <div class="spin"></div>
+  <div class="load-text">Loading BLS data...</div>
+</div>
+
+<!-- ══ HEADER ══════════════════════════════════════════════════ -->
+<header>
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="brand-logo">📊</div>
+      <div>
+        <div class="brand-name">South Florida <span>Pulse</span></div>
+        <div class="brand-sub">Miami-Fort Lauderdale-West Palm Beach, FL · BLS LAUS Data</div>
+      </div>
+    </div>
+
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-tab="stats" onclick="switchTab('stats')">
+        <span class="tab-icon">📈</span> Market Stats
+      </button>
+      <button class="nav-tab" data-tab="ai" onclick="switchTab('ai')">
+        <span class="tab-icon">🤖</span> AI Job Exposure
+      </button>
+      <button class="nav-tab" data-tab="signals" onclick="switchTab('signals')">
+        <span class="tab-icon">📡</span> Hiring Signals
+      </button>
+      <button class="nav-tab" data-tab="evolution" onclick="switchTab('evolution')">
+        <span class="tab-icon">🔄</span> Job Role Evolution
+      </button>
+    </nav>
+
+    <div class="header-right">
+      <span id="last-updated"></span>
+      <span class="badge badge-live">BLS Live</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══ PAGE 1: MARKET STATS ════════════════════════════════════ -->
+<div id="page-stats" class="page active">
+
+  <!-- ── MIAMI VS. THE NATION (dark section — top of page) ── -->
+  <div class="nation-section" id="nation-section">
+    <div class="nation-inner">
+
+      <div class="nation-eyebrow">
+        <span class="nation-eyebrow-line"></span>
+        <span class="nation-eyebrow-label">Context · Miami vs. The Nation</span>
+        <span class="nation-eyebrow-line"></span>
+      </div>
+
+      <div class="nation-title">How Does Miami Stack Up <span>Against the Nation?</span></div>
+      <div class="nation-desc">Miami metro unemployment benchmarked against the U.S. national average — 20 years of data. Miami is not seasonally adjusted (LAUS); U.S. national is seasonally adjusted (CPS). A lower unemployment rate than the national average signals a stronger local labor market. The spread and index charts are most useful for long-run trend analysis.</div>
+
+      <div class="nation-kpi-strip">
+        <div class="nation-kpi">
+          <div class="nation-kpi-label">Miami Unemployment</div>
+          <div class="nation-kpi-value sky" id="n-miami-unemp">—</div>
+          <div class="nation-kpi-sub" id="n-miami-unemp-period">—</div>
+        </div>
+        <div class="nation-kpi">
+          <div class="nation-kpi-label">US Unemployment</div>
+          <div class="nation-kpi-value emerald" id="n-us-unemp">—</div>
+          <div class="nation-kpi-sub" id="n-us-unemp-period">—</div>
+        </div>
+        <div class="nation-kpi">
+          <div class="nation-kpi-label">Miami vs. US Spread</div>
+          <div class="nation-kpi-value amber" id="n-spread">—</div>
+          <div class="nation-kpi-delta same" id="n-spread-badge">—</div>
+          <div class="nation-kpi-sub">pp difference · negative = Miami outperforming</div>
+        </div>
+        <div class="nation-kpi">
+          <div class="nation-kpi-label">Miami Employment</div>
+          <div class="nation-kpi-value rose" id="n-miami-emp">—</div>
+          <div class="nation-kpi-sub" id="n-miami-emp-period">—</div>
+        </div>
+      </div>
+
+      <div class="nation-grid-2">
+        <div class="nation-card">
+          <div class="nation-card-head">
+            <div>
+              <div class="nation-card-title">Unemployment Rate — Miami vs. US</div>
+              <div class="nation-card-desc">Monthly · Miami not seasonally adjusted · US seasonally adjusted</div>
+            </div>
+            <div class="range-btns">
+              <button class="btn-r" data-chart="n-unemp" data-range="24">2Y</button>
+              <button class="btn-r" data-chart="n-unemp" data-range="60">5Y</button>
+              <button class="btn-r" data-chart="n-unemp" data-range="120">10Y</button>
+              <button class="btn-r active" data-chart="n-unemp" data-range="all">All</button>
+            </div>
+          </div>
+          <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-unemp"></canvas></div></div>
+        </div>
+        <div class="nation-card">
+          <div class="nation-card-head">
+            <div>
+              <div class="nation-card-title">Unemployment Spread — Miami minus US</div>
+              <div class="nation-card-desc">Percentage point gap · negative = Miami outperforming nation</div>
+            </div>
+          </div>
+          <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-spread"></canvas></div></div>
+        </div>
+      </div>
+
+      <div class="nation-grid-2">
+        <div class="nation-card">
+          <div class="nation-card-head">
+            <div>
+              <div class="nation-card-title">Miami Unemployment — Indexed to US (US = 100)</div>
+              <div class="nation-card-desc">Values below 100 mean Miami unemployment is lower than the national rate</div>
+            </div>
+            <div class="range-btns">
+              <button class="btn-r" data-chart="n-index" data-range="24">2Y</button>
+              <button class="btn-r" data-chart="n-index" data-range="60">5Y</button>
+              <button class="btn-r" data-chart="n-index" data-range="120">10Y</button>
+              <button class="btn-r active" data-chart="n-index" data-range="all">All</button>
+            </div>
+          </div>
+          <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-index"></canvas></div></div>
+        </div>
+        <div class="nation-card">
+          <div class="nation-card-head">
+            <div>
+              <div class="nation-card-title">YoY Change — Miami vs. US Unemployment</div>
+              <div class="nation-card-desc">Percentage point change vs. same month prior year</div>
+            </div>
+          </div>
+          <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-yoy"></canvas></div></div>
+        </div>
+      </div>
+
+      <div class="nation-note">
+        ⚠ Methodology: Miami-Fort Lauderdale-West Palm Beach data (LAUMT123310000000003 &amp; LAUMT123310000000005) is <strong>not seasonally adjusted</strong>. U.S. national data (LNS14000000 &amp; LNS12000000) is <strong>seasonally adjusted</strong>. Account for Miami's seasonal employment patterns (tourism, hospitality) when comparing month-to-month.
+      </div>
+
+    </div>
+  </div><!-- /nation-section -->
+
+  <!-- ── MIAMI LOCAL STATS ── -->
+  <div class="stats-section-inner">
+
+    <div id="error-box"></div>
+
+    <div class="section-head">
+      <span class="section-title">Key Indicators — Latest Month</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="kpi-strip">
+      <div class="kpi cyan">
+        <div class="kpi-label">Unemployment Rate</div>
+        <div class="kpi-value" id="kpi-unemp">—</div>
+        <div class="kpi-delta flat" id="kpi-unemp-delta">—</div>
+        <div class="kpi-period" id="kpi-unemp-period">—</div>
+      </div>
+      <div class="kpi emerald">
+        <div class="kpi-label">Total Employment</div>
+        <div class="kpi-value" id="kpi-emp">—</div>
+        <div class="kpi-delta flat" id="kpi-emp-delta">—</div>
+        <div class="kpi-period" id="kpi-emp-period">—</div>
+      </div>
+      <div class="kpi amber">
+        <div class="kpi-label">12-Month Avg Unemployment</div>
+        <div class="kpi-value" id="kpi-avg">—</div>
+        <div class="kpi-delta flat">trailing 12 months</div>
+        <div class="kpi-period" id="kpi-avg-period">—</div>
+      </div>
+      <div class="kpi rose">
+        <div class="kpi-label">Peak Unemployment (Dataset)</div>
+        <div class="kpi-value" id="kpi-peak">—</div>
+        <div class="kpi-delta flat" id="kpi-peak-when">—</div>
+        <div class="kpi-period">highest on record</div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <span class="section-title">Monthly Trends — Miami Metro</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Unemployment Rate (%)</div>
+            <div class="card-desc">Monthly · Not seasonally adjusted · Miami-Fort Lauderdale-West Palm Beach MSA</div>
+          </div>
+          <div class="range-btns">
+            <button class="btn-r" data-chart="unemp" data-range="24">2Y</button>
+            <button class="btn-r" data-chart="unemp" data-range="60">5Y</button>
+            <button class="btn-r" data-chart="unemp" data-range="120">10Y</button>
+            <button class="btn-r active" data-chart="unemp" data-range="all">All</button>
+          </div>
+        </div>
+        <div class="card-body"><div class="chart-wrap"><canvas id="c-unemp"></canvas></div></div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Total Employment Level</div>
+            <div class="card-desc">Monthly persons employed · Miami-Fort Lauderdale-West Palm Beach MSA</div>
+          </div>
+          <div class="range-btns">
+            <button class="btn-r" data-chart="emp" data-range="24">2Y</button>
+            <button class="btn-r" data-chart="emp" data-range="60">5Y</button>
+            <button class="btn-r" data-chart="emp" data-range="120">10Y</button>
+            <button class="btn-r active" data-chart="emp" data-range="all">All</button>
+          </div>
+        </div>
+        <div class="card-body"><div class="chart-wrap"><canvas id="c-emp"></canvas></div></div>
+      </div>
+    </div>
+
+    <div class="grid-1">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Dual-Axis Overlay — Unemployment Rate vs. Employment Level</div>
+            <div class="card-desc">Left axis: unemployment rate (%) · Right axis: employment level (persons)</div>
+          </div>
+          <div class="range-btns">
+            <button class="btn-r" data-chart="dual" data-range="24">2Y</button>
+            <button class="btn-r" data-chart="dual" data-range="60">5Y</button>
+            <button class="btn-r" data-chart="dual" data-range="120">10Y</button>
+            <button class="btn-r active" data-chart="dual" data-range="all">All</button>
+          </div>
+        </div>
+        <div class="card-body"><div class="chart-wrap tall"><canvas id="c-dual"></canvas></div></div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Year-over-Year Change — Unemployment Rate</div>
+            <div class="card-desc">Percentage point change vs. same month prior year</div>
+          </div>
+        </div>
+        <div class="card-body"><div class="chart-wrap"><canvas id="c-yoy"></canvas></div></div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Seasonal Pattern — Avg Unemployment by Month</div>
+            <div class="card-desc">Average unemployment rate per calendar month across all years in dataset</div>
+          </div>
+        </div>
+        <div class="card-body"><div class="chart-wrap"><canvas id="c-seasonal"></canvas></div></div>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top:.5rem">
+      <span class="section-title">Recent Monthly Data — Last 24 Months</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Period</th><th>Month</th><th>Unemployment Rate</th>
+              <th>Employment Level</th><th>Unemp. YoY Δ</th><th>Emp. YoY Δ</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="tbl-body">
+            <tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted)">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /page-stats -->
+
+<!-- ══ PAGE 2: AI JOB EXPOSURE ════════════════════════════════ -->
+<div id="page-ai" class="page">
+  <div class="page-inner">
+
+    <!-- Hero -->
+    <div class="ai-hero">
+      <div class="ai-hero-content">
+        <div class="ai-hero-eyebrow">Forward Intelligence · 2026</div>
+        <div class="ai-hero-title">AI Job Exposure <span>Miami Metro</span></div>
+        <div class="ai-hero-desc">Which Miami job categories face the greatest AI automation risk — and which companies are actively growing their headcount right now. Data sourced from BLS OEWS, Microsoft AI Applicability Research, and Miami startup funding signals.</div>
+        <div class="ai-hero-stats">
+          <div class="ai-hero-stat"><div class="val">127,260</div><div class="lbl">Miami Jobs at Risk</div></div>
+          <div class="ai-hero-stat"><div class="val">447K+</div><div class="lbl">Florida Jobs Exposed</div></div>
+          <div class="ai-hero-stat"><div class="val">44%</div><div class="lbl">Peak AI Score (Cust. Svc)</div></div>
+          <div class="ai-hero-stat"><div class="val">2026</div><div class="lbl">Data Vintage</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Exposure Map -->
+    <div class="section-head">
+      <span class="section-title">AI Job Exposure Map — Miami Metro</span>
+      <span class="section-divider"></span>
+    </div>
+
+    <div class="risk-legend">
+      <span class="risk-dot high">High Exposure (40%+)</span>
+      <span class="risk-dot medium">Medium Exposure (30-39%)</span>
+      <span class="risk-dot low">Lower Exposure (&lt;30%)</span>
+    </div>
+
+    <div class="ai-exposure-grid">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Top 5 Exposed Roles — Miami MSA</div>
+            <div class="card-desc">Ranked by AI exposure score · Source: BLS OEWS + Microsoft AI Applicability Study (2026)</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="exposure-bar-list">
+            <div class="exp-row">
+              <div class="exp-row-top">
+                <span class="exp-role">Customer Service Representatives</span>
+                <span class="exp-count">65,550 workers</span>
+              </div>
+              <div class="exp-bar-track"><div class="exp-bar-fill high" style="width:44%"></div></div>
+              <div class="exp-meta">AI Exposure Score: 44% · Avg Wage: $42,460 · <strong style="color:var(--rose)">High Risk</strong></div>
+            </div>
+            <div class="exp-row">
+              <div class="exp-row-top">
+                <span class="exp-role">Management Analysts</span>
+                <span class="exp-count">21,480 workers</span>
+              </div>
+              <div class="exp-bar-track"><div class="exp-bar-fill medium" style="width:35%"></div></div>
+              <div class="exp-meta">AI Exposure Score: 35% · Avg Wage: $107,670 · <strong style="color:var(--amber)">Medium Risk</strong></div>
+            </div>
+            <div class="exp-row">
+              <div class="exp-row-top">
+                <span class="exp-role">Counter &amp; Rental Clerks</span>
+                <span class="exp-count">9,350 workers</span>
+              </div>
+              <div class="exp-bar-track"><div class="exp-bar-fill medium" style="width:36%"></div></div>
+              <div class="exp-meta">AI Exposure Score: 36% · Avg Wage: $49,340 · <strong style="color:var(--amber)">Medium Risk</strong></div>
+            </div>
+            <div class="exp-row">
+              <div class="exp-row-top">
+                <span class="exp-role">Personal Financial Advisors</span>
+                <span class="exp-count">7,180 workers</span>
+              </div>
+              <div class="exp-bar-track"><div class="exp-bar-fill medium" style="width:35%"></div></div>
+              <div class="exp-meta">AI Exposure Score: 35% · Avg Wage: $169,270 · <strong style="color:var(--amber)">Medium Risk</strong></div>
+            </div>
+            <div class="exp-row">
+              <div class="exp-row-top">
+                <span class="exp-role">Public Relations Specialists</span>
+                <span class="exp-count">5,530 workers</span>
+              </div>
+              <div class="exp-bar-track"><div class="exp-bar-fill medium" style="width:36%"></div></div>
+              <div class="exp-meta">AI Exposure Score: 36% · Avg Wage: $72,880 · <strong style="color:var(--amber)">Medium Risk</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">AI Exposure by Sector — Miami Economy</div>
+            <div class="card-desc">Sector-level risk assessment based on task automation applicability · 2026</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="sector-table-wrap">
+            <table class="sector-table">
+              <thead>
+                <tr>
+                  <th>Sector</th>
+                  <th>Miami Workers</th>
+                  <th>AI Risk Level</th>
+                  <th>Primary Driver</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Hospitality &amp; Tourism</strong></td>
+                  <td>~280,000</td>
+                  <td><span class="risk-badge high">High</span></td>
+                  <td>Concierge, front desk, booking automation</td>
+                </tr>
+                <tr>
+                  <td><strong>Financial Services</strong></td>
+                  <td>~95,000</td>
+                  <td><span class="risk-badge high">High</span></td>
+                  <td>Advisory, compliance, reporting automation</td>
+                </tr>
+                <tr>
+                  <td><strong>Contact Centers / BPO</strong></td>
+                  <td>~65,550</td>
+                  <td><span class="risk-badge high">High</span></td>
+                  <td>Customer service AI (44% exposure score)</td>
+                </tr>
+                <tr>
+                  <td><strong>Healthcare</strong></td>
+                  <td>~220,000</td>
+                  <td><span class="risk-badge medium">Medium</span></td>
+                  <td>Admin/billing tasks; clinical roles protected</td>
+                </tr>
+                <tr>
+                  <td><strong>Real Estate</strong></td>
+                  <td>~45,000</td>
+                  <td><span class="risk-badge medium">Medium</span></td>
+                  <td>Listings, research, document processing</td>
+                </tr>
+                <tr>
+                  <td><strong>Construction &amp; Trades</strong></td>
+                  <td>~180,000</td>
+                  <td><span class="risk-badge low">Lower</span></td>
+                  <td>Physical labor largely AI-resistant near-term</td>
+                </tr>
+                <tr>
+                  <td><strong>Technology / Software</strong></td>
+                  <td>~55,000</td>
+                  <td><span class="risk-badge emerging">Emerging</span></td>
+                  <td>Code generation augments but reshapes roles</td>
+                </tr>
+                <tr>
+                  <td><strong>Creative / Media</strong></td>
+                  <td>~30,000</td>
+                  <td><span class="risk-badge high">High</span></td>
+                  <td>Generative AI disrupting content production</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="disclaimer-box">
+      <strong>Data Sources &amp; Methodology:</strong> AI exposure scores are derived from Microsoft's <em>Working with AI: Measuring the Occupational Implications of Generative AI</em> study, cross-referenced with BLS Occupational Employment and Wage Statistics (OEWS) for the Miami-Fort Lauderdale-West Palm Beach MSA. Scores represent task-level automation applicability — not predicted job loss. Coverage = share of tasks AI can assist; Completion = rate AI can fully perform tasks end-to-end. Miami metro accounts for approximately <strong>127,260 of Florida's 447,170 AI-exposed jobs</strong> (Feb 2026 estimate).
+    </div>
+
+    <!-- ── AI EXPOSURE DATA VISUALIZATIONS ── -->
+    <div class="ai-viz-section">
+
+      <div class="ai-viz-section-head">
+        <span class="ai-viz-section-line"></span>
+        <span class="ai-viz-section-title">Underlying Data — Visualized</span>
+        <span class="ai-viz-section-line"></span>
+      </div>
+
+      <!-- Insight KPI band -->
+      <div class="ai-insight-band">
+        <div class="ai-insight-card purple">
+          <div class="ai-insight-label">Total At-Risk Workers</div>
+          <div class="ai-insight-value">127,260</div>
+          <div class="ai-insight-sub">Miami MSA jobs with high or medium AI exposure score</div>
+        </div>
+        <div class="ai-insight-card red">
+          <div class="ai-insight-label">Highest Exposure Role</div>
+          <div class="ai-insight-value">44%</div>
+          <div class="ai-insight-sub">Customer Service Reps — 65,550 workers at $42,460 avg wage</div>
+        </div>
+        <div class="ai-insight-card amber">
+          <div class="ai-insight-label">Avg Wage — High Risk Jobs</div>
+          <div class="ai-insight-value">$54,890</div>
+          <div class="ai-insight-sub">Weighted average across the 5 most-exposed occupations</div>
+        </div>
+        <div class="ai-insight-card teal">
+          <div class="ai-insight-label">Sectors at High Risk</div>
+          <div class="ai-insight-value">4 of 8</div>
+          <div class="ai-insight-sub">Hospitality, Finance, BPO, and Creative/Media rated High</div>
+        </div>
+      </div>
+
+      <!-- Row 1: Horizontal bar + Bubble -->
+      <div class="ai-viz-grid-2">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">AI Exposure Score by Role</div>
+              <div class="card-desc">Horizontal bar · % of tasks AI can perform end-to-end · Top 10 Miami occupations</div>
+            </div>
+          </div>
+          <div class="card-body"><div class="ai-chart-wrap tall"><canvas id="c-ai-hbar"></canvas></div></div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Workers at Risk vs. Avg Wage</div>
+              <div class="card-desc">Bubble size = number of workers · X = avg wage · Y = AI exposure score</div>
+            </div>
+          </div>
+          <div class="card-body"><div class="ai-chart-wrap tall"><canvas id="c-ai-bubble"></canvas></div></div>
+        </div>
+      </div>
+
+      <!-- Row 2: Donut + Radar -->
+      <div class="ai-viz-grid-2">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Miami Workforce by AI Risk Level</div>
+              <div class="card-desc">Donut chart · Share of total Miami metro workforce by risk category</div>
+            </div>
+          </div>
+          <div class="card-body"><div class="ai-chart-wrap"><canvas id="c-ai-donut"></canvas></div></div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Sector Risk Profile — Miami Economy</div>
+              <div class="card-desc">Radar · 8 sectors scored across AI exposure, worker count, wage level, and growth trajectory</div>
+            </div>
+          </div>
+          <div class="card-body"><div class="ai-chart-wrap"><canvas id="c-ai-radar"></canvas></div></div>
+        </div>
+      </div>
+
+      <!-- Row 3: Stacked bar (full width) -->
+      <div class="card" style="margin-bottom:1rem">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Workers at Risk by Sector — Breakdown by Risk Level</div>
+            <div class="card-desc">Stacked bar · High / Medium / Lower exposure workers per Miami sector · Estimated from BLS OEWS 2024</div>
+          </div>
+        </div>
+        <div class="card-body"><div class="ai-chart-wrap"><canvas id="c-ai-stacked"></canvas></div></div>
+      </div>
+
+    </div><!-- /ai-viz-section -->
+
+  </div>
+</div><!-- /page-ai -->
+
+<!-- ══ PAGE 3: HIRING SIGNALS ═════════════════════════════════ -->
+<div id="page-signals" class="page">
+  <div class="page-inner">
+    <div class="signals-hero">
+      <div class="signals-hero-eyebrow">HIRING SIGNALS · SOUTH FLORIDA</div>
+      <h1 class="signals-hero-title">Where the <span>Capital Is Moving</span></h1>
+      <p class="signals-hero-desc">Companies that have recently raised funding are the strongest leading indicator of near-term job creation. These are the South Florida companies actively expanding headcount right now — sourced from public funding announcements, job posting velocity, and growth indicators.</p>
+      <div class="signals-hero-stats">
+        <div class="signals-hero-stat"><span class="val">10</span><span class="lbl">Active Signals</span></div>
+        <div class="signals-hero-stat"><span class="val">$8B+</span><span class="lbl">Capital Raised</span></div>
+        <div class="signals-hero-stat"><span class="val">7</span><span class="lbl">Sectors Covered</span></div>
+        <div class="signals-hero-stat"><span class="val">2026</span><span class="lbl">Data Vintage</span></div>
+      </div>
+    </div>
+
+    <div class="signals-legend">
+      <span class="sig-dot hot"></span><span>Hot Signal (Series B+, recent raise)</span>
+      <span class="sig-dot warm"></span><span>Warm Signal (Series A / PE-backed)</span>
+      <span class="sig-dot steady"></span><span>Steady Signal (Restructuring / Organic growth)</span>
+    </div>
+
+    <div class="section-head" style="margin-top:1.5rem">
+      <span class="section-title">Funding Activity Timeline</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="signals-timeline">
+      <div class="timeline-item hot"><span class="tl-date">Q4 2025</span><span class="tl-co">Brightline</span><span class="tl-event">Orlando expansion — $2.5B infrastructure phase</span></div>
+      <div class="timeline-item hot"><span class="tl-date">Q3 2025</span><span class="tl-co">Kaseya</span><span class="tl-event">$6.2B valuation — Insight Partners &amp; Temasek</span></div>
+      <div class="timeline-item warm"><span class="tl-date">Q3 2025</span><span class="tl-co">Magic Leap</span><span class="tl-event">Enterprise AR pivot — healthcare &amp; defense contracts</span></div>
+      <div class="timeline-item hot"><span class="tl-date">Q2 2025</span><span class="tl-co">Reef Technology</span><span class="tl-event">$700M+ Series C+ — logistics network expansion</span></div>
+      <div class="timeline-item warm"><span class="tl-date">Q2 2025</span><span class="tl-co">Chewy</span><span class="tl-event">Plantation HQ expansion — tech &amp; fulfillment hiring</span></div>
+      <div class="timeline-item warm"><span class="tl-date">Q1 2025</span><span class="tl-co">Lennar</span><span class="tl-event">Miami HQ — PropTech division buildout</span></div>
+      <div class="timeline-item steady"><span class="tl-date">Q1 2025</span><span class="tl-co">Pipe</span><span class="tl-event">Post-restructure rebuild — AI-augmented team</span></div>
+      <div class="timeline-item warm"><span class="tl-date">Q4 2024</span><span class="tl-co">Carnival Corp</span><span class="tl-event">Miami HQ — digital transformation initiative</span></div>
+      <div class="timeline-item steady"><span class="tl-date">Q4 2024</span><span class="tl-co">Rokk3r</span><span class="tl-event">AI-native venture studio — portfolio co-founding</span></div>
+      <div class="timeline-item warm"><span class="tl-date">Q3 2024</span><span class="tl-co">UKG</span><span class="tl-event">Weston, FL — HCM platform expansion</span></div>
+    </div>
+
+    <div class="section-head" style="margin-top:2rem">
+      <span class="section-title">Active Hiring Signals</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="startup-grid">
+      <div class="startup-card raised"><div class="startup-name">Brightline</div><div class="startup-sector">Transportation · Rail · Infrastructure</div><div class="startup-raise raised">📈 $2.5B Expansion Phase</div><div class="startup-desc">Florida's private intercity rail operator expanding Miami-Orlando-Tampa. Major infrastructure buildout driving sustained hiring across operations, technology, hospitality, and corporate functions.</div><div class="startup-hiring">Actively hiring — Operations, Tech, Hospitality, Corporate</div></div>
+      <div class="startup-card raised"><div class="startup-name">Kaseya</div><div class="startup-sector">IT Management · SaaS · MSP</div><div class="startup-raise raised">💰 $6.2B Valuation · PE-Backed</div><div class="startup-desc">Miami-headquartered IT management platform serving MSPs globally. Consistently one of Miami's largest tech employers with ongoing engineering, sales, and support hiring across all levels.</div><div class="startup-hiring">Actively hiring — Engineering, Sales, Customer Success</div></div>
+      <div class="startup-card series"><div class="startup-name">Reef Technology</div><div class="startup-sector">Logistics · Last-Mile · Urban Infrastructure</div><div class="startup-raise series">📈 Series C+ · $700M+</div><div class="startup-desc">Miami-headquartered proximity-as-a-service platform operating parking, logistics, and delivery hubs. Strong signal for operations, tech, and driver-facing roles.</div><div class="startup-hiring">Actively hiring — Operations, Logistics, Tech</div></div>
+      <div class="startup-card series"><div class="startup-name">Chewy</div><div class="startup-sector">E-Commerce · Pet · Fulfillment</div><div class="startup-raise series">📈 Plantation HQ Expansion</div><div class="startup-desc">Plantation, FL-headquartered pet e-commerce giant expanding its South Florida tech and fulfillment footprint. Growing data engineering, customer experience, and supply chain teams.</div><div class="startup-hiring">Hiring — Data Engineering, Product, Customer Experience</div></div>
+      <div class="startup-card series"><div class="startup-name">Magic Leap</div><div class="startup-sector">Spatial Computing · AR/MR · Enterprise</div><div class="startup-raise series">📈 Enterprise Pivot · Defense &amp; Healthcare</div><div class="startup-desc">Plantation, FL-based spatial computing company pivoting to enterprise AR in healthcare, manufacturing, and defense with strong DoD contract pipeline.</div><div class="startup-hiring">Hiring — Hardware Eng, Software, Enterprise Sales</div></div>
+      <div class="startup-card series"><div class="startup-name">Lennar</div><div class="startup-sector">Real Estate · PropTech · Construction</div><div class="startup-raise series">🏠 Miami HQ · PropTech Division</div><div class="startup-desc">America's largest homebuilder building out a PropTech division focused on AI-driven home buying, mortgage automation, and smart home integration.</div><div class="startup-hiring">Hiring — Software Eng, Data, Product, UX</div></div>
+      <div class="startup-card series"><div class="startup-name">Carnival Corporation</div><div class="startup-sector">Hospitality · Travel · Digital Transformation</div><div class="startup-raise series">🛥️ Miami HQ · Digital Initiative</div><div class="startup-desc">World's largest cruise company undergoing a major digital transformation. Building out data analytics, cybersecurity, cloud infrastructure, and guest experience tech teams.</div><div class="startup-hiring">Hiring — Cybersecurity, Data, Cloud, UX</div></div>
+      <div class="startup-card raised"><div class="startup-name">UKG (Ultimate Kronos Group)</div><div class="startup-sector">HCM · Workforce Tech · SaaS</div><div class="startup-raise raised">💰 Weston HQ · Platform Expansion</div><div class="startup-desc">Weston, FL-based HR and workforce management platform expanding its AI-powered HCM suite and growing South Florida engineering and sales teams.</div><div class="startup-hiring">Actively hiring — Engineering, Implementation, Sales</div></div>
+      <div class="startup-card seed"><div class="startup-name">Rokk3r</div><div class="startup-sector">Venture Studio · AI-Native · Tech</div><div class="startup-raise seed">🌱 Active Portfolio Co-Founding</div><div class="startup-desc">Miami's leading AI-native venture studio co-founding and staffing new companies across fintech, health tech, and enterprise AI.</div><div class="startup-hiring">Hiring — Engineering, Product, Operations (portfolio-wide)</div></div>
+      <div class="startup-card seed"><div class="startup-name">Pipe</div><div class="startup-sector">Fintech · Revenue Finance · B2B</div><div class="startup-raise seed">🌱 Post-Restructure Rebuild</div><div class="startup-desc">Miami fintech rebuilding with a leaner, AI-augmented team. Strong signal for senior engineering and finance roles in a high-ownership environment.</div><div class="startup-hiring">Hiring — Senior Engineering, Finance, Sales</div></div>
+    </div>
+
+    <div class="signals-chart-row">
+      <div class="signals-chart-card">
+        <div class="card-head"><span class="card-title">Active Signals by Sector</span><span class="card-sub">Companies with active hiring signals per sector</span></div>
+        <canvas id="c-sig-sector" height="260"></canvas>
+      </div>
+      <div class="signals-chart-card">
+        <div class="card-head"><span class="card-title">Roles Most In Demand</span><span class="card-sub">Aggregated hiring role categories across all 10 signals</span></div>
+        <canvas id="c-sig-roles" height="260"></canvas>
+      </div>
+    </div>
+
+    <div class="disclaimer-box" style="margin-top:1.5rem">
+      <strong>Signal Disclaimer:</strong> Hiring signals are based on publicly available funding announcements, company growth indicators, and job posting activity as of early 2026. This is not a real-time job board — it is a directional signal of which South Florida companies are in active growth phases. Verify current openings directly on company career pages.
+    </div>
+  </div>
+</div><!-- /page-signals -->
+
+<!-- ══ PAGE 4: JOB ROLE EVOLUTION ═════════════════════ -->
+<div id="page-evolution" class="page">
+  <div class="page-inner">
+
+    <!-- Hero -->
+    <div class="evo-hero">
+      <div class="evo-hero-content">
+        <div class="evo-hero-eyebrow">Deep Dive Report · 2026</div>
+        <div class="evo-hero-title">The Great Reshuffling<br><span>How Entry-Level Tech Roles Have Transformed</span></div>
+        <div class="evo-hero-desc">A deep analysis of six key technology functions reveals a dramatic shift in skills, responsibilities, and expectations for entry-level professionals between the late 2010s and the mid-2020s. The rise of cloud computing, AI, and data-driven decision-making has reshaped the tech talent landscape.</div>
+        <div class="evo-hero-stats">
+          <div class="evo-hero-stat"><div class="val">6</div><div class="lbl">Roles Analyzed</div></div>
+          <div class="evo-hero-stat"><div class="val">~2010-18</div><div class="lbl">Historical Baseline</div></div>
+          <div class="evo-hero-stat"><div class="val">2026</div><div class="lbl">Current Standard</div></div>
+          <div class="evo-hero-stat"><div class="val">14+</div><div class="lbl">Real Job Postings</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="section-head">
+      <span class="section-title">Filter by Role</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="role-filter">
+      <button class="role-btn active" data-role="all" onclick="filterRoles('all')"><span class="ri">🔍</span> All Roles</button>
+      <button class="role-btn" data-role="data-analyst" onclick="filterRoles('data-analyst')"><span class="ri">📊</span> Data Analyst</button>
+      <button class="role-btn" data-role="cybersecurity" onclick="filterRoles('cybersecurity')"><span class="ri">🛡️</span> Cybersecurity</button>
+      <button class="role-btn" data-role="software-eng" onclick="filterRoles('software-eng')"><span class="ri">💻</span> Software Engineer</button>
+      <button class="role-btn" data-role="ai-engineer" onclick="filterRoles('ai-engineer')"><span class="ri">🤖</span> AI Engineer</button>
+      <button class="role-btn" data-role="it-support" onclick="filterRoles('it-support')"><span class="ri">🖥️</span> IT Support</button>
+      <button class="role-btn" data-role="product-mgr" onclick="filterRoles('product-mgr')"><span class="ri">🗺️</span> Product Manager</button>
+    </div>
+
+    <!-- Role Cards -->
+    <div class="role-cards">
+
+      <!-- ── 1. DATA ANALYST ── -->
+      <div class="role-card open" data-role="data-analyst" id="rc-data-analyst">
+        <div class="role-card-header" onclick="toggleCard('data-analyst')">
+          <div class="role-header-left">
+            <div class="role-icon blue">📊</div>
+            <div>
+              <div class="role-name">Data Analyst</div>
+              <div class="role-tagline">From Reporter to Oracle</div>
+            </div>
+          </div>
+          <div class="role-header-right">
+            <span class="role-shift-badge shift-radical">Radical Shift</span>
+            <span class="collapse-icon">▾</span>
+          </div>
+        </div>
+        <div class="role-card-body">
+          <div class="ba-grid">
+            <div class="ba-col">
+              <div class="ba-era era-before">⏪ Pre-2020 (~2010-2018)</div>
+              <div class="ba-headline">The Reporting Layer</div>
+              <div class="ba-desc">The entry-level Data Analyst was primarily a reporting function. Their world was defined by structured data, historical analysis, and translating business questions into SQL queries. The core job was to look at <em>what had happened</em> and present it clearly.</div>
+              <div class="skill-list">
+                <div class="skill-item">SQL querying from relational databases (SQL Server, Oracle)</div>
+                <div class="skill-item">Excel mastery — pivot tables, VLOOKUPs, macros</div>
+                <div class="skill-item">BI dashboarding in Tableau, QlikView, or SSRS</div>
+                <div class="skill-item">Descriptive analytics — KPI reporting</div>
+                <div class="skill-item">Basic ETL support for data warehouse teams</div>
+                <div class="skill-item">SPSS or SAS (optional, rarely required)</div>
+              </div>
+            </div>
+            <div class="ba-col">
+              <div class="ba-era era-after">✦ 2026 Standard</div>
+              <div class="ba-headline">The Data Plumber + Analyst Hybrid</div>
+              <div class="ba-desc">Today's analyst actively builds the infrastructure they analyze. A recent Tetra Tech posting reveals expectations that collapse multiple traditional roles into one hybrid position — analyst, engineer, and data steward simultaneously.</div>
+              <div class="skill-list">
+                <div class="skill-item new">Pipeline orchestration — building and maintaining data pipelines</div>
+                <div class="skill-item new">ETL/ELT logic design and implementation</div>
+                <div class="skill-item new">Python (Pandas, NumPy) — now a core, not optional, skill</div>
+                <div class="skill-item new">Handling unstructured data (text, logs, non-tabular formats)</div>
+                <div class="skill-item new">Data governance and institutional knowledge documentation</div>
+                <div class="skill-item highlight">Power BI / Tableau / Spotfire + SQL + Python simultaneously</div>
+              </div>
+            </div>
+          </div>
+          <div class="org-section">
+            <div class="org-section-title">Org Reality — Roles Now Absorbed Into This Position</div>
+            <table class="org-table">
+              <thead><tr><th>Old Org Unit</th><th>Now Expected?</th></tr></thead>
+              <tbody>
+                <tr><td>BI Analyst</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>Data Engineer (Junior)</td><td><span class="org-partial">◑ Partial</span></td></tr>
+                <tr><td>Data Steward / Governance</td><td><span class="org-partial">◑ Partial</span></td></tr>
+                <tr><td>Process Improvement Analyst</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bottom-line">
+            <div class="bl-card before">
+              <div class="bl-label">Mid-2010s</div>
+              <div class="bl-text">"A Data Analyst described what happened."</div>
+            </div>
+            <div class="bl-card after">
+              <div class="bl-label">2026</div>
+              <div class="bl-text">"A Data Analyst builds the systems that describe what happened, ensures the data is trustworthy, and automates the entire process."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 2. CYBERSECURITY ── -->
+      <div class="role-card" data-role="cybersecurity" id="rc-cybersecurity">
+        <div class="role-card-header" onclick="toggleCard('cybersecurity')">
+          <div class="role-header-left">
+            <div class="role-icon red">🛡️</div>
+            <div>
+              <div class="role-name">Cybersecurity Analyst</div>
+              <div class="role-tagline">From Guard to Hunter</div>
+            </div>
+          </div>
+          <div class="role-header-right">
+            <span class="role-shift-badge shift-radical">Radical Shift</span>
+            <span class="collapse-icon">▾</span>
+          </div>
+        </div>
+        <div class="role-card-body">
+          <div class="ba-grid">
+            <div class="ba-col">
+              <div class="ba-era era-before">⏪ Pre-2020 (~2010-2018)</div>
+              <div class="ba-headline">The Perimeter Gatekeeper</div>
+              <div class="ba-desc">The entry-level analyst was a reactive, compliance-driven gatekeeper. The role focused on maintaining defensive perimeters, managing access, and responding to alerts from on-premise security tools.</div>
+              <div class="skill-list">
+                <div class="skill-item">Firewall and IDS/IPS log monitoring</div>
+                <div class="skill-item">Active Directory access control management</div>
+                <div class="skill-item">Endpoint antivirus deployment and management</div>
+                <div class="skill-item">Vulnerability scanning with Nessus</div>
+                <div class="skill-item">PCI DSS / SOX compliance audits</div>
+                <div class="skill-item">Basic SIEM console monitoring (pre-defined alerts)</div>
+                <div class="skill-item">CompTIA Security+ as gold standard cert</div>
+              </div>
+            </div>
+            <div class="ba-col">
+              <div class="ba-era era-after">✦ 2026 Standard</div>
+              <div class="ba-headline">The Active Threat Hunter</div>
+              <div class="ba-desc">The perimeter has dissolved. A Havertys Furniture and FIS posting reveal a proactive, cloud-native role that absorbs responsibilities formerly held by senior SOC analysts and incident responders.</div>
+              <div class="skill-list">
+                <div class="skill-item new">Active incident response lifecycle — triage, containment, remediation</div>
+                <div class="skill-item new">Cloud security — AWS, Azure, or GCP security controls</div>
+                <div class="skill-item new">Modern SIEM/EDR — Splunk, Sentinel, CrowdStrike</div>
+                <div class="skill-item new">Web Application Firewall (WAF) — now primary attack surface</div>
+                <div class="skill-item new">SOAR automation scripting (Python, Go, or Rust)</div>
+                <div class="skill-item highlight">Basic ML/AI for anomaly detection and threat analysis</div>
+              </div>
+            </div>
+          </div>
+          <div class="org-section">
+            <div class="org-section-title">Org Reality — Roles Now Absorbed Into This Position</div>
+            <table class="org-table">
+              <thead><tr><th>Old Org Unit</th><th>Now Expected?</th></tr></thead>
+              <tbody>
+                <tr><td>Security Administrator</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>SOC Analyst (Tier 1/2)</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>Incident Responder (Junior)</td><td><span class="org-partial">◑ Partial</span></td></tr>
+                <tr><td>Compliance Analyst</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>Security Engineer (Junior)</td><td><span class="org-partial">◑ Partial</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bottom-line">
+            <div class="bl-card before">
+              <div class="bl-label">Mid-2010s</div>
+              <div class="bl-text">"A Cybersecurity Analyst guarded the castle walls."</div>
+            </div>
+            <div class="bl-card after">
+              <div class="bl-label">2026</div>
+              <div class="bl-text">"A Cybersecurity Analyst hunts for threats inside and outside the castle, understands how the castle is built in the cloud, and helps automate its defenses."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 3. SOFTWARE ENGINEER ── -->
+      <div class="role-card" data-role="software-eng" id="rc-software-eng">
+        <div class="role-card-header" onclick="toggleCard('software-eng')">
+          <div class="role-header-left">
+            <div class="role-icon teal">💻</div>
+            <div>
+              <div class="role-name">Software Engineer</div>
+              <div class="role-tagline">From Coder to Product-Builder</div>
+            </div>
+          </div>
+          <div class="role-header-right">
+            <span class="role-shift-badge shift-major">Major Shift</span>
+            <span class="collapse-icon">▾</span>
+          </div>
+        </div>
+        <div class="role-card-body">
+          <div class="ba-grid">
+            <div class="ba-col">
+              <div class="ba-era era-before">⏪ Pre-2020 (~2010-2018)</div>
+              <div class="ba-headline">The Siloed Craftsman</div>
+              <div class="ba-desc">The entry-level engineer was hired to write code within a well-defined specification. The role was siloed — separate teams handled QA, deployment, and product management. Success meant translating specs into functional code.</div>
+              <div class="skill-list">
+                <div class="skill-item">Deep proficiency in one language (Java, C++, or C#)</div>
+                <div class="skill-item">IDE mastery — Eclipse, Visual Studio, NetBeans</div>
+                <div class="skill-item">Centralized version control — SVN or TFS</div>
+                <div class="skill-item">Basic SQL for database interaction</div>
+                <div class="skill-item">Desktop or monolithic web development</div>
+                <div class="skill-item">Limited scope — coding only, no QA or Ops ownership</div>
+              </div>
+            </div>
+            <div class="ba-col">
+              <div class="ba-era era-after">✦ 2026 Standard</div>
+              <div class="ba-headline">The Full-Lifecycle Product Owner</div>
+              <div class="ba-desc">A Giga and Stripe posting reveal an engineer who owns features from conception to deployment. DevOps, cloud infrastructure, and product-led growth have collapsed the assembly line into an integrated, end-to-end process.</div>
+              <div class="skill-list">
+                <div class="skill-item new">Full lifecycle ownership — design, dev, test, deploy, maintain</div>
+                <div class="skill-item new">Polyglot stack — React, Node.js, Python simultaneously</div>
+                <div class="skill-item new">CI/CD pipelines — GitHub Actions, Jenkins</div>
+                <div class="skill-item new">Cloud-native by default — AWS, GCP, or Azure</div>
+                <div class="skill-item new">Automated testing — unit, integration, E2E</div>
+                <div class="skill-item highlight">Direct customer interaction and product sense required</div>
+              </div>
+            </div>
+          </div>
+          <div class="org-section">
+            <div class="org-section-title">Org Reality — Roles Now Absorbed Into This Position</div>
+            <table class="org-table">
+              <thead><tr><th>Old Org Unit</th><th>Now Expected?</th></tr></thead>
+              <tbody>
+                <tr><td>Software Developer</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>QA Engineer</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>DevOps Engineer (Junior)</td><td><span class="org-partial">◑ Partial</span></td></tr>
+                <tr><td>Product Manager (Junior)</td><td><span class="org-partial">◑ Partial</span></td></tr>
+                <tr><td>UI/UX Designer (Awareness)</td><td><span class="org-yes">✓ Yes — Awareness</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bottom-line">
+            <div class="bl-card before">
+              <div class="bl-label">Mid-2010s</div>
+              <div class="bl-text">"A Software Engineer was hired to write code for a feature."</div>
+            </div>
+            <div class="bl-card after">
+              <div class="bl-label">2026</div>
+              <div class="bl-text">"A Software Engineer is hired to own, build, ship, and iterate on a product for a customer."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 4. AI ENGINEER ── -->
+      <div class="role-card" data-role="ai-engineer" id="rc-ai-engineer">
+        <div class="role-card-header" onclick="toggleCard('ai-engineer')">
+          <div class="role-header-left">
+            <div class="role-icon purple">🤖</div>
+            <div>
+              <div class="role-name">AI / ML Engineer</div>
+              <div class="role-tagline">From Modeler to Full-Stack AI Builder</div>
+            </div>
+          </div>
+          <div class="role-header-right">
+            <span class="role-shift-badge shift-radical">Radical Shift</span>
+            <span class="collapse-icon">▾</span>
+          </div>
+        </div>
+        <div class="role-card-body">
+          <div class="ba-grid">
+            <div class="ba-col">
+              <div class="ba-era era-before">⏪ Pre-2020 (~2010-2018)</div>
+              <div class="ba-headline">The Lab-Coat Modeler</div>
+              <div class="ba-desc">The ML Engineer was a highly specialized, academic role focused on statistical and mathematical model building. Often requiring a Master's or Ph.D., it was a niche specialty disconnected from end-user applications and infrastructure.</div>
+              <div class="skill-list">
+                <div class="skill-item">Classification, regression, and clustering model development</div>
+                <div class="skill-item">Scikit-learn, TensorFlow, Keras</div>
+                <div class="skill-item">Python or R for statistical analysis</div>
+                <div class="skill-item">Feature engineering and hyperparameter tuning</div>
+                <div class="skill-item">Model validation and accuracy metrics</div>
+                <div class="skill-item">Handed off a pickle file — deployment was someone else's job</div>
+              </div>
+            </div>
+            <div class="ba-col">
+              <div class="ba-era era-after">✦ 2026 Standard</div>
+              <div class="ba-headline">The Generative AI Product Engineer</div>
+              <div class="ba-desc">An IBM posting makes the new reality clear: this is a product-focused engineering discipline. The value is no longer in the model alone but in the end-to-end application that uses it — including LLMs, RAG, and full MLOps.</div>
+              <div class="skill-list">
+                <div class="skill-item new">LLM integration — OpenAI, Anthropic, Llama APIs</div>
+                <div class="skill-item new">Prompt engineering and RAG architecture</div>
+                <div class="skill-item new">Vector databases — Pinecone, Chroma</div>
+                <div class="skill-item new">MLOps — Docker, cloud deployment, CI/CD for ML</div>
+                <div class="skill-item new">Model monitoring — drift, performance, cost tracking</div>
+                <div class="skill-item highlight">Full-stack software engineering skills now prerequisite</div>
+              </div>
+            </div>
+          </div>
+          <div class="org-section">
+            <div class="org-section-title">Org Reality — Roles Now Absorbed Into This Position</div>
+            <table class="org-table">
+              <thead><tr><th>Old Org Unit</th><th>Now Expected?</th></tr></thead>
+              <tbody>
+                <tr><td>Machine Learning Scientist</td><td><span class="org-partial">◑ Partial (Modeling)</span></td></tr>
+                <tr><td>Software Engineer (Backend)</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>DevOps Engineer</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>Data Engineer</td><td><span class="org-partial">◑ Partial (Pipelines)</span></td></tr>
+                <tr><td>Product Manager (AI)</td><td><span class="org-partial">◑ Partial (Prototyping)</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bottom-line">
+            <div class="bl-card before">
+              <div class="bl-label">2018</div>
+              <div class="bl-text">"An ML Engineer was hired to build a predictive model."</div>
+            </div>
+            <div class="bl-card after">
+              <div class="bl-label">2026</div>
+              <div class="bl-text">"An AI Engineer is hired to build, deploy, and maintain a full-stack application powered by generative AI."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 5. IT SUPPORT ── -->
+      <div class="role-card" data-role="it-support" id="rc-it-support">
+        <div class="role-card-header" onclick="toggleCard('it-support')">
+          <div class="role-header-left">
+            <div class="role-icon amber">🖥️</div>
+            <div>
+              <div class="role-name">IT Support Specialist</div>
+              <div class="role-tagline">From PC Medic to Cloud Concierge</div>
+            </div>
+          </div>
+          <div class="role-header-right">
+            <span class="role-shift-badge shift-major">Major Shift</span>
+            <span class="collapse-icon">▾</span>
+          </div>
+        </div>
+        <div class="role-card-body">
+          <div class="ba-grid">
+            <div class="ba-col">
+              <div class="ba-era era-before">⏪ Pre-2020 (~2010-2018)</div>
+              <div class="ba-headline">The On-Premise Hardware Medic</div>
+              <div class="ba-desc">The "IT guy" was overwhelmingly focused on tangible, on-premise hardware and software. The primary function was to fix broken things and grant access to local resources. The cloud was a distant concept.</div>
+              <div class="skill-list">
+                <div class="skill-item">Desktop support — Windows XP/7, Microsoft Office</div>
+                <div class="skill-item">Hardware repair — PCs, printers, peripherals</div>
+                <div class="skill-item">Basic LAN network troubleshooting</div>
+                <div class="skill-item">On-premise Active Directory — password resets</div>
+                <div class="skill-item">Ticket management in Remedy or Spiceworks</div>
+                <div class="skill-item">CompTIA A+ and Network+ as gold standard certs</div>
+              </div>
+            </div>
+            <div class="ba-col">
+              <div class="ba-era era-after">✦ 2026 Standard</div>
+              <div class="ba-headline">The Cloud Identity Manager</div>
+              <div class="ba-desc">A Concurrent and TeamLogic IT posting reveal a role pivoted to managing cloud services and user identity. The physical office is now just one small part of the IT landscape — the core competency has shifted to cloud-based administration.</div>
+              <div class="skill-list">
+                <div class="skill-item new">Azure Active Directory (Entra ID) or Okta — cloud IAM</div>
+                <div class="skill-item new">SaaS provisioning — M365, Box, DocuSign, and more</div>
+                <div class="skill-item new">SSO and MFA troubleshooting</div>
+                <div class="skill-item new">MDM — Intune or Jamf for remote device management</div>
+                <div class="skill-item new">Microsoft 365 / Google Workspace administration</div>
+                <div class="skill-item highlight">PowerShell scripting for Azure AD automation (major advantage)</div>
+              </div>
+            </div>
+          </div>
+          <div class="org-section">
+            <div class="org-section-title">Org Reality — Roles Now Absorbed Into This Position</div>
+            <table class="org-table">
+              <thead><tr><th>Old Org Unit</th><th>Now Expected?</th></tr></thead>
+              <tbody>
+                <tr><td>Help Desk Technician</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>Desktop Support</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>Systems Administrator (Junior)</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>Identity Management Admin</td><td><span class="org-partial">◑ Partial</span></td></tr>
+                <tr><td>Cloud Administrator (Junior)</td><td><span class="org-partial">◑ Partial</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bottom-line">
+            <div class="bl-card before">
+              <div class="bl-label">Mid-2010s</div>
+              <div class="bl-text">"An IT Support Specialist fixed your computer."</div>
+            </div>
+            <div class="bl-card after">
+              <div class="bl-label">2026</div>
+              <div class="bl-text">"An IT Support Specialist manages your digital identity and ensures you have secure access to the cloud services you need to do your job, wherever you are."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 6. PRODUCT MANAGER ── -->
+      <div class="role-card" data-role="product-mgr" id="rc-product-mgr">
+        <div class="role-card-header" onclick="toggleCard('product-mgr')">
+          <div class="role-header-left">
+            <div class="role-icon green">🗺️</div>
+            <div>
+              <div class="role-name">Product Manager</div>
+              <div class="role-tagline">From Coordinator to Data-Driven Strategist</div>
+            </div>
+          </div>
+          <div class="role-header-right">
+            <span class="role-shift-badge shift-significant">Significant Shift</span>
+            <span class="collapse-icon">▾</span>
+          </div>
+        </div>
+        <div class="role-card-body">
+          <div class="ba-grid">
+            <div class="ba-col">
+              <div class="ba-era era-before">⏪ Pre-2020 (~2010-2018)</div>
+              <div class="ba-headline">The Requirements Coordinator</div>
+              <div class="ba-desc">The entry-level PM was primarily a coordinator — gathering requirements from stakeholders, writing specs, and managing timelines. Technical depth was optional; the role was about communication and organization above all else.</div>
+              <div class="skill-list">
+                <div class="skill-item">Requirements gathering and documentation</div>
+                <div class="skill-item">Waterfall or early-Agile project management</div>
+                <div class="skill-item">Stakeholder communication and meeting facilitation</div>
+                <div class="skill-item">Basic wireframing (Visio, Balsamiq)</div>
+                <div class="skill-item">Roadmap maintenance in spreadsheets or MS Project</div>
+                <div class="skill-item">Minimal technical depth required — "translator" role</div>
+              </div>
+            </div>
+            <div class="ba-col">
+              <div class="ba-era era-after">✦ 2026 Standard</div>
+              <div class="ba-headline">The Technical Product Strategist</div>
+              <div class="ba-desc">Today's PM must be deeply technical and data-driven. They are expected to write SQL, interpret A/B test results, define AI product strategy, and work directly in engineering sprints — not just coordinate them.</div>
+              <div class="skill-list">
+                <div class="skill-item new">SQL proficiency for self-serve data analysis</div>
+                <div class="skill-item new">A/B testing design and statistical significance interpretation</div>
+                <div class="skill-item new">AI product strategy — defining LLM feature requirements</div>
+                <div class="skill-item new">Figma for high-fidelity prototyping</div>
+                <div class="skill-item new">Metrics ownership — defining and tracking OKRs and KPIs</div>
+                <div class="skill-item highlight">Technical credibility to work directly with engineering teams</div>
+              </div>
+            </div>
+          </div>
+          <div class="org-section">
+            <div class="org-section-title">Org Reality — Roles Now Absorbed Into This Position</div>
+            <table class="org-table">
+              <thead><tr><th>Old Org Unit</th><th>Now Expected?</th></tr></thead>
+              <tbody>
+                <tr><td>Business Analyst</td><td><span class="org-yes">✓ Yes — Full</span></td></tr>
+                <tr><td>Data Analyst (Basic)</td><td><span class="org-partial">◑ Partial</span></td></tr>
+                <tr><td>UX Researcher</td><td><span class="org-partial">◑ Partial</span></td></tr>
+                <tr><td>Scrum Master / Agile Coach</td><td><span class="org-yes">✓ Yes — Awareness</span></td></tr>
+                <tr><td>Growth Analyst</td><td><span class="org-partial">◑ Partial</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bottom-line">
+            <div class="bl-card before">
+              <div class="bl-label">Mid-2010s</div>
+              <div class="bl-text">"A Product Manager coordinated between business and engineering."</div>
+            </div>
+            <div class="bl-card after">
+              <div class="bl-label">2026</div>
+              <div class="bl-text">"A Product Manager owns the metrics, shapes the AI strategy, writes SQL to validate decisions, and ships features alongside engineers."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /role-cards -->
+
+    <!-- Conclusion -->
+    <div class="conclusion-card">
+      <div class="conclusion-title">The Rise of the Hybrid Technologist</div>
+      <div class="conclusion-text">
+        The evolution across these six roles points to a single, powerful trend: <strong>the collapse of silos and the rise of the hybrid technologist.</strong> The clear lines that once separated development from operations, data analysis from data engineering, and security from infrastructure have blurred into a spectrum of overlapping responsibilities.<br><br>
+        In 2026, an entry-level technologist is no longer a narrow specialist but a <strong>versatile problem-solver who understands the full lifecycle of their domain.</strong> They are expected to be more autonomous, more product-aware, and more deeply integrated into the cloud and AI-native world. The bar has been raised, but so has the potential for impact from day one.
+      </div>
+    </div>
+
+    <div style="margin-top:1rem;font-size:.72rem;color:var(--text-muted);padding:.75rem 0;border-top:1px solid var(--border)">
+      Sources: Tetra Tech, Havertys Furniture, FIS, Giga, Stripe, IBM, HealthStream, Concurrent, TeamLogic IT job postings (2026) ·
+      Academic references: Dong &amp; Triche (2020), ISCAP (2019), Lightcast (2025), Pragmatic Engineer (2020)
+    </div>
+
+  </div>
+</div><!-- /page-evolution -->
+
+<!-- ══ FOOTER ══════════════════════════════════════════════════ -->
+<footer>
+  <div>
+    BLS Data: <a href="https://www.bls.gov/lau/" target="_blank" rel="noopener">U.S. Bureau of Labor Statistics — Local Area Unemployment Statistics (LAUS)</a>
+    · Series LAUMT123310000000003 &amp; LAUMT123310000000005
+  </div>
+  <div>Miami-Fort Lauderdale-West Palm Beach, FL MSA · CBSA 33100 · Not seasonally adjusted</div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
