@@ -298,10 +298,66 @@
 
     /* Section separator between nation section and market stats charts */
     .stats-section-inner { max-width: 1440px; margin: 0 auto; padding: 1.75rem 2rem 3rem; }
+    /* ════════════════════════════════════════════════════════
+       WAGE INTELLIGENCE PAGE STYLES
+    ════════════════════════════════════════════════════════ */
+    #page-wage {
+      background:
+        radial-gradient(ellipse at 20% 10%, rgba(251,191,36,.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(245,158,11,.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(120,53,15,.15) 0%, transparent 70%),
+        linear-gradient(160deg, #1c1007 0%, #27180a 30%, #1f1509 60%, #0f0a04 100%);
+      min-height: 100vh;
+    }
+    #page-wage .page-inner { padding-top: 2rem; }
+    #page-wage .section-head .section-title  { color: rgba(251,191,36,.4); }
+    #page-wage .section-head .section-divider { background: rgba(251,191,36,.15); }
+    #page-wage .disclaimer-box {
+      background: rgba(0,0,0,.3);
+      border-color: rgba(251,191,36,.2);
+      color: rgba(255,255,255,.55);
+    }
+    #page-wage .disclaimer-box strong { color: rgba(251,191,36,.7); }
+    .wage-hero {
+      background: linear-gradient(135deg, rgba(120,53,15,.6) 0%, rgba(146,64,14,.5) 50%, rgba(180,83,9,.4) 100%);
+      border: 1px solid rgba(251,191,36,.2);
+      border-radius: 16px; padding: 2.5rem; margin-bottom: 1.5rem;
+      color: #fff; backdrop-filter: blur(4px);
+    }
+    .wage-hero-eyebrow { font-size:.72rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:rgba(251,191,36,.65); margin-bottom:.5rem; }
+    .wage-hero-title { font-size:1.9rem; font-weight:900; letter-spacing:-.04em; line-height:1.1; margin:0 0 .75rem; color:#fff; }
+    .wage-hero-title span { color:#fbbf24; }
+    .wage-hero-desc { font-size:.88rem; color:rgba(255,255,255,.75); max-width:680px; line-height:1.7; margin:0 0 1.5rem; }
+    .wage-hero-stats { display:flex; gap:2rem; flex-wrap:wrap; }
+    .wage-hero-stat .val { display:block; font-size:1.6rem; font-weight:900; letter-spacing:-.03em; color:#fbbf24; }
+    .wage-hero-stat .lbl { font-size:.68rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.5); }
+    .wage-insight-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.5rem; }
+    .wage-insight-card { background:rgba(0,0,0,.3); border:1px solid rgba(251,191,36,.15); border-radius:12px; padding:1.1rem 1.25rem; }
+    .wage-insight-label { font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:.3rem; }
+    .wage-insight-value { font-size:1.5rem; font-weight:900; letter-spacing:-.03em; margin-bottom:.2rem; }
+    .wage-insight-sub { font-size:.75rem; color:rgba(255,255,255,.45); }
+    .wage-insight-card.green .wage-insight-value { color:#34d399; }
+    .wage-insight-card.red   .wage-insight-value { color:#f87171; }
+    .wage-insight-card.amber .wage-insight-value { color:#fbbf24; }
+    .wage-insight-card.teal  .wage-insight-value { color:#5eead4; }
+    .wage-chart-card { background:rgba(255,255,255,.97); border-radius:12px; padding:1.25rem; box-shadow:0 4px 20px rgba(0,0,0,.3); margin-bottom:1.25rem; }
+    .wage-chart-card.full { width:100%; }
+    .wage-chart-row { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; }
+    .wage-table-wrap { background:rgba(255,255,255,.97); border-radius:12px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,.3); }
+    .wage-table { width:100%; border-collapse:collapse; font-size:.82rem; }
+    .wage-table thead tr { background:#1c1007; color:#fbbf24; }
+    .wage-table th { padding:.75rem 1rem; text-align:left; font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+    .wage-table td { padding:.65rem 1rem; border-bottom:1px solid #f1f5f9; color:#334155; }
+    .wage-table tr:last-child td { border-bottom:none; }
+    .wage-table tr.above td:first-child { font-weight:600; }
+    .wage-table td.pos { color:#059669; font-weight:700; }
+    .wage-table td.neg { color:#dc2626; font-weight:700; }
+    .wage-table tr:hover td { background:#fefce8; }
+    @media(max-width:700px) { .wage-insight-row{grid-template-columns:1fr 1fr;} .wage-chart-row{grid-template-columns:1fr;} }
 
-    /* ══════════════════════════════════════════════════════════
+    /* ════════════════════════════════════════════════════════
        AI & SIGNALS PAGE STYLES
-    ══════════════════════════════════════════════════════════ */
+    ════════════════════════════════════════════════════════ */
 
     /* Full-page deep purple background for AI tab */
     #page-ai {
@@ -790,6 +846,9 @@
       <button class="nav-tab active" data-tab="stats" onclick="switchTab('stats')">
         <span class="tab-icon">📈</span> Market Stats
       </button>
+      <button class="nav-tab" data-tab="wage" onclick="switchTab('wage')">
+        <span class="tab-icon">💰</span> Wage Intelligence
+      </button>
       <button class="nav-tab" data-tab="ai" onclick="switchTab('ai')">
         <span class="tab-icon">🤖</span> AI Job Exposure
       </button>
@@ -1045,6 +1104,124 @@
 </div><!-- /page-stats -->
 
 <!-- ══ PAGE 2: AI & SIGNALS ════════════════════════════════════ -->
+<!-- ══ PAGE 2: WAGE INTELLIGENCE ══════════════════════════════ -->
+<div id="page-wage" class="page">
+  <div class="page-inner">
+
+    <div class="wage-hero">
+      <div class="wage-hero-eyebrow">WAGE INTELLIGENCE · BLS OEWS · MAY 2024</div>
+      <h1 class="wage-hero-title">What Miami <span>Actually Pays</span></h1>
+      <p class="wage-hero-desc">Median wages across 22 major occupational groups in the Miami–Fort Lauderdale–West Palm Beach MSA, benchmarked against U.S. national averages. Source: BLS Occupational Employment and Wage Statistics (OEWS), May 2024 survey.</p>
+      <div class="wage-hero-stats">
+        <div class="wage-hero-stat"><span class="val">$31.88</span><span class="lbl">Miami Mean Hourly</span></div>
+        <div class="wage-hero-stat"><span class="val">$32.66</span><span class="lbl">US National Mean</span></div>
+        <div class="wage-hero-stat"><span class="val">−2.4%</span><span class="lbl">Miami vs. US Gap</span></div>
+        <div class="wage-hero-stat"><span class="val">22</span><span class="lbl">Occupational Groups</span></div>
+      </div>
+    </div>
+
+    <div class="wage-insight-row">
+      <div class="wage-insight-card green">
+        <div class="wage-insight-label">Miami Outperforms</div>
+        <div class="wage-insight-value">5 Sectors</div>
+        <div class="wage-insight-sub">Pay above US average</div>
+      </div>
+      <div class="wage-insight-card red">
+        <div class="wage-insight-label">Miami Underperforms</div>
+        <div class="wage-insight-value">13 Sectors</div>
+        <div class="wage-insight-sub">Pay below US average</div>
+      </div>
+      <div class="wage-insight-card amber">
+        <div class="wage-insight-label">Biggest Deficit</div>
+        <div class="wage-insight-value">−$7.26/hr</div>
+        <div class="wage-insight-sub">Legal occupations</div>
+      </div>
+      <div class="wage-insight-card teal">
+        <div class="wage-insight-label">Biggest Surplus</div>
+        <div class="wage-insight-value">+$3.87/hr</div>
+        <div class="wage-insight-sub">Protective service</div>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top:1.5rem">
+      <span class="section-title">Miami vs. U.S. Mean Hourly Wage — All Occupational Groups</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="wage-chart-card full">
+      <div class="card-head">
+        <span class="card-title">Miami vs. US Mean Hourly Wage by Occupational Group</span>
+        <span class="card-sub">BLS OEWS May 2024 · Sorted by Miami wage (descending) · Dashed line = US national average ($32.66)</span>
+      </div>
+      <canvas id="c-wage-compare" height="420"></canvas>
+    </div>
+
+    <div class="wage-chart-row">
+      <div class="wage-chart-card">
+        <div class="card-head">
+          <span class="card-title">Miami Wage Gap vs. US ($/hr)</span>
+          <span class="card-sub">Green = Miami pays more · Red = Miami pays less than national average</span>
+        </div>
+        <canvas id="c-wage-gap" height="380"></canvas>
+      </div>
+      <div class="wage-chart-card">
+        <div class="card-head">
+          <span class="card-title">Miami Employment Concentration vs. US</span>
+          <span class="card-sub">Location quotient — values above 1.0 mean Miami has higher share than national</span>
+        </div>
+        <canvas id="c-wage-lq" height="380"></canvas>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top:1.5rem">
+      <span class="section-title">Occupational Wage Table — Miami MSA vs. U.S. National</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="wage-table-wrap">
+      <table class="wage-table">
+        <thead>
+          <tr>
+            <th>Occupational Group</th>
+            <th>Miami Mean ($/hr)</th>
+            <th>US Mean ($/hr)</th>
+            <th>Gap ($/hr)</th>
+            <th>Miami Annual</th>
+            <th>Miami % of Jobs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="above"><td>Management</td><td>$64.23</td><td>$68.15</td><td class="neg">−$3.92</td><td>$133,600</td><td>7.6%</td></tr>
+          <tr class="above"><td>Legal</td><td>$58.93</td><td>$66.19</td><td class="neg">−$7.26</td><td>$122,570</td><td>1.7%</td></tr>
+          <tr class="above"><td>Computer and Mathematical</td><td>$52.65</td><td>$56.16</td><td class="neg">−$3.51</td><td>$109,510</td><td>2.4%</td></tr>
+          <tr class="above"><td>Healthcare Practitioners &amp; Technical</td><td>$49.32</td><td>$50.59</td><td class="neg">−$1.27</td><td>$102,590</td><td>6.5%</td></tr>
+          <tr class="above"><td>Architecture and Engineering</td><td>$45.60</td><td>$49.99</td><td class="neg">−$4.39</td><td>$94,850</td><td>1.0%</td></tr>
+          <tr class="above"><td>Business and Financial Operations</td><td>$44.68</td><td>$45.04</td><td class="neg">−$0.36</td><td>$92,930</td><td>7.1%</td></tr>
+          <tr class="above"><td>Life, Physical, and Social Science</td><td>$40.69</td><td>$43.12</td><td class="neg">−$2.43</td><td>$84,640</td><td>0.5%</td></tr>
+          <tr class="above"><td>Arts, Design, Entertainment, Sports &amp; Media</td><td>$32.97</td><td>$37.04</td><td class="neg">−$4.07</td><td>$68,580</td><td>1.4%</td></tr>
+          <tr class="above"><td>Protective Service</td><td>$33.20</td><td>$29.33</td><td class="pos">+$3.87</td><td>$69,060</td><td>3.4%</td></tr>
+          <tr><td>Educational Instruction and Library</td><td>$28.29</td><td>$31.69</td><td class="neg">−$3.40</td><td>$58,840</td><td>4.4%</td></tr>
+          <tr><td>Community and Social Service</td><td>$28.28</td><td>$30.31</td><td class="neg">−$2.03</td><td>$58,820</td><td>1.3%</td></tr>
+          <tr><td>Construction and Extraction</td><td>$28.60</td><td>$30.73</td><td class="neg">−$2.13</td><td>$59,490</td><td>3.9%</td></tr>
+          <tr><td>Installation, Maintenance, and Repair</td><td>$28.35</td><td>$29.63</td><td class="neg">−$1.28</td><td>$58,970</td><td>4.1%</td></tr>
+          <tr><td>Sales and Related</td><td>$26.90</td><td>$26.00</td><td class="pos">+$0.90</td><td>$55,950</td><td>11.0%</td></tr>
+          <tr><td>Transportation and Material Moving</td><td>$24.22</td><td>$23.44</td><td class="pos">+$0.78</td><td>$50,380</td><td>8.5%</td></tr>
+          <tr><td>Office and Administrative Support</td><td>$23.41</td><td>$24.12</td><td class="neg">−$0.71</td><td>$48,690</td><td>13.6%</td></tr>
+          <tr><td>Production</td><td>$21.79</td><td>$24.08</td><td class="neg">−$2.29</td><td>$45,320</td><td>3.0%</td></tr>
+          <tr><td>Healthcare Support</td><td>$19.70</td><td>$19.06</td><td class="pos">+$0.64</td><td>$40,980</td><td>3.2%</td></tr>
+          <tr><td>Personal Care and Service</td><td>$18.50</td><td>$18.95</td><td class="neg">−$0.45</td><td>$38,480</td><td>2.0%</td></tr>
+          <tr><td>Food Preparation and Serving Related</td><td>$17.66</td><td>$17.32</td><td class="pos">+$0.34</td><td>$36,730</td><td>9.8%</td></tr>
+          <tr><td>Building and Grounds Cleaning</td><td>$17.55</td><td>$19.01</td><td class="neg">−$1.46</td><td>$36,500</td><td>3.3%</td></tr>
+          <tr><td>Farming, Fishing, and Forestry</td><td>$16.81</td><td>$20.06</td><td class="neg">−$3.25</td><td>$34,970</td><td>0.2%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="disclaimer-box" style="margin-top:1.5rem">
+      <strong>Data Source:</strong> U.S. Bureau of Labor Statistics, Occupational Employment and Wage Statistics (OEWS), May 2024 survey. Published April 25, 2025. Miami–Fort Lauderdale–West Palm Beach, FL MSA (CBSA 33100). Mean hourly wages; annual wages calculated at 2,080 hours/year. National estimates reflect all U.S. workers in each occupational group.
+    </div>
+
+  </div>
+</div><!-- /page-wage -->
+
 <div id="page-ai" class="page">
   <div class="page-inner">
 
@@ -2335,7 +2512,86 @@ function buildAICharts() {
 }
 
 buildAICharts();
+buildWageCharts();
 init();
+
+function buildWageCharts() {
+  const groups = [
+    'Management','Legal','Computer & Math','Healthcare Pract.','Architecture & Eng.',
+    'Business & Finance','Life/Physical Sci.','Arts & Media','Protective Service',
+    'Educ. Instruction','Community & Social','Construction','Install./Maint./Repair',
+    'Sales & Related','Transport. & Moving','Office & Admin','Production',
+    'Healthcare Support','Personal Care','Food Prep & Serving','Building & Grounds','Farming/Fishing'
+  ];
+  const miamiWages = [64.23,58.93,52.65,49.32,45.60,44.68,40.69,32.97,33.20,28.29,28.28,28.60,28.35,26.90,24.22,23.41,21.79,19.70,18.50,17.66,17.55,16.81];
+  const usWages    = [68.15,66.19,56.16,50.59,49.99,45.04,43.12,37.04,29.33,31.69,30.31,30.73,29.63,26.00,23.44,24.12,24.08,19.06,18.95,17.32,19.01,20.06];
+  const gaps       = miamiWages.map((m,i) => +(m - usWages[i]).toFixed(2));
+  const miamiPct   = [7.6,1.7,2.4,6.5,1.0,7.1,0.5,1.4,3.4,4.4,1.3,3.9,4.1,11.0,8.5,13.6,3.0,3.2,2.0,9.8,3.3,0.2];
+  const usPct      = [7.1,0.8,3.4,6.2,1.7,6.7,0.9,1.4,2.4,5.8,1.7,4.1,3.9,8.7,8.9,11.8,5.7,4.8,2.0,8.8,2.9,0.3];
+  const lq         = miamiPct.map((m,i) => +(m / usPct[i]).toFixed(2));
+
+  // Sort by Miami wage descending for the compare chart
+  const idx = [...Array(groups.length).keys()].sort((a,b) => miamiWages[b]-miamiWages[a]);
+  const sg  = idx.map(i=>groups[i]);
+  const sm  = idx.map(i=>miamiWages[i]);
+  const su  = idx.map(i=>usWages[i]);
+
+  // Chart 1: Miami vs US comparison (horizontal bar)
+  new Chart(document.getElementById('c-wage-compare'), {
+    type: 'bar',
+    data: {
+      labels: sg,
+      datasets: [
+        { label: 'Miami Mean ($/hr)', data: sm, backgroundColor: 'rgba(251,191,36,.85)', borderRadius: 4 },
+        { label: 'US National Mean ($/hr)', data: su, backgroundColor: 'rgba(148,163,184,.55)', borderRadius: 4 }
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: {
+        legend: { position: 'top' },
+        annotation: {
+          annotations: { line1: { type:'line', xMin:32.66, xMax:32.66, borderColor:'#ef4444', borderWidth:2, borderDash:[6,3],
+            label:{ content:'US Avg $32.66', enabled:true, position:'start', color:'#ef4444', font:{size:10} } } }
+        }
+      },
+      scales: { x: { title:{ display:true, text:'Mean Hourly Wage ($)' } } }
+    }
+  });
+
+  // Chart 2: Wage gap (sorted by gap)
+  const gIdx = [...Array(groups.length).keys()].sort((a,b) => gaps[b]-gaps[a]);
+  const gg   = gIdx.map(i=>groups[i]);
+  const gv   = gIdx.map(i=>gaps[i]);
+  const gc   = gv.map(v => v >= 0 ? 'rgba(52,211,153,.85)' : 'rgba(248,113,113,.85)');
+  new Chart(document.getElementById('c-wage-gap'), {
+    type: 'bar',
+    data: { labels: gg, datasets: [{ label: 'Wage Gap ($/hr)', data: gv, backgroundColor: gc, borderRadius: 4 }] },
+    options: {
+      indexAxis: 'y', responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { x: { title:{ display:true, text:'Miami minus US ($/hr)' }, grid:{ color:'rgba(0,0,0,.06)' } } }
+    }
+  });
+
+  // Chart 3: Location quotient
+  const lqIdx = [...Array(groups.length).keys()].sort((a,b) => lq[b]-lq[a]);
+  const lg    = lqIdx.map(i=>groups[i]);
+  const lv    = lqIdx.map(i=>lq[i]);
+  const lc    = lv.map(v => v >= 1 ? 'rgba(251,191,36,.85)' : 'rgba(148,163,184,.6)');
+  new Chart(document.getElementById('c-wage-lq'), {
+    type: 'bar',
+    data: { labels: lg, datasets: [{ label: 'Location Quotient', data: lv, backgroundColor: lc, borderRadius: 4 }] },
+    options: {
+      indexAxis: 'y', responsive: true,
+      plugins: { legend: { display: false },
+        annotation: { annotations: { line1: { type:'line', xMin:1, xMax:1, borderColor:'#f59e0b', borderWidth:2, borderDash:[4,3] } } } }
+      },
+      scales: { x: { title:{ display:true, text:'Location Quotient (1.0 = national average)' } } }
+    }
+  });
+}
 </script>
 </body>
 </html>
