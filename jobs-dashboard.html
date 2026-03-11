@@ -58,52 +58,55 @@
     }
     .header-inner {
       max-width: 1440px; margin: 0 auto; padding: 0 2rem;
-      display: flex; align-items: stretch; justify-content: space-between; gap: 1rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+      height: 62px;
     }
     .header-brand {
-      display: flex; align-items: center; gap: .85rem; padding: .85rem 0;
+      display: flex; align-items: center; gap: .9rem; flex-shrink: 0;
     }
     .brand-logo {
-      width: 38px; height: 38px; background: var(--blue); border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; flex-shrink: 0;
+      width: 44px; height: 44px; background: #111827; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
     .brand-name {
-      font-size: 1.15rem; font-weight: 900; color: var(--text); letter-spacing: -.03em;
-      line-height: 1.1;
+      font-size: 1.22rem; font-weight: 400; color: var(--text); letter-spacing: -.02em;
+      line-height: 1.2; white-space: nowrap;
     }
-    .brand-name span { color: var(--blue); }
-    .brand-sub { font-size: .7rem; color: var(--muted); margin-top: 2px; }
+    .brand-name strong { font-weight: 800; }
 
     /* ── NAV TABS ── */
     .nav-tabs {
-      display: flex; align-items: stretch; gap: 0;
+      display: flex; align-items: center; gap: .1rem; flex: 1; justify-content: center;
     }
     .nav-tab {
-      display: flex; align-items: center; gap: .45rem;
-      padding: 0 1.25rem; font-size: .82rem; font-weight: 600;
-      color: var(--muted); cursor: pointer; border: none; background: none;
-      border-bottom: 3px solid transparent; font-family: inherit;
-      transition: color .15s, border-color .15s;
-      white-space: nowrap;
+      display: inline-flex; align-items: center; gap: .42rem;
+      padding: .42rem 1rem; font-size: .82rem; font-weight: 500;
+      color: var(--muted); cursor: pointer; background: none; font-family: inherit;
+      border: 1.5px solid transparent; border-radius: 999px;
+      transition: color .15s, border-color .15s; white-space: nowrap;
     }
     .nav-tab:hover { color: var(--text); }
-    .nav-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
-    .nav-tab .tab-icon { font-size: 15px; }
+    .nav-tab.active { color: var(--text); border-color: var(--border2); font-weight: 600; }
+    .nav-tab .tab-icon { display: inline-flex; align-items: center; line-height: 1; }
 
     .header-right {
-      display: flex; align-items: center; gap: .75rem; padding: .85rem 0;
+      display: flex; flex-direction: column; align-items: flex-end; justify-content: center;
+      gap: .15rem; flex-shrink: 0;
     }
-    #last-updated { font-size: .7rem; color: var(--muted); }
+    #last-updated { font-size: .67rem; color: var(--muted); }
     .badge {
       display: inline-flex; align-items: center; gap: .35rem;
-      font-size: .67rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
-      padding: .22rem .65rem; border-radius: 999px;
+      font-size: .67rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+      padding: .25rem .7rem; border-radius: 999px;
     }
-    .badge-bls { background: var(--blue-pale); color: var(--blue); border: 1px solid #bfdbfe; }
+    .badge-bls { background: var(--blue-pale); color: var(--blue); border: 1.5px solid #bfdbfe; }
     .badge-bls::before {
-      content: ''; width: 6px; height: 6px; background: var(--blue-l);
-      border-radius: 50%; animation: blink 2.5s ease-in-out infinite;
+      content: ''; width: 7px; height: 7px; background: var(--blue-l);
+      border-radius: 50%; animation: blink 2.5s ease-in-out infinite; flex-shrink: 0;
+    }
+    .header-sub {
+      text-align: center; padding: .3rem 2rem; font-size: .7rem;
+      color: var(--muted); border-top: 1px solid var(--border); background: var(--surface);
     }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
@@ -835,36 +838,45 @@
 <header>
   <div class="header-inner">
     <div class="header-brand">
-      <div class="brand-logo">📊</div>
-      <div>
-        <div class="brand-name">Job Stats <span>Miami</span></div>
-        <div class="brand-sub">Miami–Fort Lauderdale–West Palm Beach, FL · BLS LAUS Data</div>
+      <div class="brand-logo">
+        <svg width="24" height="22" viewBox="0 0 24 22" fill="none">
+          <rect x="0" y="13" width="6" height="9" rx="1.5" fill="#f87171"/>
+          <rect x="9" y="8" width="6" height="14" rx="1.5" fill="#34d399"/>
+          <rect x="18" y="2" width="6" height="20" rx="1.5" fill="#60a5fa"/>
+        </svg>
       </div>
+      <div class="brand-name">Job Stats <strong>Miami</strong></div>
     </div>
 
     <nav class="nav-tabs">
       <button class="nav-tab active" data-tab="stats" onclick="switchTab('stats')">
-        <span class="tab-icon">📈</span> Market Stats
+        <span class="tab-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>
+        Market Stats
       </button>
       <button class="nav-tab" data-tab="wage" onclick="switchTab('wage')">
-        <span class="tab-icon">💰</span> Wage Intelligence
+        <span class="tab-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><line x1="12" y1="6" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="18"/></svg></span>
+        Wage Intelligence
       </button>
       <button class="nav-tab" data-tab="ai" onclick="switchTab('ai')">
-        <span class="tab-icon">🤖</span> AI Job Exposure
+        <span class="tab-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="2" x2="9" y2="4"/><line x1="15" y1="2" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="22"/><line x1="15" y1="20" x2="15" y2="22"/><line x1="20" y1="9" x2="22" y2="9"/><line x1="20" y1="14" x2="22" y2="14"/><line x1="2" y1="9" x2="4" y2="9"/><line x1="2" y1="14" x2="4" y2="14"/></svg></span>
+        AI Job Exposure
       </button>
       <button class="nav-tab" data-tab="signals" onclick="switchTab('signals')">
-        <span class="tab-icon">📡</span> Hiring Signals
+        <span class="tab-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+        Hiring Signals
       </button>
       <button class="nav-tab" data-tab="evolution" onclick="switchTab('evolution')">
-        <span class="tab-icon">🔄</span> Job Role Evolution
+        <span class="tab-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span>
+        Job Role Evolution
       </button>
     </nav>
 
     <div class="header-right">
+      <span class="badge badge-bls">BLS LIVE</span>
       <span id="last-updated"></span>
-      <span class="badge badge-bls">BLS Live</span>
     </div>
   </div>
+  <div class="header-sub">Miami–Fort Lauderdale–West Palm Beach, FL · BLS LAUS Data</div>
 </header>
 
 <!-- ══ PAGE 1: MARKET STATS ════════════════════════════════════ -->
