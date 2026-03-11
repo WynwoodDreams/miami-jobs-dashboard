@@ -2585,8 +2585,7 @@ function buildWageCharts() {
     options: {
       indexAxis: 'y', responsive: true,
       plugins: { legend: { display: false },
-        annotation: { annotations: { line1: { type:'line', xMin:1, xMax:1, borderColor:'#f59e0b', borderWidth:2, borderDash:[4,3] } } } }
-      },
+        annotation: { annotations: { line1: { type:'line', xMin:1, xMax:1, borderColor:'#f59e0b', borderWidth:2, borderDash:[4,3] } } } },
       scales: { x: { title:{ display:true, text:'Location Quotient (1.0 = national average)' } } }
     }
   });
