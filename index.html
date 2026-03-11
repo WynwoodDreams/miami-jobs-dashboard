@@ -62,11 +62,16 @@
       height: 62px;
     }
     .header-brand {
-      display: flex; align-items: center; flex-shrink: 0;
+      display: flex; align-items: center; gap: .75rem; flex-shrink: 0;
     }
     .brand-logo-img {
-      height: 44px; width: auto;
+      height: 52px; width: auto;
     }
+    .brand-name {
+      font-size: 1.22rem; font-weight: 400; color: var(--text); letter-spacing: -.02em;
+      line-height: 1.2; white-space: nowrap;
+    }
+    .brand-name strong { font-weight: 800; }
 
     /* ── NAV TABS ── */
     .nav-tabs {
@@ -832,7 +837,8 @@
 <header>
   <div class="header-inner">
     <div class="header-brand">
-      <img src="logo.png.jfif" alt="Job Stats Miami" class="brand-logo-img">
+      <img src="logo.png" alt="Job Stats Miami" class="brand-logo-img">
+      <div class="brand-name">Job Stats <strong>Miami</strong></div>
     </div>
 
     <nav class="nav-tabs">
