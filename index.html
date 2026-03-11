@@ -62,13 +62,13 @@
       height: 62px;
     }
     .header-brand {
-      display: flex; align-items: center; gap: .75rem; flex-shrink: 0;
+      display: flex; align-items: center; gap: .3rem; flex-shrink: 0;
     }
     .brand-logo-img {
-      height: 52px; width: auto;
+      height: 44px; width: auto; margin-right: -.05rem;
     }
     .brand-name {
-      font-size: 1.22rem; font-weight: 400; color: var(--text); letter-spacing: -.02em;
+      font-size: 1.18rem; font-weight: 400; color: var(--text); letter-spacing: -.03em;
       line-height: 1.2; white-space: nowrap;
     }
     .brand-name strong { font-weight: 800; }
@@ -107,6 +107,7 @@
       text-align: center; padding: .3rem 2rem; font-size: .7rem;
       color: var(--muted); border-top: 1px solid var(--border); background: var(--surface);
     }
+    .header-sub-updated { display: none; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
     /* ── PAGES ── */
@@ -899,9 +900,20 @@
       }
       .mobile-menu-btn {
         display: flex;
+        order: 3;
       }
       .header-inner {
         position: relative;
+      }
+      .header-brand {
+        gap: .25rem;
+        order: 1;
+      }
+      .header-right {
+        order: 2;
+        flex-direction: row;
+        align-items: center;
+        gap: .5rem;
       }
       .header-sub {
         font-size: .65rem;
@@ -913,28 +925,41 @@
     @media (max-width: 640px) {
       .header-inner {
         padding: 0 .75rem;
-        gap: .5rem;
-        height: 54px;
+        gap: .4rem;
+        height: 58px;
+      }
+      .header-brand {
+        gap: .2rem;
       }
       .brand-logo-img {
-        height: 38px;
+        height: 42px;
       }
       .brand-name {
-        font-size: 1rem;
+        font-size: 1.05rem;
       }
       .header-right {
-        gap: .1rem;
-      }
-      .badge {
-        font-size: .6rem;
-        padding: .2rem .5rem;
+        flex-direction: row;
+        align-items: center;
+        gap: .4rem;
+        margin-left: auto;
       }
       #last-updated {
-        font-size: .6rem;
+        display: none;
+      }
+      .badge {
+        font-size: .58rem;
+        padding: .2rem .5rem;
       }
       .header-sub {
         font-size: .6rem;
         padding: .2rem .75rem;
+      }
+      .header-sub-updated {
+        display: inline;
+      }
+      .mobile-menu-btn {
+        font-size: 1.4rem;
+        padding: .3rem .55rem;
       }
 
       /* Page content padding */
@@ -1166,13 +1191,16 @@
     /* ── Extra-small breakpoint (≤ 400px) ── */
     @media (max-width: 400px) {
       .header-inner {
-        height: 48px;
+        height: 52px;
+      }
+      .header-brand {
+        gap: .15rem;
       }
       .brand-logo-img {
-        height: 32px;
+        height: 36px;
       }
       .brand-name {
-        font-size: .88rem;
+        font-size: .92rem;
       }
       .kpi-value {
         font-size: 1.4rem;
@@ -1259,7 +1287,7 @@
       <span id="last-updated"></span>
     </div>
   </div>
-  <div class="header-sub">Miami–Fort Lauderdale–West Palm Beach, FL · BLS LAUS Data</div>
+  <div class="header-sub">Miami–Fort Lauderdale–West Palm Beach, FL · BLS LAUS Data<span class="header-sub-updated" id="last-updated-mobile"></span></div>
 </header>
 
 <!-- ══ PAGE 1: MARKET STATS ════════════════════════════════════ -->
@@ -2707,7 +2735,9 @@ async function init() {
     if (!uData.length || !eData.length) throw new Error('No data records found');
 
     const ts = new Date(data.metadata.last_updated);
-    document.getElementById('last-updated').textContent = `Updated ${ts.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`;
+    const updatedText = `Updated ${ts.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`;
+    document.getElementById('last-updated').textContent = updatedText;
+    document.getElementById('last-updated-mobile').textContent = ` · ${updatedText}`;
 
     setKPIs(uData, eData);
     buildUnemp(uData);
