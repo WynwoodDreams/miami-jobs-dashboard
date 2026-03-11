@@ -824,9 +824,398 @@
     }
     .conclusion-title { font-size: 1.2rem; font-weight: 900; letter-spacing: -.03em; margin-bottom: .75rem; }
     .conclusion-text { font-size: .88rem; opacity: .9; line-height: 1.8; }
+
+    /* ══════════════════════════════════════════════════════════
+       MOBILE-FRIENDLY IMPROVEMENTS
+    ══════════════════════════════════════════════════════════ */
+
+    /* ── Mobile hamburger button ── */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: 1.5px solid var(--border);
+      color: var(--muted);
+      font-size: 1.4rem;
+      line-height: 1;
+      padding: .45rem .6rem;
+      border-radius: 8px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+      transition: border-color .15s, color .15s;
+    }
+    .mobile-menu-btn:hover, .mobile-menu-btn:active {
+      border-color: var(--blue-l);
+      color: var(--blue);
+    }
+
+    /* ── Mobile menu overlay backdrop ── */
+    .mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.35);
+      z-index: 99;
+      opacity: 0;
+      transition: opacity .25s;
+    }
+    .mobile-overlay.show {
+      display: block;
+      opacity: 1;
+    }
+
+    /* ── Tablet breakpoint (≤ 900px) ── */
+    @media (max-width: 900px) {
+      .nav-tabs {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 8px 24px rgba(0,0,0,.12);
+        z-index: 200;
+        padding: .5rem 0;
+      }
+      .nav-tabs.open {
+        display: flex;
+      }
+      .nav-tabs .nav-tab {
+        padding: .85rem 1.5rem;
+        border-radius: 0;
+        border: none;
+        border-left: 3px solid transparent;
+        font-size: .88rem;
+        justify-content: flex-start;
+        min-height: 48px;
+      }
+      .nav-tabs .nav-tab.active {
+        border-left-color: var(--blue);
+        background: var(--blue-pale);
+        border-radius: 0;
+      }
+      .mobile-menu-btn {
+        display: flex;
+      }
+      .header-inner {
+        position: relative;
+      }
+      .header-sub {
+        font-size: .65rem;
+        padding: .25rem 1rem;
+      }
+    }
+
+    /* ── Mobile breakpoint (≤ 640px) ── */
+    @media (max-width: 640px) {
+      .header-inner {
+        padding: 0 .75rem;
+        gap: .5rem;
+        height: 54px;
+      }
+      .brand-logo-img {
+        height: 38px;
+      }
+      .brand-name {
+        font-size: 1rem;
+      }
+      .header-right {
+        gap: .1rem;
+      }
+      .badge {
+        font-size: .6rem;
+        padding: .2rem .5rem;
+      }
+      #last-updated {
+        font-size: .6rem;
+      }
+      .header-sub {
+        font-size: .6rem;
+        padding: .2rem .75rem;
+      }
+
+      /* Page content padding */
+      .page-inner,
+      .stats-section-inner,
+      .nation-inner {
+        padding-left: .75rem;
+        padding-right: .75rem;
+      }
+      .page-inner {
+        padding-top: 1.25rem;
+        padding-bottom: 2rem;
+      }
+      .stats-section-inner {
+        padding-top: 1.25rem;
+        padding-bottom: 2rem;
+      }
+
+      /* Cards — tighter on mobile */
+      .card-head {
+        padding: .85rem 1rem .7rem;
+        flex-wrap: wrap;
+      }
+      .card-body {
+        padding: 1rem;
+      }
+      .card-title {
+        font-size: .82rem;
+      }
+
+      /* Range buttons — bigger touch targets */
+      .btn-r {
+        padding: .35rem .65rem;
+        font-size: .72rem;
+        min-height: 32px;
+        min-width: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Chart heights on mobile */
+      .chart-wrap {
+        height: 220px;
+      }
+      .chart-wrap.tall {
+        height: 260px;
+      }
+      .nation-chart-wrap {
+        height: 210px;
+      }
+
+      /* KPI cards — compact */
+      .kpi {
+        padding: 1rem 1.15rem;
+      }
+      .kpi-value {
+        font-size: 1.65rem;
+      }
+
+      /* Nation section */
+      .nation-section {
+        padding: 1.5rem 0 2rem;
+      }
+      .nation-title {
+        font-size: 1.25rem;
+      }
+      .nation-desc {
+        font-size: .78rem;
+      }
+      .nation-kpi {
+        padding: .85rem 1rem;
+      }
+      .nation-kpi-value {
+        font-size: 1.4rem;
+      }
+      .nation-card-head {
+        padding: .85rem 1rem .7rem;
+        flex-wrap: wrap;
+      }
+      .nation-card-body {
+        padding: .85rem 1rem;
+      }
+
+      /* Hero sections — tighter */
+      .ai-hero,
+      .signals-hero,
+      .evo-hero,
+      .wage-hero {
+        padding: 1.25rem;
+        border-radius: 12px;
+        margin-bottom: 1.25rem;
+      }
+      .ai-hero-title,
+      .signals-hero-title,
+      .evo-hero-title,
+      .wage-hero-title {
+        font-size: 1.3rem;
+      }
+      .ai-hero-desc,
+      .signals-hero-desc,
+      .evo-hero-desc,
+      .wage-hero-desc {
+        font-size: .8rem;
+      }
+      .ai-hero-stats,
+      .signals-hero-stats,
+      .evo-hero-stats,
+      .wage-hero-stats {
+        gap: 1.25rem;
+      }
+      .ai-hero-stat .val,
+      .signals-hero-stat .val,
+      .evo-hero-stat .val,
+      .wage-hero-stat .val {
+        font-size: 1.3rem;
+      }
+
+      /* Table — better mobile scroll UX */
+      .table-wrap {
+        -webkit-overflow-scrolling: touch;
+        max-height: 300px;
+      }
+      thead th {
+        padding: .5rem .75rem;
+        font-size: .62rem;
+      }
+      tbody td {
+        padding: .5rem .75rem;
+        font-size: .75rem;
+      }
+
+      /* Wage page */
+      .wage-insight-row {
+        grid-template-columns: 1fr 1fr;
+      }
+      .wage-chart-card {
+        padding: .85rem;
+      }
+
+      /* AI insight band */
+      .ai-insight-band {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .ai-insight-card {
+        padding: .85rem 1rem;
+      }
+      .ai-insight-value {
+        font-size: 1.25rem;
+      }
+
+      /* Signals timeline */
+      .timeline-item {
+        flex-wrap: wrap;
+        gap: .4rem;
+        padding: .5rem .75rem;
+        font-size: .78rem;
+      }
+      .tl-co {
+        min-width: auto;
+      }
+      .signals-chart-row {
+        grid-template-columns: 1fr;
+        gap: .75rem;
+      }
+      .signals-chart-card {
+        padding: 1rem;
+      }
+
+      /* Role cards */
+      .role-card-header {
+        padding: 1rem 1.15rem;
+        gap: .5rem;
+      }
+      .role-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
+      .role-name {
+        font-size: .92rem;
+      }
+      .role-header-right {
+        gap: .5rem;
+      }
+      .role-shift-badge {
+        font-size: .62rem;
+        padding: .2rem .5rem;
+      }
+      .ba-col {
+        padding: 1.25rem 1rem;
+      }
+      .org-section {
+        padding: 1rem 1.15rem;
+      }
+      .bl-card {
+        padding: 1rem 1.15rem;
+      }
+
+      /* Conclusion */
+      .conclusion-card {
+        padding: 1.25rem 1.5rem;
+        border-radius: 12px;
+      }
+
+      /* Role filter — scrollable on small screens */
+      .role-filter {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: .35rem;
+        gap: .4rem;
+      }
+      .role-btn {
+        flex-shrink: 0;
+        min-height: 40px;
+        padding: .45rem .85rem;
+      }
+
+      /* Footer */
+      footer {
+        padding: 1rem .75rem;
+        font-size: .65rem;
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    /* ── Extra-small breakpoint (≤ 400px) ── */
+    @media (max-width: 400px) {
+      .header-inner {
+        height: 48px;
+      }
+      .brand-logo-img {
+        height: 32px;
+      }
+      .brand-name {
+        font-size: .88rem;
+      }
+      .kpi-value {
+        font-size: 1.4rem;
+      }
+      .nation-kpi-value {
+        font-size: 1.2rem;
+      }
+      .wage-insight-row {
+        grid-template-columns: 1fr;
+      }
+      .ai-insight-band {
+        grid-template-columns: 1fr;
+      }
+      .ai-hero-title,
+      .signals-hero-title,
+      .evo-hero-title,
+      .wage-hero-title {
+        font-size: 1.15rem;
+      }
+    }
+
+    /* ── Touch-friendly global enhancements ── */
+    @media (hover: none) and (pointer: coarse) {
+      .kpi:hover,
+      .card:hover,
+      .nation-kpi:hover,
+      .nation-card:hover,
+      .startup-card:hover,
+      .ai-insight-card:hover {
+        transform: none;
+        box-shadow: var(--shadow-sm);
+      }
+      .nav-tab,
+      .btn-r,
+      .role-btn {
+        min-height: 44px;
+      }
+    }
   </style>
 </head>
 <body>
+
+<div class="mobile-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
 
 <div id="loading">
   <div class="spin"></div>
@@ -841,7 +1230,8 @@
       <div class="brand-name">Job Stats <strong>Miami</strong></div>
     </div>
 
-    <nav class="nav-tabs">
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu">☰</button>
+    <nav class="nav-tabs" id="nav-tabs">
       <button class="nav-tab active" data-tab="stats" onclick="switchTab('stats')">
         <span class="tab-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>
         Market Stats
@@ -2054,12 +2444,25 @@ Chart.defaults.borderColor = '#e2e8f0';
 
 const REGISTRY = {};
 
+/* ── Mobile menu ── */
+function toggleMobileMenu() {
+  const nav = document.getElementById('nav-tabs');
+  const overlay = document.getElementById('mobile-overlay');
+  nav.classList.toggle('open');
+  overlay.classList.toggle('show');
+}
+function closeMobileMenu() {
+  document.getElementById('nav-tabs').classList.remove('open');
+  document.getElementById('mobile-overlay').classList.remove('show');
+}
+
 /* ── Tab switching ── */
 function switchTab(tab) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
   document.getElementById('page-' + tab).classList.add('active');
   document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  closeMobileMenu();
 }
 
 /* ── Role card toggle ── */
