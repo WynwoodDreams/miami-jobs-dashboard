@@ -208,6 +208,100 @@
     .spin { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--blue); border-radius: 50%; animation: spin .9s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .load-text { font-size: .82rem; color: var(--muted); }
+
+    /* ── INTRO SPLASH ── */
+    #intro-splash {
+      position: fixed; inset: 0; z-index: 1100;
+      background: var(--surface);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      opacity: 1; transition: opacity .5s ease;
+    }
+    #intro-splash.out { opacity: 0; pointer-events: none; }
+    .intro-logo {
+      width: 90px; height: 90px;
+      opacity: 0; transform: scale(.7);
+      animation: introLogoIn .6s cubic-bezier(.22,1,.36,1) .2s forwards;
+    }
+    @keyframes introLogoIn {
+      to { opacity: 1; transform: scale(1); }
+    }
+    .intro-title {
+      margin-top: 1.2rem;
+      font-size: 1.6rem; font-weight: 400; color: var(--text);
+      letter-spacing: -.03em;
+      opacity: 0; transform: translateY(10px);
+      animation: introFadeUp .5s ease .55s forwards;
+    }
+    .intro-title strong { font-weight: 700; }
+    @keyframes introFadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .intro-bar-wrap {
+      margin-top: 2rem; width: 200px; height: 3px;
+      background: var(--border); border-radius: 3px; overflow: hidden;
+      opacity: 0;
+      animation: introFadeUp .4s ease .85s forwards;
+    }
+    .intro-bar {
+      height: 100%; width: 0; border-radius: 3px;
+      background: linear-gradient(90deg, var(--blue), var(--teal));
+      animation: introBarFill 1.4s cubic-bezier(.25,.46,.45,.94) 1s forwards;
+    }
+    @keyframes introBarFill {
+      0%   { width: 0; }
+      40%  { width: 55%; }
+      70%  { width: 78%; }
+      100% { width: 100%; }
+    }
+    .intro-status {
+      margin-top: .75rem; font-size: .72rem; font-weight: 500;
+      color: var(--muted); letter-spacing: .06em; text-transform: uppercase;
+      opacity: 0;
+      animation: introFadeUp .4s ease .95s forwards;
+    }
+    .intro-dots::after {
+      content: '';
+      animation: introDots 1.5s steps(3) 1s infinite;
+    }
+    @keyframes introDots {
+      0%   { content: ''; }
+      33%  { content: '.'; }
+      66%  { content: '..'; }
+      100% { content: '...'; }
+    }
+    .intro-metrics {
+      display: flex; gap: 2rem; margin-top: 1.5rem;
+      opacity: 0;
+      animation: introFadeUp .4s ease 1.3s forwards;
+    }
+    .intro-metric {
+      display: flex; flex-direction: column; align-items: center; gap: .2rem;
+    }
+    .intro-metric-val {
+      font-size: 1.1rem; font-weight: 700; font-variant-numeric: tabular-nums;
+      color: var(--text);
+    }
+    .intro-metric-val.blue { color: var(--blue); }
+    .intro-metric-val.teal { color: var(--teal); }
+    .intro-metric-val.amber { color: var(--amber); }
+    .intro-metric-label {
+      font-size: .62rem; font-weight: 600; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--faint);
+    }
+    .intro-metric-val span {
+      display: inline-block;
+      animation: introCount .8s ease 1.5s both;
+    }
+    @keyframes introCount {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 640px) {
+      .intro-logo { width: 70px; height: 70px; }
+      .intro-title { font-size: 1.3rem; }
+      .intro-bar-wrap { width: 160px; }
+      .intro-metrics { gap: 1.2rem; }
+    }
     #error-box { display: none; background: var(--red-pale); border: 1px solid #fca5a5; color: var(--red); border-radius: 10px; padding: 1rem 1.5rem; margin-bottom: 1.25rem; font-size: .82rem; }
 
     /* ══════════════════════════════════════════════════════════
@@ -1264,6 +1358,28 @@
   </style>
 </head>
 <body>
+
+<!-- ══ INTRO SPLASH ═══════════════════════════════════════════ -->
+<div id="intro-splash">
+  <img src="logo.png" alt="Job Stats Miami" class="intro-logo">
+  <div class="intro-title">Job Stats <strong>Miami</strong></div>
+  <div class="intro-bar-wrap"><div class="intro-bar"></div></div>
+  <div class="intro-status">Connecting to BLS<span class="intro-dots"></span></div>
+  <div class="intro-metrics">
+    <div class="intro-metric">
+      <div class="intro-metric-val blue"><span>850+</span></div>
+      <div class="intro-metric-label">Occupations</div>
+    </div>
+    <div class="intro-metric">
+      <div class="intro-metric-val teal"><span>Live</span></div>
+      <div class="intro-metric-label">BLS Data</div>
+    </div>
+    <div class="intro-metric">
+      <div class="intro-metric-val amber"><span>5</span></div>
+      <div class="intro-metric-label">Dashboards</div>
+    </div>
+  </div>
+</div>
 
 <div class="mobile-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
 
@@ -2995,7 +3111,18 @@ function buildAICharts() {
 
 buildAICharts();
 buildWageCharts();
-init();
+
+/* ── Intro splash sequence ── */
+(function() {
+  const splash = document.getElementById('intro-splash');
+  if (!splash) { init(); return; }
+  // Let intro animations play, then fade out and start data load
+  setTimeout(() => {
+    splash.classList.add('out');
+    setTimeout(() => { splash.remove(); }, 500);
+    init();
+  }, 2800);
+})();
 
 function buildWageCharts() {
   const groups = [
