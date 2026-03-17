@@ -32,7 +32,10 @@ const ttDark = {
 const gridDark = { color: 'rgba(255,255,255,0.04)' };
 const ticksDark = { color: '#475569', maxTicksLimit: 10, maxRotation: 0 };
 
-/* ── Tab switching ── */
+/* ── Lazy tab tracking ── */
+const tabBuilt = { dashboard: true, national: false, signals: false, ai: false };
+
+/* ── Tab switching (with lazy chart building) ── */
 function switchTab(tab) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
@@ -41,6 +44,15 @@ function switchTab(tab) {
 
   // Close mobile menu
   document.querySelector('.nav-tabs').classList.remove('open');
+
+  // Lazy-build charts for this tab on first visit
+  if (!tabBuilt[tab] && window._dashData) {
+    const { uData, nuData } = window._dashData;
+    if (tab === 'national' && nuData) buildNationSection(uData, nuData);
+    if (tab === 'signals') buildSignalsCharts();
+    if (tab === 'ai') buildAICharts();
+    tabBuilt[tab] = true;
+  }
 }
 
 /* ── Mobile menu toggle ── */
@@ -888,10 +900,18 @@ function buildAICharts() {
   });
 }
 
-/* ── Main init ── */
-async function init() {
+/* ── Main init (guarded against double calls) ── */
+let initPromise = null;
+
+function init() {
+  if (initPromise) return initPromise;
+  initPromise = _doInit();
+  return initPromise;
+}
+
+async function _doInit() {
   try {
-    const resp = await fetch('jobs_data.json?v=' + Date.now());
+    const resp = await fetch('jobs_data.json');
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();
     const keys = Object.keys(data.series);
@@ -905,9 +925,18 @@ async function init() {
     const eData = data.series[eKey].data;
     if (!uData.length || !eData.length) throw new Error('No data records found');
 
+    /* Resolve national data for lazy tab building */
+    const nKeys = keys.filter(k => data.series[k].scope === 'national');
+    const nuKey = nKeys.find(k => data.series[k].label.toLowerCase().includes('unemployment'));
+    const nuData = nuKey ? data.series[nuKey].data : null;
+
+    /* Store data globally so switchTab() can lazy-build charts */
+    window._dashData = { uData, eData, nuData };
+
     const ts = new Date(data.metadata.last_updated);
     document.getElementById('last-updated').textContent = `Updated ${ts.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
 
+    /* Build only the overview tab (visible on load) */
     setKPIs(uData, eData);
     buildUnemp(uData);
     buildEmp(eData);
@@ -916,16 +945,7 @@ async function init() {
     buildSeasonal(uData);
     buildTable(uData, eData);
 
-    /* National comparison */
-    const nKeys = keys.filter(k => data.series[k].scope === 'national');
-    const nuKey = nKeys.find(k => data.series[k].label.toLowerCase().includes('unemployment'));
-    if (nuKey) {
-      const nuData = data.series[nuKey].data;
-      buildNationSection(uData, nuData);
-    }
-
-    /* Hiring Signals charts */
-    buildSignalsCharts();
+    /* National, Signals, and AI charts are built lazily in switchTab() */
 
     const ov = document.getElementById('loading');
     ov.classList.add('out');
@@ -939,5 +959,4 @@ async function init() {
   }
 }
 
-buildAICharts();
 init();
