@@ -108,7 +108,7 @@ header {
 .header-brand {
   display: flex;
   align-items: center;
-  gap: .45rem;
+  gap: .6rem;
   padding: .85rem 0;
 }
 
