@@ -29,6 +29,7 @@ import os
 import sys
 import json
 import time
+import hashlib
 import argparse
 import logging
 from datetime import datetime, timezone
@@ -237,10 +238,30 @@ def build_output(api_response):
 
 
 def save_output(data, path):
+    # Add a data hash so the frontend can detect changes without re-parsing
+    raw = json.dumps(data["series"], sort_keys=True)
+    data["metadata"]["data_hash"] = hashlib.sha256(raw.encode()).hexdigest()[:12]
+
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
     log.info(f"Data saved → {path.resolve()}")
+
+
+def data_is_current(path, max_age_days=25):
+    """Return True if existing data was fetched less than max_age_days ago."""
+    if not path.exists():
+        return False
+    try:
+        with open(path, encoding="utf-8") as f:
+            existing = json.load(f)
+        last = existing.get("metadata", {}).get("last_updated", "")
+        if not last:
+            return False
+        age = (datetime.now(timezone.utc) - datetime.fromisoformat(last)).days
+        return age < max_age_days
+    except (json.JSONDecodeError, ValueError, KeyError):
+        return False
 
 
 # ---------------------------------------------------------------------------
@@ -253,7 +274,14 @@ def main():
     )
     parser.add_argument("--years", type=int, default=20, metavar="N",
                         help="Number of years of history to fetch (default: 20, max: 20)")
+    parser.add_argument("--force", action="store_true",
+                        help="Force fetch even if existing data is recent")
     args = parser.parse_args()
+
+    # Skip fetch if data is already current (unless --force)
+    if not args.force and data_is_current(OUTPUT_FILE):
+        log.info("Existing data is recent (< 25 days old). Skipping fetch. Use --force to override.")
+        return
 
     current_year = datetime.now().year
     years_back = max(1, min(args.years, 20))
