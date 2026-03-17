@@ -934,7 +934,9 @@ async function _doInit() {
     window._dashData = { uData, eData, nuData };
 
     const ts = new Date(data.metadata.last_updated);
-    document.getElementById('last-updated').textContent = `Updated ${ts.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+    const ageDays = Math.floor((Date.now() - ts.getTime()) / 86400000);
+    const agoText = ageDays < 1 ? 'Updated today' : ageDays === 1 ? 'Updated yesterday' : ageDays < 30 ? `Updated ${ageDays}d ago` : `Updated ${ts.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+    document.getElementById('last-updated').textContent = agoText;
 
     /* Build only the overview tab (visible on load) */
     setKPIs(uData, eData);
