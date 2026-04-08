@@ -38,8 +38,10 @@
         "scope": "national"
       }
     },
-    "last_updated": "2026-02-22T19:44:14.980139+00:00",
-    "fetch_status": "success"
+    "last_updated": "2026-04-08T13:07:30.163112+00:00",
+    "fetch_status": "success",
+    "notes": "Updated 2026-04-08: Added Feb/Mar 2026 national data from BLS Employment Situation reports. Jan 2026 US employment level revised to reflect new population controls introduced with the Feb 2026 report (released Mar 6, 2026). Miami metro data unchanged; Jan 2026 metro data scheduled for BLS release Apr 16, 2026. Oct 2025 data unavailable due to government shutdown.",
+    "data_hash": "73db63cd13e2"
   },
   "series": {
     "LAUMT123310000000003": {
@@ -5110,13 +5112,27 @@
           "period": "2026-01",
           "value": 4.3,
           "footnotes": []
+        },
+        {
+          "year": 2026,
+          "month": 2,
+          "period": "2026-02",
+          "value": 4.4,
+          "footnotes": []
+        },
+        {
+          "year": 2026,
+          "month": 3,
+          "period": "2026-03",
+          "value": 4.3,
+          "footnotes": []
         }
       ],
-      "record_count": 240,
+      "record_count": 242,
       "latest": {
         "year": 2026,
-        "month": 1,
-        "period": "2026-01",
+        "month": 3,
+        "period": "2026-03",
         "value": 4.3,
         "footnotes": []
       }
@@ -6843,16 +6859,32 @@
           "year": 2026,
           "month": 1,
           "period": "2026-01",
-          "value": 164520.0,
+          "value": 163105.0,
+          "footnotes": [
+            "Revised with updated population controls introduced March 2026."
+          ]
+        },
+        {
+          "year": 2026,
+          "month": 2,
+          "period": "2026-02",
+          "value": 162912.0,
+          "footnotes": []
+        },
+        {
+          "year": 2026,
+          "month": 3,
+          "period": "2026-03",
+          "value": 162848.0,
           "footnotes": []
         }
       ],
-      "record_count": 240,
+      "record_count": 242,
       "latest": {
         "year": 2026,
-        "month": 1,
-        "period": "2026-01",
-        "value": 164520.0,
+        "month": 3,
+        "period": "2026-03",
+        "value": 162848.0,
         "footnotes": []
       }
     }
