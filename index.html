@@ -1380,106 +1380,6 @@
 
 <!-- ══ PAGE 1: MARKET STATS ════════════════════════════════════ -->
 <div id="page-stats" class="page active">
-
-  <!-- ── MIAMI VS. THE NATION (dark section — top of page) ── -->
-  <div class="nation-section" id="nation-section">
-    <div class="nation-inner">
-
-      <div class="nation-eyebrow">
-        <span class="nation-eyebrow-line"></span>
-        <span class="nation-eyebrow-label">Context · Miami vs. The Nation</span>
-        <span class="nation-eyebrow-line"></span>
-      </div>
-
-      <div class="nation-title">How Does Miami Stack Up <span>Against the Nation?</span></div>
-      <div class="nation-desc">Miami metro unemployment benchmarked against the U.S. national average — 20 years of data. Miami is not seasonally adjusted (LAUS); U.S. national is seasonally adjusted (CPS). A lower unemployment rate than the national average signals a stronger local labor market. The spread and index charts are most useful for long-run trend analysis.</div>
-
-      <div class="nation-kpi-strip">
-        <div class="nation-kpi">
-          <div class="nation-kpi-label">Miami Unemployment</div>
-          <div class="nation-kpi-value sky" id="n-miami-unemp">—</div>
-          <div class="nation-kpi-sub" id="n-miami-unemp-period">—</div>
-        </div>
-        <div class="nation-kpi">
-          <div class="nation-kpi-label">US Unemployment</div>
-          <div class="nation-kpi-value emerald" id="n-us-unemp">—</div>
-          <div class="nation-kpi-sub" id="n-us-unemp-period">—</div>
-        </div>
-        <div class="nation-kpi">
-          <div class="nation-kpi-label">Miami vs. US Spread</div>
-          <div class="nation-kpi-value amber" id="n-spread">—</div>
-          <div class="nation-kpi-delta same" id="n-spread-badge">—</div>
-          <div class="nation-kpi-sub">pp difference · negative = Miami outperforming</div>
-        </div>
-        <div class="nation-kpi">
-          <div class="nation-kpi-label">Miami Employment</div>
-          <div class="nation-kpi-value rose" id="n-miami-emp">—</div>
-          <div class="nation-kpi-sub" id="n-miami-emp-period">—</div>
-        </div>
-      </div>
-
-      <div class="nation-grid-2">
-        <div class="nation-card">
-          <div class="nation-card-head">
-            <div>
-              <div class="nation-card-title">Unemployment Rate — Miami vs. US</div>
-              <div class="nation-card-desc">Monthly · Miami not seasonally adjusted · US seasonally adjusted</div>
-            </div>
-            <div class="range-btns">
-              <button class="btn-r" data-chart="n-unemp" data-range="24">2Y</button>
-              <button class="btn-r" data-chart="n-unemp" data-range="60">5Y</button>
-              <button class="btn-r" data-chart="n-unemp" data-range="120">10Y</button>
-              <button class="btn-r active" data-chart="n-unemp" data-range="all">All</button>
-            </div>
-          </div>
-          <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-unemp"></canvas></div></div>
-        </div>
-        <div class="nation-card">
-          <div class="nation-card-head">
-            <div>
-              <div class="nation-card-title">Unemployment Spread — Miami minus US</div>
-              <div class="nation-card-desc">Percentage point gap · negative = Miami outperforming nation</div>
-            </div>
-          </div>
-          <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-spread"></canvas></div></div>
-        </div>
-      </div>
-
-      <div class="nation-grid-2">
-        <div class="nation-card">
-          <div class="nation-card-head">
-            <div>
-              <div class="nation-card-title">Miami Unemployment — Indexed to US (US = 100)</div>
-              <div class="nation-card-desc">Values below 100 mean Miami unemployment is lower than the national rate</div>
-            </div>
-            <div class="range-btns">
-              <button class="btn-r" data-chart="n-index" data-range="24">2Y</button>
-              <button class="btn-r" data-chart="n-index" data-range="60">5Y</button>
-              <button class="btn-r" data-chart="n-index" data-range="120">10Y</button>
-              <button class="btn-r active" data-chart="n-index" data-range="all">All</button>
-            </div>
-          </div>
-          <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-index"></canvas></div></div>
-        </div>
-        <div class="nation-card">
-          <div class="nation-card-head">
-            <div>
-              <div class="nation-card-title">YoY Change — Miami vs. US Unemployment</div>
-              <div class="nation-card-desc">Percentage point change vs. same month prior year</div>
-            </div>
-          </div>
-          <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-yoy"></canvas></div></div>
-        </div>
-      </div>
-
-      <div class="nation-note">
-        ⚠ Methodology: Miami–Fort Lauderdale–West Palm Beach data (LAUMT123310000000003 &amp; LAUMT123310000000005) is <strong>not seasonally adjusted</strong>. U.S. national data (LNS14000000 &amp; LNS12000000) is <strong>seasonally adjusted</strong>. Account for Miami's seasonal employment patterns (tourism, hospitality) when comparing month-to-month.
-      </div>
-
-    </div>
-  </div><!-- /nation-section -->
-
-  <!-- ── MIAMI LOCAL STATS ── -->
   <div class="stats-section-inner">
 
     <div id="error-box"></div>
@@ -1516,15 +1416,15 @@
     </div>
 
     <div class="section-head">
-      <span class="section-title">Monthly Trends — Miami Metro</span>
+      <span class="section-title">Miami Unemployment Rate</span>
       <span class="section-divider"></span>
     </div>
-    <div class="grid-2">
+    <div class="grid-1">
       <div class="card">
         <div class="card-head">
           <div>
-            <div class="card-title">Unemployment Rate (%)</div>
-            <div class="card-desc">Monthly · Not seasonally adjusted · Miami–Fort Lauderdale–West Palm Beach MSA</div>
+            <div class="card-title">Unemployment Rate (%) — Monthly</div>
+            <div class="card-desc">Not seasonally adjusted · Miami–Fort Lauderdale–West Palm Beach MSA · shaded bands mark recessions &amp; major shocks</div>
           </div>
           <div class="range-btns">
             <button class="btn-r" data-chart="unemp" data-range="24">2Y</button>
@@ -1533,13 +1433,42 @@
             <button class="btn-r active" data-chart="unemp" data-range="all">All</button>
           </div>
         </div>
-        <div class="card-body"><div class="chart-wrap"><canvas id="c-unemp"></canvas></div></div>
+        <div class="card-body"><div class="chart-wrap tall"><canvas id="c-unemp"></canvas></div></div>
       </div>
+    </div>
+
+    <div class="section-head" style="margin-top:1rem">
+      <span class="section-title">20-Year Pattern — Year × Month Heatmap</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="card" style="margin-bottom:1rem">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Miami Unemployment Rate — Calendar Heatmap</div>
+          <div class="card-desc">Each cell = one month · colors shift blue (low) → red (high) · hover for exact value and historical context</div>
+        </div>
+        <div class="heatmap-legend">
+          <span class="hl-label">Low</span>
+          <span class="hl-grad"></span>
+          <span class="hl-label">High</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="heatmap-wrap"><div id="heatmap" class="heatmap"></div></div>
+        <div id="heatmap-hint" class="heatmap-hint">—</div>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top:1rem">
+      <span class="section-title">Miami Employment Level</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="grid-1">
       <div class="card">
         <div class="card-head">
           <div>
-            <div class="card-title">Total Employment Level</div>
-            <div class="card-desc">Monthly persons employed · Miami–Fort Lauderdale–West Palm Beach MSA</div>
+            <div class="card-title">Total Employment Level — Monthly</div>
+            <div class="card-desc">Persons employed · Miami–Fort Lauderdale–West Palm Beach MSA</div>
           </div>
           <div class="range-btns">
             <button class="btn-r" data-chart="emp" data-range="24">2Y</button>
@@ -1552,6 +1481,10 @@
       </div>
     </div>
 
+    <div class="section-head" style="margin-top:1rem">
+      <span class="section-title">Rate vs. Level — Combined View</span>
+      <span class="section-divider"></span>
+    </div>
     <div class="grid-1">
       <div class="card">
         <div class="card-head">
@@ -1570,6 +1503,10 @@
       </div>
     </div>
 
+    <div class="section-head" style="margin-top:1rem">
+      <span class="section-title">Change &amp; Seasonality</span>
+      <span class="section-divider"></span>
+    </div>
     <div class="grid-2">
       <div class="card">
         <div class="card-head">
@@ -1591,29 +1528,7 @@
       </div>
     </div>
 
-    <div class="section-head" style="margin-top:.5rem">
-      <span class="section-title">Unemployment Heatmap — Year × Month</span>
-      <span class="section-divider"></span>
-    </div>
-    <div class="card" style="margin-bottom:1rem">
-      <div class="card-head">
-        <div>
-          <div class="card-title">Miami Unemployment Rate — Calendar Heatmap</div>
-          <div class="card-desc">Each cell = one month · darker red = higher unemployment · hover for exact value</div>
-        </div>
-        <div class="heatmap-legend">
-          <span class="hl-label">Low</span>
-          <span class="hl-grad"></span>
-          <span class="hl-label">High</span>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="heatmap-wrap"><div id="heatmap" class="heatmap"></div></div>
-        <div id="heatmap-hint" class="heatmap-hint">—</div>
-      </div>
-    </div>
-
-    <div class="section-head" style="margin-top:.5rem">
+    <div class="section-head" style="margin-top:1rem">
       <span class="section-title">Recent Monthly Data — Last 24 Months</span>
       <span class="section-divider"></span>
     </div>
@@ -3086,12 +3001,8 @@ async function init() {
     buildTable(uData, eData);
 
     /* National comparison */
-    const nKeys = keys.filter(k => data.series[k].scope === 'national');
-    const nuKey = nKeys.find(k => data.series[k].label.toLowerCase().includes('unemployment'));
-    if (nuKey) {
-      const nuData = data.series[nuKey].data;
-      buildNationSection(uData, nuData);
-    }
+    // Nation comparison section was removed (Miami-first focus).
+    // Leaving US series parsing disabled to avoid rendering hidden charts.
 
     /* Hiring Signals charts */
     buildSignalsCharts();
