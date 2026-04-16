@@ -174,6 +174,12 @@
     .kpi-delta.down { background: var(--red-pale);   color: var(--red); }
     .kpi-delta.flat { background: var(--surface2);   color: var(--muted); }
     .kpi-period { font-size: .68rem; color: var(--faint); margin-top: .15rem; }
+    .kpi-trend { display: inline-flex; align-items: center; gap: .22rem; font-size: .66rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; margin-top: .18rem; }
+    .kpi-trend.up   { color: var(--red); }      /* unemployment rising = bad */
+    .kpi-trend.down { color: var(--green); }    /* unemployment falling = good */
+    .kpi-trend.up-good   { color: var(--green); } /* employment rising = good */
+    .kpi-trend.down-bad  { color: var(--red); }
+    .kpi-trend.flat { color: var(--muted); }
 
     /* ── CARDS ── */
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow-sm); overflow: hidden; transition: box-shadow .2s; }
@@ -1393,12 +1399,14 @@
         <div class="kpi-label">Unemployment Rate</div>
         <div class="kpi-value" id="kpi-unemp">—</div>
         <div class="kpi-delta flat" id="kpi-unemp-delta">—</div>
+        <div class="kpi-trend flat" id="kpi-unemp-trend">—</div>
         <div class="kpi-period" id="kpi-unemp-period">—</div>
       </div>
       <div class="kpi teal">
         <div class="kpi-label">Total Employment</div>
         <div class="kpi-value" id="kpi-emp">—</div>
         <div class="kpi-delta flat" id="kpi-emp-delta">—</div>
+        <div class="kpi-trend flat" id="kpi-emp-trend">—</div>
         <div class="kpi-period" id="kpi-emp-period">—</div>
       </div>
       <div class="kpi amber">
@@ -1447,10 +1455,16 @@
           <div class="card-title">Miami Unemployment Rate — Calendar Heatmap</div>
           <div class="card-desc">Each cell = one month · colors shift blue (low) → red (high) · hover for exact value and historical context</div>
         </div>
-        <div class="heatmap-legend">
-          <span class="hl-label">Low</span>
-          <span class="hl-grad"></span>
-          <span class="hl-label">High</span>
+        <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+          <div class="range-btns" id="heatmap-range">
+            <button class="btn-r active" data-hm-range="10">10Y</button>
+            <button class="btn-r" data-hm-range="all">All</button>
+          </div>
+          <div class="heatmap-legend">
+            <span class="hl-label">Low</span>
+            <span class="hl-grad"></span>
+            <span class="hl-label">High</span>
+          </div>
         </div>
       </div>
       <div class="card-body">
@@ -1504,27 +1518,18 @@
     </div>
 
     <div class="section-head" style="margin-top:1rem">
-      <span class="section-title">Change &amp; Seasonality</span>
+      <span class="section-title">Year-over-Year Change</span>
       <span class="section-divider"></span>
     </div>
-    <div class="grid-2">
+    <div class="grid-1">
       <div class="card">
         <div class="card-head">
           <div>
-            <div class="card-title">Year-over-Year Change — Unemployment Rate</div>
-            <div class="card-desc">Percentage point change vs. same month prior year</div>
+            <div class="card-title">YoY Change — Unemployment Rate</div>
+            <div class="card-desc">Percentage point change vs. same month prior year · teal = improving, red = worsening</div>
           </div>
         </div>
         <div class="card-body"><div class="chart-wrap"><canvas id="c-yoy"></canvas></div></div>
-      </div>
-      <div class="card">
-        <div class="card-head">
-          <div>
-            <div class="card-title">Seasonal Pattern — Avg Unemployment by Month</div>
-            <div class="card-desc">Average unemployment rate per calendar month across all years in dataset</div>
-          </div>
-        </div>
-        <div class="card-body"><div class="chart-wrap"><canvas id="c-seasonal"></canvas></div></div>
       </div>
     </div>
 
@@ -2579,6 +2584,34 @@ function eventForPeriod(p) {
   return null;
 }
 
+/* 3-month trend chip: last-3 mean vs prior-3 mean.
+   `higherIsBad = true` flips color semantics (unemployment up = red). */
+function setTrend(elId, window6, unit, verb, higherIsBad) {
+  const el = document.getElementById(elId);
+  if (!el || window6.length < 6) return;
+  const recent = window6.slice(-3), prior = window6.slice(0,3);
+  const mean = a => a.reduce((x,y) => x+y, 0) / a.length;
+  const delta = mean(recent) - mean(prior);
+  const absDelta = Math.abs(delta);
+  const threshold = unit === 'pp' ? 0.1 : 500;
+  let cls = 'flat', arrow = '→', label = 'Stable';
+  if (absDelta < threshold) { cls = 'flat'; arrow = '→'; label = 'Stable'; }
+  else if (delta > 0) {
+    arrow = '↗';
+    cls = higherIsBad ? 'up' : 'up-good';
+    label = higherIsBad ? 'Rising' : 'Growing';
+  } else {
+    arrow = '↘';
+    cls = higherIsBad ? 'down' : 'down-bad';
+    label = higherIsBad ? 'Falling' : 'Shrinking';
+  }
+  const disp = unit === 'pp'
+    ? `${delta >= 0 ? '+' : ''}${delta.toFixed(2)} pp`
+    : `${delta >= 0 ? '+' : ''}${fmtEmp(Math.abs(delta)).replace(/^-/,'')}`;
+  el.className = `kpi-trend ${cls}`;
+  el.textContent = `${arrow} ${label} · 3-mo ${disp}`;
+}
+
 /* ── Mobile menu ── */
 function toggleMobileMenu() {
   const nav = document.getElementById('nav-tabs');
@@ -2671,6 +2704,10 @@ function setKPIs(uData, eData) {
   const avg = last12.reduce((a,b) => a+b, 0) / last12.length;
   document.getElementById('kpi-avg').textContent = avg.toFixed(2) + '%';
   document.getElementById('kpi-avg-period').textContent = `${fmtPeriod(uData.at(-12).period)} – ${fmtPeriod(lu.period)}`;
+
+  // 3-month trend chips: compare avg of last 3 vs prior 3
+  setTrend('kpi-unemp-trend', uData.slice(-6).map(d => d.value), 'pp', 'rising',  true);
+  setTrend('kpi-emp-trend',   eData.slice(-6).map(d => d.value), 'persons', 'rising', false);
 
   const peak = uData.reduce((a,b) => b.value > a.value ? b : a);
   document.getElementById('kpi-peak').textContent = peak.value.toFixed(1) + '%';
@@ -2826,12 +2863,20 @@ function exportTableCSV() {
   URL.revokeObjectURL(url);
 }
 
+let HEATMAP_DATA = null, HEATMAP_RANGE = 10;
 function buildHeatmap(uData) {
+  HEATMAP_DATA = uData;
+  renderHeatmap();
+}
+function renderHeatmap() {
+  const uData = HEATMAP_DATA;
   const host = document.getElementById('heatmap');
-  if (!host) return;
-  const years = [...new Set(uData.map(d => d.year))].sort((a,b) => a - b);
+  if (!host || !uData) return;
+  let yearsAll = [...new Set(uData.map(d => d.year))].sort((a,b) => a - b);
+  const years = HEATMAP_RANGE === 'all' ? yearsAll : yearsAll.slice(-HEATMAP_RANGE);
   const byKey = {};
   uData.forEach(d => { byKey[`${d.year}-${d.month}`] = d; });
+  // Scale against full dataset so colors stay comparable between views
   const vals = uData.map(d => d.value);
   const min = Math.min(...vals), max = Math.max(...vals);
   const scale = v => {
@@ -2867,15 +2912,28 @@ function buildHeatmap(uData) {
   });
   host.innerHTML = '';
   host.appendChild(frag);
-  host.addEventListener('mouseover', e => {
-    const cell = e.target.closest('.h-cell');
-    if (!cell || !cell.dataset.period) return;
-    const [y, m] = cell.dataset.period.split('-');
-    const ev = eventForPeriod(cell.dataset.period);
-    document.getElementById('heatmap-hint').textContent =
-      `${MON_FULL[+m-1]} ${y} — ${(+cell.dataset.value).toFixed(1)}% unemployment${ev ? ' · ' + ev : ''}`;
-  });
+  if (!host._hoverBound) {
+    host.addEventListener('mouseover', e => {
+      const cell = e.target.closest('.h-cell');
+      if (!cell || !cell.dataset.period) return;
+      const [y, m] = cell.dataset.period.split('-');
+      const ev = eventForPeriod(cell.dataset.period);
+      document.getElementById('heatmap-hint').textContent =
+        `${MON_FULL[+m-1]} ${y} — ${(+cell.dataset.value).toFixed(1)}% unemployment${ev ? ' · ' + ev : ''}`;
+    });
+    host._hoverBound = true;
+  }
 }
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('#heatmap-range .btn-r[data-hm-range]');
+  if (!b) return;
+  b.closest('.range-btns').querySelectorAll('.btn-r').forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  const r = b.dataset.hmRange;
+  HEATMAP_RANGE = r === 'all' ? 'all' : parseInt(r);
+  renderHeatmap();
+});
 
 document.addEventListener('click', e => {
   const th = e.target.closest('#data-table thead th[data-sort]');
@@ -2996,7 +3054,6 @@ async function init() {
     buildEmp(eData);
     buildDual(uData, eData);
     buildYoY(uData);
-    buildSeasonal(uData);
     buildHeatmap(uData);
     buildTable(uData, eData);
 
