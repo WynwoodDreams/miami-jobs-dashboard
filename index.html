@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" /></noscript>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
   </script>
@@ -203,6 +204,45 @@
     tbody td { padding: .6rem 1.25rem; color: var(--text2); }
     td.mono { font-family: 'SF Mono','Fira Code','Consolas',monospace; font-size: .78rem; }
     .tag-p { display: inline-block; background: #fef3c7; color: #92400e; font-size: .62rem; font-weight: 700; padding: .08rem .35rem; border-radius: 4px; letter-spacing: .04em; text-transform: uppercase; margin-left: .35rem; vertical-align: middle; }
+
+    /* ── HEATMAP ── */
+    .heatmap-wrap { overflow-x: auto; }
+    .heatmap { display: grid; grid-template-columns: 44px repeat(12, 1fr); gap: 2px; min-width: 640px; font-size: .68rem; }
+    .heatmap .h-cell { padding: .35rem .2rem; text-align: center; border-radius: 3px; color: #fff; font-weight: 600; letter-spacing: .02em; cursor: default; transition: transform .12s; }
+    .heatmap .h-cell:hover { transform: scale(1.15); box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+    .heatmap .h-head { background: transparent; color: var(--muted); font-weight: 700; padding: .35rem .2rem; text-align: center; font-size: .65rem; letter-spacing: .05em; }
+    .heatmap .h-year { background: transparent; color: var(--text2); font-weight: 700; padding: .35rem .4rem; text-align: right; font-size: .7rem; font-family: 'SF Mono','Consolas',monospace; }
+    .heatmap .h-empty { background: var(--surface2); border: 1px dashed var(--border); color: transparent; }
+    .heatmap-hint { margin-top: .5rem; font-size: .72rem; color: var(--muted); font-family: 'SF Mono','Consolas',monospace; min-height: 1.2em; }
+    .heatmap-legend { display: inline-flex; align-items: center; gap: .4rem; font-size: .68rem; color: var(--muted); }
+    .heatmap-legend .hl-grad { width: 120px; height: 10px; border-radius: 3px; background: linear-gradient(90deg, #1d4ed8 0%, #0d9488 25%, #fbbf24 55%, #f97316 75%, #b91c1c 100%); }
+    .heatmap-legend .hl-label { text-transform: uppercase; letter-spacing: .07em; font-weight: 600; font-size: .62rem; }
+
+    /* ── TABLE TOOLBAR ── */
+    .table-toolbar { display: flex; gap: .6rem; align-items: center; padding: .65rem 1rem; border-bottom: 1px solid var(--border); background: var(--surface2); }
+    .tbl-input { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: .45rem .7rem; font-size: .8rem; color: var(--text); font-family: inherit; outline: none; transition: border-color .15s; }
+    .tbl-input:focus { border-color: var(--blue-l); box-shadow: 0 0 0 3px rgba(59,130,246,.12); }
+    .tbl-btn { background: var(--blue); border: 1px solid var(--blue); color: #fff; border-radius: 6px; padding: .45rem .85rem; font-size: .75rem; font-weight: 600; cursor: pointer; font-family: inherit; letter-spacing: .03em; transition: background .15s; flex-shrink: 0; }
+    .tbl-btn:hover { background: var(--blue-l); }
+    #data-table thead th[data-sort] { cursor: pointer; user-select: none; }
+    #data-table thead th[data-sort]:hover { color: var(--blue); background: #eef2f7; }
+    #data-table thead th.sorted-asc::after  { content: ' ▲'; color: var(--blue); font-size: .65rem; }
+    #data-table thead th.sorted-desc::after { content: ' ▼'; color: var(--blue); font-size: .65rem; }
+    #ai-sector-table thead th.sorted-asc::after  { content: ' ▲'; color: var(--purple); font-size: .65rem; }
+    #ai-sector-table thead th.sorted-desc::after { content: ' ▼'; color: var(--purple); font-size: .65rem; }
+    #ai-sector-table thead th:hover { color: var(--purple); }
+
+    /* ── SEARCH (AI / ROLE EVOLUTION) ── */
+    .inline-search { display: flex; align-items: center; gap: .5rem; margin-bottom: 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: .4rem .7rem; box-shadow: var(--shadow-sm); }
+    .inline-search input { flex: 1; border: none; outline: none; font: inherit; font-size: .82rem; color: var(--text); background: transparent; padding: .25rem 0; }
+    .inline-search .is-icon { color: var(--muted); font-size: .95rem; }
+    .inline-search .is-clear { background: none; border: none; color: var(--muted); cursor: pointer; font-size: .9rem; padding: .1rem .35rem; border-radius: 4px; }
+    .inline-search .is-clear:hover { background: var(--surface2); color: var(--red); }
+
+    /* ── CHART ACTIONS (PNG export) ── */
+    .chart-actions { display: inline-flex; gap: .25rem; }
+    .chart-act-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); border-radius: 5px; font-size: .65rem; font-weight: 700; padding: .22rem .5rem; cursor: pointer; letter-spacing: .05em; text-transform: uppercase; font-family: inherit; transition: all .15s; }
+    .chart-act-btn:hover { color: var(--blue); border-color: var(--blue-l); }
 
     /* ── FOOTER ── */
     footer { border-top: 1px solid var(--border); background: var(--surface); padding: 1.25rem 2rem; font-size: .72rem; color: var(--muted); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
@@ -1524,16 +1564,42 @@
     </div>
 
     <div class="section-head" style="margin-top:.5rem">
+      <span class="section-title">Unemployment Heatmap — Year × Month</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="card" style="margin-bottom:1rem">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Miami Unemployment Rate — Calendar Heatmap</div>
+          <div class="card-desc">Each cell = one month · darker red = higher unemployment · hover for exact value</div>
+        </div>
+        <div class="heatmap-legend">
+          <span class="hl-label">Low</span>
+          <span class="hl-grad"></span>
+          <span class="hl-label">High</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="heatmap-wrap"><div id="heatmap" class="heatmap"></div></div>
+        <div id="heatmap-hint" class="heatmap-hint">—</div>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top:.5rem">
       <span class="section-title">Recent Monthly Data — Last 24 Months</span>
       <span class="section-divider"></span>
     </div>
     <div class="card">
+      <div class="table-toolbar">
+        <input id="tbl-search" type="search" placeholder="Filter by month or year (e.g. Jan, 2024)" class="tbl-input" />
+        <button class="tbl-btn" id="tbl-export" type="button">⬇ Export CSV</button>
+      </div>
       <div class="table-wrap">
-        <table>
+        <table id="data-table">
           <thead>
             <tr>
-              <th>Period</th><th>Month</th><th>Unemployment Rate</th>
-              <th>Employment Level</th><th>Unemp. YoY Δ</th><th>Emp. YoY Δ</th><th>Status</th>
+              <th data-sort="period">Period</th><th data-sort="month">Month</th><th data-sort="unemp">Unemployment Rate</th>
+              <th data-sort="emp">Employment Level</th><th data-sort="uyoy">Unemp. YoY Δ</th><th data-sort="eyoy">Emp. YoY Δ</th><th data-sort="status">Status</th>
             </tr>
           </thead>
           <tbody id="tbl-body">
@@ -1689,6 +1755,12 @@
       <span class="section-divider"></span>
     </div>
 
+    <div class="inline-search" id="ai-search-wrap">
+      <span class="is-icon">🔎</span>
+      <input id="ai-search" type="search" placeholder="Search occupation or sector (e.g. software, hospitality, finance)" />
+      <button class="is-clear" id="ai-clear" type="button" title="Clear">✕</button>
+    </div>
+
     <div class="risk-legend">
       <span class="risk-dot high">High Exposure (40%+)</span>
       <span class="risk-dot medium">Medium Exposure (30–39%)</span>
@@ -1704,7 +1776,7 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="exposure-bar-list">
+          <div class="exposure-bar-list ai-searchable">
             <div class="exp-row">
               <div class="exp-row-top">
                 <span class="exp-role">Customer Service Representatives</span>
@@ -1758,16 +1830,16 @@
         </div>
         <div class="card-body">
           <div class="sector-table-wrap">
-            <table class="sector-table">
+            <table class="sector-table" id="ai-sector-table">
               <thead>
                 <tr>
-                  <th>Sector</th>
-                  <th>Miami Workers</th>
-                  <th>AI Risk Level</th>
-                  <th>Primary Driver</th>
+                  <th data-sort="sector">Sector</th>
+                  <th data-sort="workers">Miami Workers</th>
+                  <th data-sort="risk">AI Risk Level</th>
+                  <th data-sort="driver">Primary Driver</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody class="ai-searchable">
                 <tr>
                   <td><strong>Hospitality &amp; Tourism</strong></td>
                   <td>~280,000</td>
@@ -1915,6 +1987,17 @@
         <div class="card-body"><div class="ai-chart-wrap"><canvas id="c-ai-stacked"></canvas></div></div>
       </div>
 
+      <!-- Row 4: AI Risk Evolution timeline -->
+      <div class="card" style="margin-bottom:1rem">
+        <div class="card-head">
+          <div>
+            <div class="card-title">AI Risk Evolution — 2020 → 2026</div>
+            <div class="card-desc">Estimated share of tasks automatable per occupation · Microsoft AI Applicability Study (interpolated)</div>
+          </div>
+        </div>
+        <div class="card-body"><div class="ai-chart-wrap tall"><canvas id="c-ai-evolution"></canvas></div></div>
+      </div>
+
     </div><!-- /ai-viz-section -->
 
   </div>
@@ -1962,7 +2045,14 @@
       <span class="section-title">Active Hiring Signals</span>
       <span class="section-divider"></span>
     </div>
-    <div class="startup-grid">
+
+    <div class="inline-search" id="sig-search-wrap">
+      <span class="is-icon">🔎</span>
+      <input id="sig-search" type="search" placeholder="Filter companies, sectors, or roles (e.g. engineering, real estate)" />
+      <button class="is-clear" id="sig-clear" type="button" title="Clear">✕</button>
+    </div>
+
+    <div class="startup-grid" id="startup-grid">
       <div class="startup-card raised"><div class="startup-name">Brightline</div><div class="startup-sector">Transportation · Rail · Infrastructure</div><div class="startup-raise raised">📈 $2.5B Expansion Phase</div><div class="startup-desc">Florida’s private intercity rail operator expanding Miami–Orlando–Tampa. Major infrastructure buildout driving sustained hiring across operations, technology, hospitality, and corporate functions.</div><div class="startup-hiring">Actively hiring — Operations, Tech, Hospitality, Corporate</div></div>
       <div class="startup-card raised"><div class="startup-name">Kaseya</div><div class="startup-sector">IT Management · SaaS · MSP</div><div class="startup-raise raised">💰 $6.2B Valuation · PE-Backed</div><div class="startup-desc">Miami-headquartered IT management platform serving MSPs globally. Consistently one of Miami’s largest tech employers with ongoing engineering, sales, and support hiring across all levels.</div><div class="startup-hiring">Actively hiring — Engineering, Sales, Customer Success</div></div>
       <div class="startup-card series"><div class="startup-name">Reef Technology</div><div class="startup-sector">Logistics · Last-Mile · Urban Infrastructure</div><div class="startup-raise series">📈 Series C+ · $700M+</div><div class="startup-desc">Miami-headquartered proximity-as-a-service platform operating parking, logistics, and delivery hubs. Strong signal for operations, tech, and driver-facing roles.</div><div class="startup-hiring">Actively hiring — Operations, Logistics, Tech</div></div>
@@ -1983,6 +2073,17 @@
       <div class="signals-chart-card">
         <div class="card-head"><span class="card-title">Roles Most In Demand</span><span class="card-sub">Aggregated hiring role categories across all 10 signals</span></div>
         <canvas id="c-sig-roles" height="260"></canvas>
+      </div>
+    </div>
+
+    <div class="signals-chart-row" style="margin-top:1rem">
+      <div class="signals-chart-card">
+        <div class="card-head"><span class="card-title">Signal Cadence — Funding &amp; Expansion Events</span><span class="card-sub">Count of headline events per quarter · by signal strength</span></div>
+        <canvas id="c-sig-cadence" height="260"></canvas>
+      </div>
+      <div class="signals-chart-card">
+        <div class="card-head"><span class="card-title">Capital &amp; Valuation by Signal</span><span class="card-sub">Approximate scale of recent South Florida capital movements ($M)</span></div>
+        <canvas id="c-sig-capital" height="260"></canvas>
       </div>
     </div>
 
@@ -2009,6 +2110,18 @@
           <div class="evo-hero-stat"><div class="val">14+</div><div class="lbl">Real Job Postings</div></div>
         </div>
       </div>
+    </div>
+
+    <!-- Search + Expand controls -->
+    <div class="inline-search" id="evo-search-wrap">
+      <span class="is-icon">🔎</span>
+      <input id="evo-search" type="search" placeholder="Search skills, tools, or keywords (e.g. Python, SIEM, Kubernetes, React)" />
+      <button class="is-clear" id="evo-clear" type="button" title="Clear">✕</button>
+    </div>
+    <div style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap">
+      <button type="button" class="tbl-btn" id="evo-expand-all" style="background:var(--surface2);border:1px solid var(--border);color:var(--text2)">⊞ Expand All</button>
+      <button type="button" class="tbl-btn" id="evo-collapse-all" style="background:var(--surface2);border:1px solid var(--border);color:var(--text2)">⊟ Collapse All</button>
+      <span id="evo-match-count" style="font-size:.72rem;color:var(--muted);align-self:center;margin-left:auto"></span>
     </div>
 
     <!-- Filter -->
@@ -2492,6 +2605,37 @@ Chart.defaults.borderColor = '#e2e8f0';
 
 const REGISTRY = {};
 
+/* ── Historic events (for annotation bands on long-range charts) ── */
+const EVENTS = [
+  { start: '2008-09', end: '2009-12', label: 'Great Recession',  color: 'rgba(244,114,182,.08)', lineColor: '#f472b6' },
+  { start: '2020-03', end: '2020-12', label: 'COVID-19 Lockdown', color: 'rgba(248,113,113,.10)', lineColor: '#f87171' },
+  { start: '2022-03', end: '2023-07', label: 'Fed Hiking Cycle',  color: 'rgba(251,191,36,.06)', lineColor: '#fbbf24' }
+];
+function eventAnnotations(labels) {
+  const idx = Object.create(null);
+  labels.forEach((lab, i) => { idx[lab] = i; });
+  const toLabel = p => { const [y,m] = p.split('-'); return `${MON[+m-1]} ${y}`; };
+  const out = {};
+  EVENTS.forEach((ev, n) => {
+    const s = idx[toLabel(ev.start)], e = idx[toLabel(ev.end)];
+    if (s === undefined || e === undefined) return;
+    out['band'+n] = { type:'box', xMin:s, xMax:e, backgroundColor:ev.color, borderWidth:0 };
+    out['lbl'+n]  = { type:'label', xValue:(s+e)/2, yValue:'max', position:'start', yAdjust:10,
+      content:ev.label, color:ev.lineColor, font:{size:10, weight:'600'},
+      backgroundColor:'rgba(255,255,255,.85)', padding:{x:4,y:2}, borderRadius:3 };
+  });
+  return out;
+}
+function eventAnnotationsDark(labels) {
+  const ann = eventAnnotations(labels);
+  Object.keys(ann).forEach(k => { if (k.startsWith('lbl')) ann[k].backgroundColor = 'rgba(15,23,42,.75)'; });
+  return ann;
+}
+function eventForPeriod(p) {
+  for (const ev of EVENTS) { if (p >= ev.start && p <= ev.end) return ev.label; }
+  return null;
+}
+
 /* ── Mobile menu ── */
 function toggleMobileMenu() {
   const nav = document.getElementById('nav-tabs');
@@ -2587,7 +2731,8 @@ function setKPIs(uData, eData) {
 
   const peak = uData.reduce((a,b) => b.value > a.value ? b : a);
   document.getElementById('kpi-peak').textContent = peak.value.toFixed(1) + '%';
-  document.getElementById('kpi-peak-when').textContent = fmtPeriod(peak.period);
+  const ctx2 = eventForPeriod(peak.period);
+  document.getElementById('kpi-peak-when').textContent = fmtPeriod(peak.period) + (ctx2 ? ` · ${ctx2}` : '');
 }
 
 const slice = (data, r) => r === 'all' ? data : data.slice(-parseInt(r));
@@ -2597,7 +2742,8 @@ function buildUnemp(all) {
   const ctx = document.getElementById('c-unemp').getContext('2d');
   const grad = ctx.createLinearGradient(0,0,0,270);
   grad.addColorStop(0,'rgba(29,78,216,.15)'); grad.addColorStop(1,'rgba(29,78,216,0)');
-  const chart = new Chart(ctx, { type:'line', data:{ labels:all.map(d=>fmtPeriod(d.period)), datasets:[{ data:all.map(d=>d.value), borderColor:'#1d4ed8', backgroundColor:grad, borderWidth:2, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35 }] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:false}, tooltip:{...ttBase,callbacks:{label:c=>` ${c.parsed.y.toFixed(1)}%`}}}, scales:{ x:{grid:{color:'#f1f5f9'},ticks:{maxTicksLimit:10,maxRotation:0}}, y:{grid:{color:'#f1f5f9'},ticks:{callback:v=>v+'%'},title:{display:true,text:'Rate (%)',color:'#94a3b8',font:{size:11}}} } } });
+  const labels = all.map(d=>fmtPeriod(d.period));
+  const chart = new Chart(ctx, { type:'line', data:{ labels, datasets:[{ data:all.map(d=>d.value), borderColor:'#1d4ed8', backgroundColor:grad, borderWidth:2, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35 }] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:false}, tooltip:{...ttBase,callbacks:{label:c=>` ${c.parsed.y.toFixed(1)}%`}}, annotation:{ annotations: eventAnnotations(labels) }}, scales:{ x:{grid:{color:'#f1f5f9'},ticks:{maxTicksLimit:10,maxRotation:0}}, y:{grid:{color:'#f1f5f9'},ticks:{callback:v=>v+'%'},title:{display:true,text:'Rate (%)',color:'#94a3b8',font:{size:11}}} } } });
   REGISTRY['unemp'] = { chart, all };
 }
 
@@ -2611,7 +2757,8 @@ function buildEmp(all) {
 
 function buildDual(uAll, eAll) {
   const ctx = document.getElementById('c-dual').getContext('2d');
-  const chart = new Chart(ctx, { type:'line', data:{ labels:uAll.map(d=>fmtPeriod(d.period)), datasets:[{ label:'Unemployment Rate (%)', data:uAll.map(d=>d.value), borderColor:'#1d4ed8', backgroundColor:'rgba(29,78,216,.06)', borderWidth:2.5, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35, yAxisID:'y' }, { label:'Employment Level', data:eAll.map(d=>d.value), borderColor:'#0d9488', backgroundColor:'rgba(13,148,136,.06)', borderWidth:2.5, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35, yAxisID:'y1' }] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{ legend:{display:true,position:'top',labels:{color:'#334155',boxWidth:12,padding:16,font:{size:12}}}, tooltip:{...ttBase,callbacks:{label:c=>c.datasetIndex===0?` Unemp: ${c.parsed.y.toFixed(1)}%`:` Employed: ${fmtEmp(c.parsed.y)}`}} }, scales:{ x:{grid:{color:'#f1f5f9'},ticks:{maxTicksLimit:12,maxRotation:0}}, y:{position:'left',grid:{color:'#f1f5f9'},ticks:{callback:v=>v+'%'},title:{display:true,text:'Unemployment Rate (%)',color:'#1d4ed8',font:{size:11}}}, y1:{position:'right',grid:{drawOnChartArea:false},ticks:{callback:v=>fmtEmp(v)},title:{display:true,text:'Employment Level',color:'#0d9488',font:{size:11}}} } } });
+  const labels = uAll.map(d=>fmtPeriod(d.period));
+  const chart = new Chart(ctx, { type:'line', data:{ labels, datasets:[{ label:'Unemployment Rate (%)', data:uAll.map(d=>d.value), borderColor:'#1d4ed8', backgroundColor:'rgba(29,78,216,.06)', borderWidth:2.5, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35, yAxisID:'y' }, { label:'Employment Level', data:eAll.map(d=>d.value), borderColor:'#0d9488', backgroundColor:'rgba(13,148,136,.06)', borderWidth:2.5, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35, yAxisID:'y1' }] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{ legend:{display:true,position:'top',labels:{color:'#334155',boxWidth:12,padding:16,font:{size:12}}}, tooltip:{...ttBase,callbacks:{label:c=>c.datasetIndex===0?` Unemp: ${c.parsed.y.toFixed(1)}%`:` Employed: ${fmtEmp(c.parsed.y)}`}}, annotation:{ annotations: eventAnnotations(labels) } }, scales:{ x:{grid:{color:'#f1f5f9'},ticks:{maxTicksLimit:12,maxRotation:0}}, y:{position:'left',grid:{color:'#f1f5f9'},ticks:{callback:v=>v+'%'},title:{display:true,text:'Unemployment Rate (%)',color:'#1d4ed8',font:{size:11}}}, y1:{position:'right',grid:{drawOnChartArea:false},ticks:{callback:v=>fmtEmp(v)},title:{display:true,text:'Employment Level',color:'#0d9488',font:{size:11}}} } } });
   REGISTRY['dual'] = { chart, uAll, eAll };
 }
 
@@ -2667,26 +2814,140 @@ document.addEventListener('click', e => {
   reg.chart.update('active');
 });
 
+let TABLE_ROWS = [];
+let TABLE_SORT = { key: 'period', dir: 'desc' };
+
 function buildTable(uData, eData) {
   const eMap={}, uMap={};
   eData.forEach(d=>eMap[d.period]=d);
   uData.forEach(d=>uMap[d.period]=d);
+
+  TABLE_ROWS = [...uData].slice(-24).map(u => {
+    const e = eMap[u.period];
+    const py = `${u.year-1}-${String(u.month).padStart(2,'0')}`;
+    const pu = uMap[py], pe = eMap[py];
+    const prelim = u.footnotes.some(f => f.toLowerCase().includes('prelim'));
+    return {
+      period: u.period, month: MON_FULL[u.month-1], monthShort: MON[u.month-1], year: u.year,
+      unemp: u.value, emp: e ? e.value : null,
+      uyoy: pu ? +(u.value - pu.value).toFixed(2) : null,
+      eyoy: (e && pe) ? e.value - pe.value : null,
+      status: prelim ? 'Preliminary' : 'Final', prelim
+    };
+  });
+  renderTableRows();
+}
+
+function renderTableRows() {
   const tbody = document.getElementById('tbl-body');
+  if (!tbody) return;
+  const q = (document.getElementById('tbl-search')?.value || '').trim().toLowerCase();
+  const { key, dir } = TABLE_SORT;
+  const mult = dir === 'asc' ? 1 : -1;
+  const rows = TABLE_ROWS
+    .filter(r => !q || r.period.includes(q) || r.month.toLowerCase().includes(q) || r.monthShort.toLowerCase().includes(q) || String(r.year).includes(q) || r.status.toLowerCase().includes(q))
+    .sort((a,b) => {
+      const va = a[key], vb = b[key];
+      if (va == null && vb == null) return 0;
+      if (va == null) return 1;
+      if (vb == null) return -1;
+      if (typeof va === 'number') return (va - vb) * mult;
+      return String(va).localeCompare(String(vb)) * mult;
+    });
   tbody.innerHTML = '';
-  [...uData].slice(-24).reverse().forEach(u => {
-    const e=eMap[u.period];
-    const py=`${u.year-1}-${String(u.month).padStart(2,'0')}`;
-    const pu=uMap[py], pe=eMap[py];
-    const uYoY=pu?+(u.value-pu.value).toFixed(2):null;
-    const eYoY=(e&&pe)?e.value-pe.value:null;
-    const prelim=u.footnotes.some(f=>f.toLowerCase().includes('prelim'));
-    const uColor=uYoY===null?'':uYoY<0?'color:#16a34a':uYoY>0?'color:#dc2626':'';
-    const eColor=eYoY===null?'':eYoY>0?'color:#16a34a':eYoY<0?'color:#dc2626':'';
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td class="mono">${u.period}</td><td>${MON_FULL[u.month-1]} ${u.year}${prelim?'<span class="tag-p">P</span>':''}</td><td class="mono">${u.value.toFixed(1)}%</td><td class="mono">${e?fmtEmp(e.value):'—'}</td><td class="mono" style="${uColor}">${uYoY!==null?(uYoY>0?'+':'')+uYoY+' pp':'—'}</td><td class="mono" style="${eColor}">${eYoY!==null?(eYoY>0?'+':'')+fmtEmp(Math.abs(eYoY)):'—'}</td><td style="color:var(--muted);font-size:.72rem">${prelim?'Preliminary':'Final'}</td>`;
+  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted)">No matches</td></tr>'; return; }
+  rows.forEach(r => {
+    const uColor = r.uyoy == null ? '' : r.uyoy < 0 ? 'color:#16a34a' : r.uyoy > 0 ? 'color:#dc2626' : '';
+    const eColor = r.eyoy == null ? '' : r.eyoy > 0 ? 'color:#16a34a' : r.eyoy < 0 ? 'color:#dc2626' : '';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="mono">${r.period}</td><td>${r.month} ${r.year}${r.prelim?'<span class="tag-p">P</span>':''}</td><td class="mono">${r.unemp.toFixed(1)}%</td><td class="mono">${r.emp!=null?fmtEmp(r.emp):'—'}</td><td class="mono" style="${uColor}">${r.uyoy!=null?(r.uyoy>0?'+':'')+r.uyoy+' pp':'—'}</td><td class="mono" style="${eColor}">${r.eyoy!=null?(r.eyoy>0?'+':'')+fmtEmp(Math.abs(r.eyoy)):'—'}</td><td style="color:var(--muted);font-size:.72rem">${r.status}</td>`;
     tbody.appendChild(tr);
   });
+  document.querySelectorAll('#data-table thead th[data-sort]').forEach(th => {
+    th.classList.remove('sorted-asc', 'sorted-desc');
+    if (th.dataset.sort === key) th.classList.add(dir === 'asc' ? 'sorted-asc' : 'sorted-desc');
+  });
 }
+
+function exportTableCSV() {
+  const header = ['Period','Month','Year','Unemployment Rate (%)','Employment Level','Unemp YoY (pp)','Emp YoY','Status'];
+  const rows = TABLE_ROWS.map(r => [r.period, r.month, r.year, r.unemp.toFixed(1), r.emp ?? '', r.uyoy ?? '', r.eyoy ?? '', r.status]);
+  const csv = [header, ...rows].map(row => row.map(c => {
+    const s = String(c); return /[",\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s;
+  }).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'miami-unemployment-24mo.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function buildHeatmap(uData) {
+  const host = document.getElementById('heatmap');
+  if (!host) return;
+  const years = [...new Set(uData.map(d => d.year))].sort((a,b) => a - b);
+  const byKey = {};
+  uData.forEach(d => { byKey[`${d.year}-${d.month}`] = d; });
+  const vals = uData.map(d => d.value);
+  const min = Math.min(...vals), max = Math.max(...vals);
+  const scale = v => {
+    if (v == null) return null;
+    const t = Math.max(0, Math.min(1, (v - min) / (max - min || 1)));
+    const stops = [ {t:0,c:[29,78,216]},{t:.25,c:[13,148,136]},{t:.55,c:[251,191,36]},{t:.75,c:[249,115,22]},{t:1,c:[185,28,28]} ];
+    let a = stops[0], b = stops[stops.length-1];
+    for (let i = 0; i < stops.length-1; i++) if (t >= stops[i].t && t <= stops[i+1].t) { a = stops[i]; b = stops[i+1]; break; }
+    const span = b.t - a.t || 1, rt = (t - a.t) / span;
+    const r = Math.round(a.c[0] + (b.c[0]-a.c[0]) * rt);
+    const g = Math.round(a.c[1] + (b.c[1]-a.c[1]) * rt);
+    const bl = Math.round(a.c[2] + (b.c[2]-a.c[2]) * rt);
+    return `rgb(${r},${g},${bl})`;
+  };
+  const frag = document.createDocumentFragment();
+  const hdr = document.createElement('div'); hdr.className = 'h-head'; frag.appendChild(hdr);
+  MON.forEach(m => { const c = document.createElement('div'); c.className = 'h-head'; c.textContent = m; frag.appendChild(c); });
+  years.forEach(y => {
+    const ylbl = document.createElement('div'); ylbl.className = 'h-year'; ylbl.textContent = y; frag.appendChild(ylbl);
+    for (let m = 1; m <= 12; m++) {
+      const d = byKey[`${y}-${m}`];
+      const cell = document.createElement('div');
+      if (!d) { cell.className = 'h-cell h-empty'; }
+      else {
+        cell.className = 'h-cell';
+        cell.style.background = scale(d.value);
+        cell.textContent = d.value.toFixed(1);
+        cell.dataset.period = d.period; cell.dataset.value = d.value;
+        cell.title = `${MON_FULL[m-1]} ${y}: ${d.value.toFixed(1)}%`;
+      }
+      frag.appendChild(cell);
+    }
+  });
+  host.innerHTML = '';
+  host.appendChild(frag);
+  host.addEventListener('mouseover', e => {
+    const cell = e.target.closest('.h-cell');
+    if (!cell || !cell.dataset.period) return;
+    const [y, m] = cell.dataset.period.split('-');
+    const ev = eventForPeriod(cell.dataset.period);
+    document.getElementById('heatmap-hint').textContent =
+      `${MON_FULL[+m-1]} ${y} — ${(+cell.dataset.value).toFixed(1)}% unemployment${ev ? ' · ' + ev : ''}`;
+  });
+}
+
+document.addEventListener('click', e => {
+  const th = e.target.closest('#data-table thead th[data-sort]');
+  if (th) {
+    const key = th.dataset.sort;
+    TABLE_SORT = TABLE_SORT.key === key
+      ? { key, dir: TABLE_SORT.dir === 'asc' ? 'desc' : 'asc' }
+      : { key, dir: 'desc' };
+    renderTableRows();
+  }
+  if (e.target.id === 'tbl-export') exportTableCSV();
+});
+document.addEventListener('input', e => {
+  if (e.target.id === 'tbl-search') renderTableRows();
+});
 
 /* ── National comparison section ── */
 function buildNationSection(mData, nuData) {
@@ -2737,7 +2998,7 @@ function buildNationSection(mData, nuData) {
   const c1 = new Chart(ctx1, { type:'line', data:{ labels:sharedLabels, datasets:[
     { label:'Miami', data:mVals, borderColor:'#38bdf8', backgroundColor:'rgba(56,189,248,.1)', borderWidth:2.5, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35 },
     { label:'US National', data:uVals, borderColor:'#34d399', backgroundColor:'rgba(52,211,153,.05)', borderWidth:2, borderDash:[5,4], pointRadius:0, pointHoverRadius:4, fill:false, tension:0.35 }
-  ]}, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{ legend:{display:true,position:'top',labels:{color:'rgba(255,255,255,.7)',boxWidth:12,padding:14,font:{size:11}}}, tooltip:{backgroundColor:'#1e293b',borderColor:'rgba(255,255,255,.1)',borderWidth:1,titleColor:'#fff',bodyColor:'rgba(255,255,255,.75)',padding:10,cornerRadius:8,callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y.toFixed(1)}%`}} }, scales:{ x:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'rgba(255,255,255,.4)',maxTicksLimit:10,maxRotation:0}}, y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'rgba(255,255,255,.4)',callback:v=>v+'%'}} } } });
+  ]}, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{ legend:{display:true,position:'top',labels:{color:'rgba(255,255,255,.7)',boxWidth:12,padding:14,font:{size:11}}}, tooltip:{backgroundColor:'#1e293b',borderColor:'rgba(255,255,255,.1)',borderWidth:1,titleColor:'#fff',bodyColor:'rgba(255,255,255,.75)',padding:10,cornerRadius:8,callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y.toFixed(1)}%`}}, annotation:{ annotations: eventAnnotationsDark(sharedLabels) } }, scales:{ x:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'rgba(255,255,255,.4)',maxTicksLimit:10,maxRotation:0}}, y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'rgba(255,255,255,.4)',callback:v=>v+'%'}} } } });
   REGISTRY['n-unemp'] = { chart:c1, shared, mAll:mData };
 
   /* Chart 2 — spread bars */
@@ -2786,6 +3047,7 @@ async function init() {
     buildDual(uData, eData);
     buildYoY(uData);
     buildSeasonal(uData);
+    buildHeatmap(uData);
     buildTable(uData, eData);
 
     /* National comparison */
@@ -2840,6 +3102,59 @@ function buildSignalsCharts() {
       plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: ctx => ` ${ctx.raw} companies` }, ...tt } },
       scales:{ x:{ grid:{color:'#f1f5f9'}, beginAtZero:true, ticks:{stepSize:1} }, y:{ grid:{display:false}, ticks:{font:{size:11}} } } }
   });
+
+  /* Signal cadence — stacked bar per quarter */
+  const cadenceCanvas = document.getElementById('c-sig-cadence');
+  if (cadenceCanvas) {
+    new Chart(cadenceCanvas, {
+      type: 'bar',
+      data: {
+        labels: ['Q3 2024','Q4 2024','Q1 2025','Q2 2025','Q3 2025','Q4 2025'],
+        datasets: [
+          { label: 'Hot (Series B+ / Major Raise)', data: [0, 0, 0, 1, 1, 1], backgroundColor:'rgba(5,150,105,.85)', borderColor:'#065f46', borderWidth:1, borderRadius:{ topLeft:3, topRight:3 } },
+          { label: 'Warm (Series A / PE / Expansion)', data: [1, 1, 1, 1, 1, 0], backgroundColor:'rgba(16,185,129,.75)', borderColor:'#047857', borderWidth:1 },
+          { label: 'Steady (Rebuild / Studio)', data: [0, 1, 1, 0, 0, 0], backgroundColor:'rgba(167,243,208,.85)', borderColor:'#6ee7b7', borderWidth:1 }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position:'bottom', labels:{ color:'#334155', boxWidth:10, padding:10, font:{ size:10 } } }, tooltip: { ...tt, callbacks: { label: c => ` ${c.dataset.label}: ${c.parsed.y}` } } },
+        scales: { x: { stacked:true, grid:{ display:false } }, y: { stacked:true, beginAtZero:true, ticks:{ stepSize:1 }, grid:{ color:'#f1f5f9' } } }
+      }
+    });
+  }
+
+  /* Capital / valuation per signal */
+  const capCanvas = document.getElementById('c-sig-capital');
+  if (capCanvas) {
+    const capCompanies = ['Kaseya','Brightline','Reef Tech','Magic Leap','Lennar','Chewy','UKG','Carnival','Rokk3r','Pipe'];
+    const capVal       = [6200, 2500, 700, 590, 480, 350, 320, 220, 25, 18];
+    new Chart(capCanvas, {
+      type: 'bar',
+      data: { labels: capCompanies, datasets: [{ label: 'Recent Valuation / Capital ($M)', data: capVal, backgroundColor: capVal.map(v => v>=1000?'rgba(5,150,105,.85)':v>=300?'rgba(16,185,129,.7)':'rgba(167,243,208,.85)'), borderRadius: 4 }] },
+      options: { indexAxis:'y', responsive:true,
+        plugins: { legend: { display:false }, tooltip: { ...tt, callbacks: { label: c => ` $${c.parsed.x.toLocaleString()}M` } } },
+        scales: { x: { beginAtZero:true, grid:{ color:'#f1f5f9' }, ticks: { callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(1)+'B' : v+'M') } }, y: { grid:{ display:false }, ticks:{ font:{ size:11 } } } }
+      }
+    });
+  }
+
+  wireSignalSearch();
+}
+
+function wireSignalSearch() {
+  const input = document.getElementById('sig-search');
+  const clear = document.getElementById('sig-clear');
+  if (!input) return;
+  const apply = () => {
+    const q = input.value.trim().toLowerCase();
+    document.querySelectorAll('#startup-grid .startup-card').forEach(card => {
+      const txt = card.textContent.toLowerCase();
+      card.style.display = !q || txt.includes(q) ? '' : 'none';
+    });
+  };
+  input.addEventListener('input', apply);
+  clear?.addEventListener('click', () => { input.value = ''; apply(); input.focus(); });
 }
 
 /* ── AI Exposure Visualizations ── */
@@ -2990,8 +3305,157 @@ function buildAICharts() {
 }
 
 buildAICharts();
+buildAIEvolution();
 buildWageCharts();
+wireAISearch();
+wireAISectorSort();
+wireEvoSearch();
+wireChartDownloads();
 init();
+
+/* ── Phase 2: AI Risk Evolution chart ── */
+function buildAIEvolution() {
+  const el = document.getElementById('c-ai-evolution');
+  if (!el) return;
+  const labels = ['2020','2021','2022','2023','2024','2025','2026'];
+  const tt = { backgroundColor:'#fff', borderColor:'#e2e8f0', borderWidth:1, titleColor:'#0f172a', bodyColor:'#64748b', padding:10, cornerRadius:8 };
+  const series = [
+    { label: 'Customer Service Reps',   data: [12, 16, 22, 30, 38, 42, 44], color: '#dc2626' },
+    { label: 'Public Relations',        data: [10, 14, 18, 24, 30, 34, 36], color: '#d97706' },
+    { label: 'Management Analysts',     data: [ 8, 11, 15, 22, 28, 33, 35], color: '#b45309' },
+    { label: 'Financial Advisors',      data: [ 6,  9, 13, 20, 27, 32, 35], color: '#7c3aed' },
+    { label: 'Accountants',             data: [ 5,  7, 11, 16, 22, 26, 28], color: '#0d9488' },
+    { label: 'Software Developers',     data: [ 3,  5,  8, 11, 14, 16, 18], color: '#1d4ed8' }
+  ];
+  new Chart(el.getContext('2d'), {
+    type: 'line',
+    data: { labels, datasets: series.map(s => ({
+      label: s.label, data: s.data, borderColor: s.color, backgroundColor: s.color + '20',
+      borderWidth: 2.5, tension: 0.35, pointRadius: 3, pointHoverRadius: 5, fill: false
+    })) },
+    options: {
+      responsive: true, maintainAspectRatio: false, interaction: { mode:'index', intersect:false },
+      plugins: {
+        legend: { position:'bottom', labels: { color:'#334155', boxWidth:10, padding:12, font:{ size:10 } } },
+        tooltip: { ...tt, callbacks: { label: c => ` ${c.dataset.label}: ${c.parsed.y}%` } }
+      },
+      scales: {
+        x: { grid: { color:'#f1f5f9' } },
+        y: { grid: { color:'#f1f5f9' }, ticks: { callback: v => v + '%' }, title: { display:true, text:'AI Exposure Score (%)', color:'#94a3b8', font:{ size:11 } } }
+      }
+    }
+  });
+}
+
+/* ── Phase 2: AI tab search filter ── */
+function wireAISearch() {
+  const input = document.getElementById('ai-search');
+  const clear = document.getElementById('ai-clear');
+  if (!input) return;
+  const apply = () => {
+    const q = input.value.trim().toLowerCase();
+    document.querySelectorAll('#page-ai .ai-searchable > .exp-row').forEach(row => {
+      const txt = row.textContent.toLowerCase();
+      row.style.display = !q || txt.includes(q) ? '' : 'none';
+    });
+    document.querySelectorAll('#ai-sector-table tbody tr').forEach(tr => {
+      const txt = tr.textContent.toLowerCase();
+      tr.style.display = !q || txt.includes(q) ? '' : 'none';
+    });
+  };
+  input.addEventListener('input', apply);
+  clear?.addEventListener('click', () => { input.value = ''; apply(); input.focus(); });
+}
+
+/* ── Phase 2: AI sector table sort ── */
+function wireAISectorSort() {
+  const table = document.getElementById('ai-sector-table');
+  if (!table) return;
+  const tbody = table.querySelector('tbody');
+  const riskRank = { 'lower': 0, 'emerging': 1, 'medium': 2, 'high': 3 };
+  const parseWorkers = s => {
+    const n = parseFloat(s.replace(/[^\d.]/g,''));
+    return isNaN(n) ? 0 : (s.toLowerCase().includes('k') ? n*1000 : n);
+  };
+  let state = { key: null, dir: 'asc' };
+  table.querySelectorAll('thead th[data-sort]').forEach((th, idx) => {
+    th.style.cursor = 'pointer'; th.style.userSelect = 'none';
+    th.addEventListener('click', () => {
+      const key = th.dataset.sort;
+      state = state.key === key ? { key, dir: state.dir === 'asc' ? 'desc' : 'asc' } : { key, dir: 'asc' };
+      const rows = [...tbody.querySelectorAll('tr')];
+      const mult = state.dir === 'asc' ? 1 : -1;
+      rows.sort((a, b) => {
+        const ta = a.children[idx].textContent.trim();
+        const tb = b.children[idx].textContent.trim();
+        if (key === 'workers') return (parseWorkers(ta) - parseWorkers(tb)) * mult;
+        if (key === 'risk') {
+          const ra = riskRank[a.children[idx].textContent.trim().toLowerCase()] ?? 0;
+          const rb = riskRank[b.children[idx].textContent.trim().toLowerCase()] ?? 0;
+          return (ra - rb) * mult;
+        }
+        return ta.localeCompare(tb) * mult;
+      });
+      rows.forEach(r => tbody.appendChild(r));
+      table.querySelectorAll('thead th').forEach(x => x.classList.remove('sorted-asc','sorted-desc'));
+      th.classList.add(state.dir === 'asc' ? 'sorted-asc' : 'sorted-desc');
+    });
+  });
+}
+
+/* ── Phase 4: Role Evolution search + expand/collapse ── */
+function wireEvoSearch() {
+  const input = document.getElementById('evo-search');
+  const clear = document.getElementById('evo-clear');
+  const countEl = document.getElementById('evo-match-count');
+  const cards = () => document.querySelectorAll('#page-evolution .role-card');
+  const apply = () => {
+    const q = (input?.value || '').trim().toLowerCase();
+    let matches = 0;
+    cards().forEach(card => {
+      if (card.classList.contains('hidden')) { card.style.display = 'none'; return; }
+      const txt = card.textContent.toLowerCase();
+      const show = !q || txt.includes(q);
+      card.style.display = show ? '' : 'none';
+      if (show) { matches++; if (q) card.classList.add('open'); }
+    });
+    if (countEl) countEl.textContent = q ? `${matches} role${matches===1?'':'s'} match "${input.value}"` : '';
+  };
+  input?.addEventListener('input', apply);
+  clear?.addEventListener('click', () => { input.value = ''; apply(); input.focus(); });
+  document.getElementById('evo-expand-all')?.addEventListener('click', () => cards().forEach(c => c.classList.add('open')));
+  document.getElementById('evo-collapse-all')?.addEventListener('click', () => cards().forEach(c => c.classList.remove('open')));
+  const origFilter = window.filterRoles;
+  if (origFilter) window.filterRoles = function(role) { origFilter(role); apply(); };
+}
+
+/* ── Phase 5: PNG download buttons on every chart card ── */
+function wireChartDownloads() {
+  const addBtn = canvas => {
+    if (!canvas) return;
+    const card = canvas.closest('.card, .nation-card, .wage-chart-card, .signals-chart-card');
+    if (!card) return;
+    const head = card.querySelector('.card-head, .nation-card-head');
+    if (!head || head.querySelector('.chart-dl')) return;
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'chart-act-btn chart-dl';
+    btn.textContent = '⬇ PNG'; btn.title = 'Download chart as PNG';
+    btn.addEventListener('click', () => {
+      const url = canvas.toDataURL('image/png', 1.0);
+      const title = (card.querySelector('.card-title, .nation-card-title')?.textContent || 'chart').replace(/[^\w\- ]+/g,'').slice(0,60).trim().replace(/\s+/g,'-').toLowerCase();
+      const a = document.createElement('a');
+      a.href = url; a.download = `miami-${title || 'chart'}.png`;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    });
+    const actionsHost = head.querySelector('.range-btns');
+    const wrap = document.createElement('span');
+    wrap.className = 'chart-actions';
+    wrap.appendChild(btn);
+    if (actionsHost) actionsHost.parentNode.insertBefore(wrap, actionsHost);
+    else { wrap.style.marginLeft = 'auto'; head.appendChild(wrap); }
+  };
+  setTimeout(() => document.querySelectorAll('canvas[id^="c-"]').forEach(addBtn), 400);
+}
 
 function buildWageCharts() {
   const groups = [
