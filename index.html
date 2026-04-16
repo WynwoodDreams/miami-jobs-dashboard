@@ -174,6 +174,12 @@
     .kpi-delta.down { background: var(--red-pale);   color: var(--red); }
     .kpi-delta.flat { background: var(--surface2);   color: var(--muted); }
     .kpi-period { font-size: .68rem; color: var(--faint); margin-top: .15rem; }
+    .kpi-trend { display: inline-flex; align-items: center; gap: .22rem; font-size: .66rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; margin-top: .18rem; }
+    .kpi-trend.up   { color: var(--red); }      /* unemployment rising = bad */
+    .kpi-trend.down { color: var(--green); }    /* unemployment falling = good */
+    .kpi-trend.up-good   { color: var(--green); } /* employment rising = good */
+    .kpi-trend.down-bad  { color: var(--red); }
+    .kpi-trend.flat { color: var(--muted); }
 
     /* ── CARDS ── */
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow-sm); overflow: hidden; transition: box-shadow .2s; }
@@ -371,51 +377,41 @@
     /* ════════════════════════════════════════════════════════
        WAGE INTELLIGENCE PAGE STYLES
     ════════════════════════════════════════════════════════ */
-    #page-wage {
-      background:
-        radial-gradient(ellipse at 20% 10%, rgba(251,191,36,.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 80%, rgba(245,158,11,.06) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 50%, rgba(120,53,15,.15) 0%, transparent 70%),
-        linear-gradient(160deg, #1c1007 0%, #27180a 30%, #1f1509 60%, #0f0a04 100%);
-      min-height: 100vh;
-    }
+    /* Wages — light surface, gold accent */
+    #page-wage { background: var(--bg); min-height: 100vh; }
     #page-wage .page-inner { padding-top: 2rem; }
-    #page-wage .section-head .section-title  { color: rgba(251,191,36,.4); }
-    #page-wage .section-head .section-divider { background: rgba(251,191,36,.15); }
-    #page-wage .disclaimer-box {
-      background: rgba(0,0,0,.3);
-      border-color: rgba(251,191,36,.2);
-      color: rgba(255,255,255,.55);
-    }
-    #page-wage .disclaimer-box strong { color: rgba(251,191,36,.7); }
+    #page-wage .section-head .section-title  { color: var(--amber); letter-spacing: .1em; }
+    #page-wage .section-head .section-divider { background: rgba(217,119,6,.2); }
+    #page-wage .card { border-left: 3px solid var(--amber); }
+    #page-wage .disclaimer-box { background: var(--amber-pale); border-color: rgba(217,119,6,.25); color: var(--text2); }
+    #page-wage .disclaimer-box strong { color: var(--amber); }
     .wage-hero {
-      background: linear-gradient(135deg, rgba(120,53,15,.6) 0%, rgba(146,64,14,.5) 50%, rgba(180,83,9,.4) 100%);
-      border: 1px solid rgba(251,191,36,.2);
-      border-radius: 16px; padding: 2.5rem; margin-bottom: 1.5rem;
-      color: #fff; backdrop-filter: blur(4px);
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border: 1px solid rgba(217,119,6,.2); border-left: 5px solid var(--amber);
+      border-radius: 16px; padding: 2.5rem; margin-bottom: 1.5rem; color: var(--text);
     }
-    .wage-hero-eyebrow { font-size:.72rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:rgba(251,191,36,.65); margin-bottom:.5rem; }
-    .wage-hero-title { font-size:1.9rem; font-weight:900; letter-spacing:-.04em; line-height:1.1; margin:0 0 .75rem; color:#fff; }
-    .wage-hero-title span { color:#fbbf24; }
-    .wage-hero-desc { font-size:.88rem; color:rgba(255,255,255,.75); max-width:680px; line-height:1.7; margin:0 0 1.5rem; }
+    .wage-hero-eyebrow { font-size:.72rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--amber); margin-bottom:.5rem; }
+    .wage-hero-title { font-size:1.9rem; font-weight:900; letter-spacing:-.04em; line-height:1.1; margin:0 0 .75rem; color:var(--text); }
+    .wage-hero-title span { color:var(--amber); }
+    .wage-hero-desc { font-size:.88rem; color:var(--text2); max-width:680px; line-height:1.7; margin:0 0 1.5rem; }
     .wage-hero-stats { display:flex; gap:2rem; flex-wrap:wrap; }
-    .wage-hero-stat .val { display:block; font-size:1.6rem; font-weight:900; letter-spacing:-.03em; color:#fbbf24; }
-    .wage-hero-stat .lbl { font-size:.68rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.5); }
+    .wage-hero-stat .val { display:block; font-size:1.6rem; font-weight:900; letter-spacing:-.03em; color:var(--amber); }
+    .wage-hero-stat .lbl { font-size:.68rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
     .wage-insight-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.5rem; }
-    .wage-insight-card { background:rgba(0,0,0,.3); border:1px solid rgba(251,191,36,.15); border-radius:12px; padding:1.1rem 1.25rem; }
-    .wage-insight-label { font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:.3rem; }
-    .wage-insight-value { font-size:1.5rem; font-weight:900; letter-spacing:-.03em; margin-bottom:.2rem; }
-    .wage-insight-sub { font-size:.75rem; color:rgba(255,255,255,.45); }
-    .wage-insight-card.green .wage-insight-value { color:#34d399; }
-    .wage-insight-card.red   .wage-insight-value { color:#f87171; }
-    .wage-insight-card.amber .wage-insight-value { color:#fbbf24; }
-    .wage-insight-card.teal  .wage-insight-value { color:#5eead4; }
-    .wage-chart-card { background:rgba(255,255,255,.97); border-radius:12px; padding:1.25rem; box-shadow:0 4px 20px rgba(0,0,0,.3); margin-bottom:1.25rem; }
+    .wage-insight-card { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--amber); border-radius:12px; padding:1.1rem 1.25rem; box-shadow: var(--shadow-sm); }
+    .wage-insight-label { font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:.3rem; }
+    .wage-insight-value { font-size:1.5rem; font-weight:900; letter-spacing:-.03em; margin-bottom:.2rem; color: var(--text); }
+    .wage-insight-sub { font-size:.75rem; color:var(--muted); }
+    .wage-insight-card.green .wage-insight-value { color:var(--green); }
+    .wage-insight-card.red   .wage-insight-value { color:var(--red); }
+    .wage-insight-card.amber .wage-insight-value { color:var(--amber); }
+    .wage-insight-card.teal  .wage-insight-value { color:var(--teal); }
+    .wage-chart-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.25rem; box-shadow:var(--shadow-sm); margin-bottom:1.25rem; }
     .wage-chart-card.full { width:100%; }
     .wage-chart-row { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; }
-    .wage-table-wrap { background:rgba(255,255,255,.97); border-radius:12px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,.3); }
+    .wage-table-wrap { background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; box-shadow:var(--shadow-sm); }
     .wage-table { width:100%; border-collapse:collapse; font-size:.82rem; }
-    .wage-table thead tr { background:#1c1007; color:#fbbf24; }
+    .wage-table thead tr { background:var(--amber-pale); color:var(--amber); }
     .wage-table th { padding:.75rem 1rem; text-align:left; font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
     .wage-table td { padding:.65rem 1rem; border-bottom:1px solid #f1f5f9; color:#334155; }
     .wage-table tr:last-child td { border-bottom:none; }
@@ -430,106 +426,51 @@
     ════════════════════════════════════════════════════════ */
 
     /* Full-page deep purple background for AI tab */
-    #page-ai {
-      background: linear-gradient(160deg, #0c0f1a 0%, #130d2e 40%, #1a1040 70%, #0f172a 100%);
-      min-height: 100vh;
-    }
-    #page-ai .page-inner {
-      padding-top: 2rem;
-    }
-
-    /* Section headings on dark bg */
-    #page-ai .section-head .section-title {
-      color: rgba(255,255,255,.45);
-    }
-    #page-ai .section-head .section-divider {
-      background: rgba(255,255,255,.1);
-    }
-    #page-ai .risk-legend .risk-dot {
-      color: rgba(255,255,255,.6);
-    }
-
-    /* Cards stay white/light but get a subtle purple-tinted border */
-    #page-ai .card {
-      background: #ffffff;
-      border-color: rgba(167,139,250,.2);
-      box-shadow: 0 4px 24px rgba(0,0,0,.35), 0 0 0 1px rgba(167,139,250,.1);
-    }
-    #page-ai .card-head {
-      border-bottom-color: rgba(167,139,250,.12);
-    }
-
-    /* Disclaimer box on dark bg */
-    #page-ai .disclaimer-box {
-      background: rgba(255,255,255,.06);
-      border-color: rgba(167,139,250,.2);
-      color: rgba(255,255,255,.45);
-    }
-    #page-ai .disclaimer-box strong { color: rgba(255,255,255,.65); }
-    #page-ai .disclaimer-box em { color: #a78bfa; }
-
-    /* Viz section separator */
-    #page-ai .ai-viz-section-title { color: rgba(255,255,255,.35); }
-    #page-ai .ai-viz-section-line  { background: rgba(255,255,255,.1); }
-
-    /* Insight KPI cards on dark bg — keep white surface */
-    #page-ai .ai-insight-card {
-      background: rgba(255,255,255,.05);
-      border-color: rgba(167,139,250,.2);
-      box-shadow: 0 4px 16px rgba(0,0,0,.3);
-    }
-    #page-ai .ai-insight-card .ai-insight-label { color: rgba(255,255,255,.4); }
-    #page-ai .ai-insight-card .ai-insight-sub   { color: rgba(255,255,255,.45); }
-    /* Keep the colored values but brighten them slightly */
-    #page-ai .ai-insight-card.purple .ai-insight-value { color: #c4b5fd; }
-    #page-ai .ai-insight-card.red    .ai-insight-value { color: #fca5a5; }
-    #page-ai .ai-insight-card.amber  .ai-insight-value { color: #fcd34d; }
-    #page-ai .ai-insight-card.teal   .ai-insight-value { color: #5eead4; }
-
-    /* Startup cards on dark bg */
-    #page-ai .startup-card {
-      background: rgba(255,255,255,.05);
-      border-color: rgba(167,139,250,.2);
-      box-shadow: 0 4px 16px rgba(0,0,0,.3);
-    }
-    #page-ai .startup-card:hover {
-      background: rgba(255,255,255,.08);
-      box-shadow: 0 8px 32px rgba(0,0,0,.4);
-      transform: translateY(-2px);
-    }
-    #page-ai .startup-name   { color: #f1f5f9; }
-    #page-ai .startup-sector { color: rgba(255,255,255,.4); }
-    #page-ai .startup-desc   { color: rgba(255,255,255,.65); }
-    #page-ai .startup-hiring { color: #5eead4; }
-    #page-ai .startup-hiring::before { color: #5eead4; }
-    #page-ai .startup-raise.raised { background: rgba(22,163,74,.2);  color: #86efac; }
-    #page-ai .startup-raise.series { background: rgba(29,78,216,.2);  color: #93c5fd; }
-    #page-ai .startup-raise.seed   { background: rgba(124,58,237,.25); color: #c4b5fd; }
-
-    /* Sector table on dark bg (inside white card — no change needed) */
-
-    /* Footer on dark bg */
-    #page-ai + footer, #page-ai ~ footer { background: #0c0f1a; }
+    /* AI Impact — light surface, purple accent */
+    #page-ai { background: var(--bg); min-height: 100vh; }
+    #page-ai .page-inner { padding-top: 2rem; }
+    #page-ai .section-head .section-title { color: var(--purple); letter-spacing: .1em; }
+    #page-ai .section-head .section-divider { background: rgba(124,58,237,.2); }
+    #page-ai .risk-legend .risk-dot { color: var(--text2); }
+    #page-ai .card { background: var(--surface); border-color: var(--border); border-left: 3px solid var(--purple); box-shadow: var(--shadow-sm); }
+    #page-ai .card-head { border-bottom-color: var(--border); }
+    #page-ai .disclaimer-box { background: var(--purple-pale); border-color: rgba(124,58,237,.25); color: var(--text2); }
+    #page-ai .disclaimer-box strong { color: var(--purple); }
+    #page-ai .disclaimer-box em { color: var(--purple); }
+    #page-ai .ai-viz-section-title { color: var(--purple); }
+    #page-ai .ai-viz-section-line  { background: rgba(124,58,237,.15); }
+    #page-ai .ai-insight-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--purple); box-shadow: var(--shadow-sm); }
+    #page-ai .ai-insight-card .ai-insight-label { color: var(--muted); }
+    #page-ai .ai-insight-card .ai-insight-sub   { color: var(--muted); }
+    #page-ai .ai-insight-card.purple .ai-insight-value { color: var(--purple); }
+    #page-ai .ai-insight-card.red    .ai-insight-value { color: var(--red); }
+    #page-ai .ai-insight-card.amber  .ai-insight-value { color: var(--amber); }
+    #page-ai .ai-insight-card.teal   .ai-insight-value { color: var(--teal); }
+    #page-ai .startup-card { background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+    #page-ai .startup-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    #page-ai .startup-name   { color: var(--text); }
+    #page-ai .startup-sector { color: var(--muted); }
+    #page-ai .startup-desc   { color: var(--text2); }
+    #page-ai .startup-hiring { color: var(--teal); }
+    #page-ai .startup-hiring::before { color: var(--teal); }
+    #page-ai .startup-raise.raised { background: var(--green-pale); color: var(--green); }
+    #page-ai .startup-raise.series { background: var(--blue-pale);  color: var(--blue); }
+    #page-ai .startup-raise.seed   { background: var(--purple-pale); color: var(--purple); }
 
     .ai-hero {
-      background: linear-gradient(135deg, #0c0f1a 0%, #1a1040 50%, #0f172a 100%);
+      background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+      border: 1px solid rgba(124,58,237,.2); border-left: 5px solid var(--purple);
       border-radius: 16px; padding: 2.5rem; margin-bottom: 1.75rem;
-      color: #fff; position: relative; overflow: hidden;
-      border: 1px solid rgba(124,58,237,.3);
-    }
-    .ai-hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 70% 50%, rgba(124,58,237,.15) 0%, transparent 70%);
+      color: var(--text); position: relative; overflow: hidden;
     }
     .ai-hero-content { position: relative; z-index: 1; }
-    .ai-hero-eyebrow { font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #a78bfa; margin-bottom: .5rem; }
-    .ai-hero-title { font-size: 1.9rem; font-weight: 900; letter-spacing: -.04em; line-height: 1.1; margin-bottom: .75rem; }
-    .ai-hero-title span { color: #a78bfa; }
-    .ai-hero-desc { font-size: .88rem; color: rgba(255,255,255,.75); max-width: 680px; line-height: 1.7; }
+    .ai-hero-eyebrow { font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--purple); margin-bottom: .5rem; }
+    .ai-hero-title { font-size: 1.9rem; font-weight: 900; letter-spacing: -.04em; line-height: 1.1; margin-bottom: .75rem; color: var(--text); }
+    .ai-hero-title span { color: var(--purple); }
+    .ai-hero-desc { font-size: .88rem; color: var(--text2); max-width: 680px; line-height: 1.7; }
     .ai-hero-stats { display: flex; gap: 2.5rem; margin-top: 1.5rem; flex-wrap: wrap; }
-    .ai-hero-stat .val { font-size: 1.6rem; font-weight: 900; letter-spacing: -.03em; color: #a78bfa; }
-    .ai-hero-stat .lbl { font-size: .68rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-top: 2px; }
+    .ai-hero-stat .val { font-size: 1.6rem; font-weight: 900; letter-spacing: -.03em; color: var(--purple); }
+    .ai-hero-stat .lbl { font-size: .68rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
 
     /* AI Exposure section */
     .ai-exposure-grid {
@@ -651,126 +592,57 @@
     ══════════════════════════════════════════════════════════ */
 
     /* Full-page blue-to-teal gradient with bokeh dot pattern */
-    #page-evolution {
-      background:
-        radial-gradient(circle at 12% 18%, rgba(255,255,255,.09) 38px, transparent 38px),
-        radial-gradient(circle at 35% 8%,  rgba(255,255,255,.07) 30px, transparent 30px),
-        radial-gradient(circle at 58% 22%, rgba(255,255,255,.08) 42px, transparent 42px),
-        radial-gradient(circle at 80% 12%, rgba(255,255,255,.06) 28px, transparent 28px),
-        radial-gradient(circle at 95% 30%, rgba(255,255,255,.07) 36px, transparent 36px),
-        radial-gradient(circle at 5%  45%, rgba(255,255,255,.07) 34px, transparent 34px),
-        radial-gradient(circle at 25% 55%, rgba(255,255,255,.06) 40px, transparent 40px),
-        radial-gradient(circle at 48% 48%, rgba(255,255,255,.08) 32px, transparent 32px),
-        radial-gradient(circle at 70% 42%, rgba(255,255,255,.07) 38px, transparent 38px),
-        radial-gradient(circle at 88% 58%, rgba(255,255,255,.06) 30px, transparent 30px),
-        radial-gradient(circle at 15% 72%, rgba(255,255,255,.07) 36px, transparent 36px),
-        radial-gradient(circle at 38% 78%, rgba(255,255,255,.08) 44px, transparent 44px),
-        radial-gradient(circle at 62% 68%, rgba(255,255,255,.06) 28px, transparent 28px),
-        radial-gradient(circle at 82% 80%, rgba(255,255,255,.07) 38px, transparent 38px),
-        radial-gradient(circle at 50% 92%, rgba(255,255,255,.06) 32px, transparent 32px),
-        radial-gradient(circle at 20% 95%, rgba(255,255,255,.05) 26px, transparent 26px),
-        radial-gradient(circle at 75% 95%, rgba(255,255,255,.06) 34px, transparent 34px),
-        linear-gradient(135deg, #3b5bdb 0%, #4263eb 25%, #3b82c4 55%, #1a9e8f 100%);
-      min-height: 100vh;
-    }
+    /* Role Shifts — light surface, teal accent */
+    #page-evolution { background: var(--bg); min-height: 100vh; }
     #page-evolution .page-inner { padding-top: 2rem; }
-
-    /* Hero banner on blue bg */
     #page-evolution .evo-hero {
-      background: rgba(0,0,0,.18);
-      border-color: rgba(255,255,255,.15);
-      backdrop-filter: blur(2px);
+      background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+      border: 1px solid rgba(13,148,136,.2); border-left: 5px solid var(--teal);
     }
-    #page-evolution .evo-hero-eyebrow { color: rgba(255,255,255,.6); }
-    #page-evolution .evo-hero-title   { color: #fff; }
-    #page-evolution .evo-hero-desc    { color: rgba(255,255,255,.8); }
-    #page-evolution .evo-hero-stat .val { color: #fff; }
-    #page-evolution .evo-hero-stat .lbl { color: rgba(255,255,255,.55); }
-
-    /* Role filter tabs on blue bg */
-    #page-evolution .role-filter-bar { background: rgba(0,0,0,.15); border-color: rgba(255,255,255,.12); }
-    #page-evolution .role-filter-btn { color: rgba(255,255,255,.65); background: transparent; border-color: rgba(255,255,255,.15); }
-    #page-evolution .role-filter-btn:hover { background: rgba(255,255,255,.1); color: #fff; }
-    #page-evolution .role-filter-btn.active { background: rgba(255,255,255,.18); color: #fff; border-color: rgba(255,255,255,.4); }
-
-    /* Role cards on blue bg — keep white surface */
-    #page-evolution .role-card {
-      background: rgba(255,255,255,.97);
-      border-color: rgba(255,255,255,.3);
-      box-shadow: 0 6px 28px rgba(0,0,0,.22), 0 0 0 1px rgba(255,255,255,.15);
-    }
-    #page-evolution .role-card:hover {
-      box-shadow: 0 10px 40px rgba(0,0,0,.28), 0 0 0 1px rgba(255,255,255,.25);
-    }
-
-    /* Conclusion section on blue bg */
+    #page-evolution .evo-hero-eyebrow { color: var(--teal); }
+    #page-evolution .evo-hero-title   { color: var(--text); }
+    #page-evolution .evo-hero-title span { color: var(--teal); opacity: 1; }
+    #page-evolution .evo-hero-desc    { color: var(--text2); opacity: 1; }
+    #page-evolution .evo-hero-stat .val { color: var(--teal); }
+    #page-evolution .evo-hero-stat .lbl { color: var(--muted); opacity: 1; }
+    #page-evolution .role-filter-bar { background: var(--surface); border: 1px solid var(--border); }
+    #page-evolution .role-filter-btn { color: var(--text2); background: transparent; border-color: var(--border); }
+    #page-evolution .role-filter-btn:hover { background: var(--surface2); color: var(--teal); }
+    #page-evolution .role-filter-btn.active { background: var(--teal-pale); color: var(--teal); border-color: var(--teal); }
+    #page-evolution .role-card { background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+    #page-evolution .role-card:hover { box-shadow: var(--shadow-md); }
     #page-evolution .evo-conclusion {
-      background: rgba(0,0,0,.18);
-      border-color: rgba(255,255,255,.15);
-      color: rgba(255,255,255,.85);
+      background: var(--teal-pale); border: 1px solid rgba(13,148,136,.2);
+      color: var(--text2); border-radius: 12px;
     }
-    #page-evolution .evo-conclusion h2 { color: #fff; }
-    #page-evolution .evo-conclusion p  { color: rgba(255,255,255,.8); }
-    #page-evolution .evo-conclusion strong { color: #fff; }
+    #page-evolution .evo-conclusion h2 { color: var(--teal); }
+    #page-evolution .evo-conclusion p  { color: var(--text2); }
+    #page-evolution .evo-conclusion strong { color: var(--text); }
+    #page-evolution .section-head .section-title  { color: var(--teal); letter-spacing: .1em; }
+    #page-evolution .section-head .section-divider { background: rgba(13,148,136,.2); }
 
-    /* Section head on blue bg */
-    #page-evolution .section-head .section-title  { color: rgba(255,255,255,.5); }
-    #page-evolution .section-head .section-divider { background: rgba(255,255,255,.15); }
-
-    /* ── HIRING SIGNALS PAGE ─────────────────────────────────── */
-    #page-signals {
-      background:
-        radial-gradient(circle at 10% 20%, rgba(255,255,255,.07) 50px, transparent 50px),
-        radial-gradient(circle at 30% 10%, rgba(255,255,255,.05) 38px, transparent 38px),
-        radial-gradient(circle at 55% 25%, rgba(255,255,255,.06) 44px, transparent 44px),
-        radial-gradient(circle at 78% 15%, rgba(255,255,255,.05) 32px, transparent 32px),
-        radial-gradient(circle at 92% 35%, rgba(255,255,255,.06) 40px, transparent 40px),
-        radial-gradient(circle at 8%  50%, rgba(255,255,255,.05) 36px, transparent 36px),
-        radial-gradient(circle at 28% 60%, rgba(255,255,255,.06) 42px, transparent 42px),
-        radial-gradient(circle at 50% 52%, rgba(255,255,255,.05) 30px, transparent 30px),
-        radial-gradient(circle at 72% 48%, rgba(255,255,255,.06) 38px, transparent 38px),
-        radial-gradient(circle at 90% 62%, rgba(255,255,255,.05) 28px, transparent 28px),
-        radial-gradient(circle at 18% 78%, rgba(255,255,255,.06) 34px, transparent 34px),
-        radial-gradient(circle at 40% 82%, rgba(255,255,255,.05) 40px, transparent 40px),
-        radial-gradient(circle at 65% 72%, rgba(255,255,255,.06) 32px, transparent 32px),
-        radial-gradient(circle at 85% 85%, rgba(255,255,255,.05) 36px, transparent 36px),
-        linear-gradient(135deg, #064e3b 0%, #065f46 30%, #047857 60%, #059669 100%);
-      min-height: 100vh;
-    }
+    /* Hiring — light surface, emerald accent */
+    #page-signals { background: var(--bg); min-height: 100vh; }
     #page-signals .page-inner { padding-top: 2rem; }
-    #page-signals .section-head .section-title  { color: rgba(255,255,255,.5); }
-    #page-signals .section-head .section-divider { background: rgba(255,255,255,.15); }
-    #page-signals .startup-card {
-      background: rgba(255,255,255,.97);
-      border-color: rgba(255,255,255,.25);
-      box-shadow: 0 6px 28px rgba(0,0,0,.25), 0 0 0 1px rgba(255,255,255,.12);
-    }
-    #page-signals .startup-card:hover {
-      box-shadow: 0 10px 40px rgba(0,0,0,.32), 0 0 0 1px rgba(255,255,255,.22);
-    }
-    #page-signals .disclaimer-box {
-      background: rgba(0,0,0,.2);
-      border-color: rgba(255,255,255,.15);
-      color: rgba(255,255,255,.65);
-    }
-    #page-signals .disclaimer-box strong { color: rgba(255,255,255,.65); }
+    #page-signals .section-head .section-title  { color: var(--green); letter-spacing: .1em; }
+    #page-signals .section-head .section-divider { background: rgba(22,163,74,.2); }
+    #page-signals .startup-card { background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+    #page-signals .startup-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    #page-signals .disclaimer-box { background: var(--green-pale); border-color: rgba(22,163,74,.25); color: var(--text2); }
+    #page-signals .disclaimer-box strong { color: var(--green); }
     .signals-hero {
-      background: rgba(0,0,0,.22);
-      border: 1px solid rgba(255,255,255,.15);
-      border-radius: 16px;
-      padding: 2.5rem;
-      margin-bottom: 1.5rem;
-      color: #fff;
-      backdrop-filter: blur(2px);
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 1px solid rgba(22,163,74,.2); border-left: 5px solid var(--green);
+      border-radius: 16px; padding: 2.5rem; margin-bottom: 1.5rem; color: var(--text);
     }
-    .signals-hero-eyebrow { font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-bottom: .5rem; }
-    .signals-hero-title { font-size: 1.9rem; font-weight: 900; letter-spacing: -.04em; line-height: 1.1; margin: 0 0 .75rem; color: #fff; }
-    .signals-hero-title span { color: #6ee7b7; }
-    .signals-hero-desc { font-size: .88rem; color: rgba(255,255,255,.8); max-width: 680px; line-height: 1.7; margin: 0 0 1.5rem; }
+    .signals-hero-eyebrow { font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--green); margin-bottom: .5rem; }
+    .signals-hero-title { font-size: 1.9rem; font-weight: 900; letter-spacing: -.04em; line-height: 1.1; margin: 0 0 .75rem; color: var(--text); }
+    .signals-hero-title span { color: var(--green); }
+    .signals-hero-desc { font-size: .88rem; color: var(--text2); max-width: 680px; line-height: 1.7; margin: 0 0 1.5rem; }
     .signals-hero-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
-    .signals-hero-stat .val { display: block; font-size: 1.6rem; font-weight: 900; letter-spacing: -.03em; color: #6ee7b7; }
-    .signals-hero-stat .lbl { font-size: .68rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.55); }
-    .signals-legend { display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; margin-bottom: .5rem; font-size: .8rem; color: rgba(255,255,255,.7); }
+    .signals-hero-stat .val { display: block; font-size: 1.6rem; font-weight: 900; letter-spacing: -.03em; color: var(--green); }
+    .signals-hero-stat .lbl { font-size: .68rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+    .signals-legend { display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; margin-bottom: .5rem; font-size: .8rem; color: var(--text2); }
     .sig-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: .35rem; }
     .sig-dot.hot    { background: #34d399; box-shadow: 0 0 6px #34d399; }
     .sig-dot.warm   { background: #fbbf24; box-shadow: 0 0 6px #fbbf24; }
@@ -780,11 +652,11 @@
     .timeline-item.hot    { background: rgba(52,211,153,.12); border-left: 3px solid #34d399; }
     .timeline-item.warm   { background: rgba(251,191,36,.1);  border-left: 3px solid #fbbf24; }
     .timeline-item.steady { background: rgba(148,163,184,.1); border-left: 3px solid #94a3b8; }
-    .tl-date  { font-weight: 700; color: rgba(255,255,255,.5); min-width: 60px; font-size: .75rem; }
-    .tl-co    { font-weight: 700; color: #fff; min-width: 140px; }
-    .tl-event { color: rgba(255,255,255,.7); }
+    .tl-date  { font-weight: 700; color: var(--muted); min-width: 60px; font-size: .75rem; }
+    .tl-co    { font-weight: 700; color: var(--text); min-width: 140px; }
+    .tl-event { color: var(--text2); }
     .signals-chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 1.5rem; }
-    .signals-chart-card { background: rgba(255,255,255,.97); border-radius: 12px; padding: 1.25rem; box-shadow: 0 4px 20px rgba(0,0,0,.2); }
+    .signals-chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-sm); }
     @media(max-width:700px) { .signals-chart-row { grid-template-columns: 1fr; } .timeline-item { flex-wrap: wrap; } }
     .evo-hero {
       background: linear-gradient(135deg, #1e3a5f 0%, #1d4ed8 50%, #0d9488 100%);
@@ -1380,106 +1252,6 @@
 
 <!-- ══ PAGE 1: MARKET STATS ════════════════════════════════════ -->
 <div id="page-stats" class="page active">
-
-  <!-- ── MIAMI VS. THE NATION (dark section — top of page) ── -->
-  <div class="nation-section" id="nation-section">
-    <div class="nation-inner">
-
-      <div class="nation-eyebrow">
-        <span class="nation-eyebrow-line"></span>
-        <span class="nation-eyebrow-label">Context · Miami vs. The Nation</span>
-        <span class="nation-eyebrow-line"></span>
-      </div>
-
-      <div class="nation-title">How Does Miami Stack Up <span>Against the Nation?</span></div>
-      <div class="nation-desc">Miami metro unemployment benchmarked against the U.S. national average — 20 years of data. Miami is not seasonally adjusted (LAUS); U.S. national is seasonally adjusted (CPS). A lower unemployment rate than the national average signals a stronger local labor market. The spread and index charts are most useful for long-run trend analysis.</div>
-
-      <div class="nation-kpi-strip">
-        <div class="nation-kpi">
-          <div class="nation-kpi-label">Miami Unemployment</div>
-          <div class="nation-kpi-value sky" id="n-miami-unemp">—</div>
-          <div class="nation-kpi-sub" id="n-miami-unemp-period">—</div>
-        </div>
-        <div class="nation-kpi">
-          <div class="nation-kpi-label">US Unemployment</div>
-          <div class="nation-kpi-value emerald" id="n-us-unemp">—</div>
-          <div class="nation-kpi-sub" id="n-us-unemp-period">—</div>
-        </div>
-        <div class="nation-kpi">
-          <div class="nation-kpi-label">Miami vs. US Spread</div>
-          <div class="nation-kpi-value amber" id="n-spread">—</div>
-          <div class="nation-kpi-delta same" id="n-spread-badge">—</div>
-          <div class="nation-kpi-sub">pp difference · negative = Miami outperforming</div>
-        </div>
-        <div class="nation-kpi">
-          <div class="nation-kpi-label">Miami Employment</div>
-          <div class="nation-kpi-value rose" id="n-miami-emp">—</div>
-          <div class="nation-kpi-sub" id="n-miami-emp-period">—</div>
-        </div>
-      </div>
-
-      <div class="nation-grid-2">
-        <div class="nation-card">
-          <div class="nation-card-head">
-            <div>
-              <div class="nation-card-title">Unemployment Rate — Miami vs. US</div>
-              <div class="nation-card-desc">Monthly · Miami not seasonally adjusted · US seasonally adjusted</div>
-            </div>
-            <div class="range-btns">
-              <button class="btn-r" data-chart="n-unemp" data-range="24">2Y</button>
-              <button class="btn-r" data-chart="n-unemp" data-range="60">5Y</button>
-              <button class="btn-r" data-chart="n-unemp" data-range="120">10Y</button>
-              <button class="btn-r active" data-chart="n-unemp" data-range="all">All</button>
-            </div>
-          </div>
-          <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-unemp"></canvas></div></div>
-        </div>
-        <div class="nation-card">
-          <div class="nation-card-head">
-            <div>
-              <div class="nation-card-title">Unemployment Spread — Miami minus US</div>
-              <div class="nation-card-desc">Percentage point gap · negative = Miami outperforming nation</div>
-            </div>
-          </div>
-          <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-spread"></canvas></div></div>
-        </div>
-      </div>
-
-      <div class="nation-grid-2">
-        <div class="nation-card">
-          <div class="nation-card-head">
-            <div>
-              <div class="nation-card-title">Miami Unemployment — Indexed to US (US = 100)</div>
-              <div class="nation-card-desc">Values below 100 mean Miami unemployment is lower than the national rate</div>
-            </div>
-            <div class="range-btns">
-              <button class="btn-r" data-chart="n-index" data-range="24">2Y</button>
-              <button class="btn-r" data-chart="n-index" data-range="60">5Y</button>
-              <button class="btn-r" data-chart="n-index" data-range="120">10Y</button>
-              <button class="btn-r active" data-chart="n-index" data-range="all">All</button>
-            </div>
-          </div>
-          <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-index"></canvas></div></div>
-        </div>
-        <div class="nation-card">
-          <div class="nation-card-head">
-            <div>
-              <div class="nation-card-title">YoY Change — Miami vs. US Unemployment</div>
-              <div class="nation-card-desc">Percentage point change vs. same month prior year</div>
-            </div>
-          </div>
-          <div class="nation-card-body"><div class="nation-chart-wrap"><canvas id="c-n-yoy"></canvas></div></div>
-        </div>
-      </div>
-
-      <div class="nation-note">
-        ⚠ Methodology: Miami–Fort Lauderdale–West Palm Beach data (LAUMT123310000000003 &amp; LAUMT123310000000005) is <strong>not seasonally adjusted</strong>. U.S. national data (LNS14000000 &amp; LNS12000000) is <strong>seasonally adjusted</strong>. Account for Miami's seasonal employment patterns (tourism, hospitality) when comparing month-to-month.
-      </div>
-
-    </div>
-  </div><!-- /nation-section -->
-
-  <!-- ── MIAMI LOCAL STATS ── -->
   <div class="stats-section-inner">
 
     <div id="error-box"></div>
@@ -1493,12 +1265,14 @@
         <div class="kpi-label">Unemployment Rate</div>
         <div class="kpi-value" id="kpi-unemp">—</div>
         <div class="kpi-delta flat" id="kpi-unemp-delta">—</div>
+        <div class="kpi-trend flat" id="kpi-unemp-trend">—</div>
         <div class="kpi-period" id="kpi-unemp-period">—</div>
       </div>
       <div class="kpi teal">
         <div class="kpi-label">Total Employment</div>
         <div class="kpi-value" id="kpi-emp">—</div>
         <div class="kpi-delta flat" id="kpi-emp-delta">—</div>
+        <div class="kpi-trend flat" id="kpi-emp-trend">—</div>
         <div class="kpi-period" id="kpi-emp-period">—</div>
       </div>
       <div class="kpi amber">
@@ -1516,15 +1290,15 @@
     </div>
 
     <div class="section-head">
-      <span class="section-title">Monthly Trends — Miami Metro</span>
+      <span class="section-title">Miami Unemployment Rate</span>
       <span class="section-divider"></span>
     </div>
-    <div class="grid-2">
+    <div class="grid-1">
       <div class="card">
         <div class="card-head">
           <div>
-            <div class="card-title">Unemployment Rate (%)</div>
-            <div class="card-desc">Monthly · Not seasonally adjusted · Miami–Fort Lauderdale–West Palm Beach MSA</div>
+            <div class="card-title">Unemployment Rate (%) — Monthly</div>
+            <div class="card-desc">Not seasonally adjusted · Miami–Fort Lauderdale–West Palm Beach MSA · shaded bands mark recessions &amp; major shocks</div>
           </div>
           <div class="range-btns">
             <button class="btn-r" data-chart="unemp" data-range="24">2Y</button>
@@ -1533,13 +1307,48 @@
             <button class="btn-r active" data-chart="unemp" data-range="all">All</button>
           </div>
         </div>
-        <div class="card-body"><div class="chart-wrap"><canvas id="c-unemp"></canvas></div></div>
+        <div class="card-body"><div class="chart-wrap tall"><canvas id="c-unemp"></canvas></div></div>
       </div>
+    </div>
+
+    <div class="section-head" style="margin-top:1rem">
+      <span class="section-title">20-Year Pattern — Year × Month Heatmap</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="card" style="margin-bottom:1rem">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Miami Unemployment Rate — Calendar Heatmap</div>
+          <div class="card-desc">Each cell = one month · colors shift blue (low) → red (high) · hover for exact value and historical context</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+          <div class="range-btns" id="heatmap-range">
+            <button class="btn-r active" data-hm-range="10">10Y</button>
+            <button class="btn-r" data-hm-range="all">All</button>
+          </div>
+          <div class="heatmap-legend">
+            <span class="hl-label">Low</span>
+            <span class="hl-grad"></span>
+            <span class="hl-label">High</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="heatmap-wrap"><div id="heatmap" class="heatmap"></div></div>
+        <div id="heatmap-hint" class="heatmap-hint">—</div>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top:1rem">
+      <span class="section-title">Miami Employment Level</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="grid-1">
       <div class="card">
         <div class="card-head">
           <div>
-            <div class="card-title">Total Employment Level</div>
-            <div class="card-desc">Monthly persons employed · Miami–Fort Lauderdale–West Palm Beach MSA</div>
+            <div class="card-title">Total Employment Level — Monthly</div>
+            <div class="card-desc">Persons employed · Miami–Fort Lauderdale–West Palm Beach MSA</div>
           </div>
           <div class="range-btns">
             <button class="btn-r" data-chart="emp" data-range="24">2Y</button>
@@ -1552,6 +1361,10 @@
       </div>
     </div>
 
+    <div class="section-head" style="margin-top:1rem">
+      <span class="section-title">Rate vs. Level — Combined View</span>
+      <span class="section-divider"></span>
+    </div>
     <div class="grid-1">
       <div class="card">
         <div class="card-head">
@@ -1570,50 +1383,23 @@
       </div>
     </div>
 
-    <div class="grid-2">
+    <div class="section-head" style="margin-top:1rem">
+      <span class="section-title">Year-over-Year Change</span>
+      <span class="section-divider"></span>
+    </div>
+    <div class="grid-1">
       <div class="card">
         <div class="card-head">
           <div>
-            <div class="card-title">Year-over-Year Change — Unemployment Rate</div>
-            <div class="card-desc">Percentage point change vs. same month prior year</div>
+            <div class="card-title">YoY Change — Unemployment Rate</div>
+            <div class="card-desc">Percentage point change vs. same month prior year · teal = improving, red = worsening</div>
           </div>
         </div>
         <div class="card-body"><div class="chart-wrap"><canvas id="c-yoy"></canvas></div></div>
       </div>
-      <div class="card">
-        <div class="card-head">
-          <div>
-            <div class="card-title">Seasonal Pattern — Avg Unemployment by Month</div>
-            <div class="card-desc">Average unemployment rate per calendar month across all years in dataset</div>
-          </div>
-        </div>
-        <div class="card-body"><div class="chart-wrap"><canvas id="c-seasonal"></canvas></div></div>
-      </div>
     </div>
 
-    <div class="section-head" style="margin-top:.5rem">
-      <span class="section-title">Unemployment Heatmap — Year × Month</span>
-      <span class="section-divider"></span>
-    </div>
-    <div class="card" style="margin-bottom:1rem">
-      <div class="card-head">
-        <div>
-          <div class="card-title">Miami Unemployment Rate — Calendar Heatmap</div>
-          <div class="card-desc">Each cell = one month · darker red = higher unemployment · hover for exact value</div>
-        </div>
-        <div class="heatmap-legend">
-          <span class="hl-label">Low</span>
-          <span class="hl-grad"></span>
-          <span class="hl-label">High</span>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="heatmap-wrap"><div id="heatmap" class="heatmap"></div></div>
-        <div id="heatmap-hint" class="heatmap-hint">—</div>
-      </div>
-    </div>
-
-    <div class="section-head" style="margin-top:.5rem">
+    <div class="section-head" style="margin-top:1rem">
       <span class="section-title">Recent Monthly Data — Last 24 Months</span>
       <span class="section-divider"></span>
     </div>
@@ -2664,6 +2450,34 @@ function eventForPeriod(p) {
   return null;
 }
 
+/* 3-month trend chip: last-3 mean vs prior-3 mean.
+   `higherIsBad = true` flips color semantics (unemployment up = red). */
+function setTrend(elId, window6, unit, verb, higherIsBad) {
+  const el = document.getElementById(elId);
+  if (!el || window6.length < 6) return;
+  const recent = window6.slice(-3), prior = window6.slice(0,3);
+  const mean = a => a.reduce((x,y) => x+y, 0) / a.length;
+  const delta = mean(recent) - mean(prior);
+  const absDelta = Math.abs(delta);
+  const threshold = unit === 'pp' ? 0.1 : 500;
+  let cls = 'flat', arrow = '→', label = 'Stable';
+  if (absDelta < threshold) { cls = 'flat'; arrow = '→'; label = 'Stable'; }
+  else if (delta > 0) {
+    arrow = '↗';
+    cls = higherIsBad ? 'up' : 'up-good';
+    label = higherIsBad ? 'Rising' : 'Growing';
+  } else {
+    arrow = '↘';
+    cls = higherIsBad ? 'down' : 'down-bad';
+    label = higherIsBad ? 'Falling' : 'Shrinking';
+  }
+  const disp = unit === 'pp'
+    ? `${delta >= 0 ? '+' : ''}${delta.toFixed(2)} pp`
+    : `${delta >= 0 ? '+' : ''}${fmtEmp(Math.abs(delta)).replace(/^-/,'')}`;
+  el.className = `kpi-trend ${cls}`;
+  el.textContent = `${arrow} ${label} · 3-mo ${disp}`;
+}
+
 /* ── Mobile menu ── */
 function toggleMobileMenu() {
   const nav = document.getElementById('nav-tabs');
@@ -2756,6 +2570,10 @@ function setKPIs(uData, eData) {
   const avg = last12.reduce((a,b) => a+b, 0) / last12.length;
   document.getElementById('kpi-avg').textContent = avg.toFixed(2) + '%';
   document.getElementById('kpi-avg-period').textContent = `${fmtPeriod(uData.at(-12).period)} – ${fmtPeriod(lu.period)}`;
+
+  // 3-month trend chips: compare avg of last 3 vs prior 3
+  setTrend('kpi-unemp-trend', uData.slice(-6).map(d => d.value), 'pp', 'rising',  true);
+  setTrend('kpi-emp-trend',   eData.slice(-6).map(d => d.value), 'persons', 'rising', false);
 
   const peak = uData.reduce((a,b) => b.value > a.value ? b : a);
   document.getElementById('kpi-peak').textContent = peak.value.toFixed(1) + '%';
@@ -2911,12 +2729,20 @@ function exportTableCSV() {
   URL.revokeObjectURL(url);
 }
 
+let HEATMAP_DATA = null, HEATMAP_RANGE = 10;
 function buildHeatmap(uData) {
+  HEATMAP_DATA = uData;
+  renderHeatmap();
+}
+function renderHeatmap() {
+  const uData = HEATMAP_DATA;
   const host = document.getElementById('heatmap');
-  if (!host) return;
-  const years = [...new Set(uData.map(d => d.year))].sort((a,b) => a - b);
+  if (!host || !uData) return;
+  let yearsAll = [...new Set(uData.map(d => d.year))].sort((a,b) => a - b);
+  const years = HEATMAP_RANGE === 'all' ? yearsAll : yearsAll.slice(-HEATMAP_RANGE);
   const byKey = {};
   uData.forEach(d => { byKey[`${d.year}-${d.month}`] = d; });
+  // Scale against full dataset so colors stay comparable between views
   const vals = uData.map(d => d.value);
   const min = Math.min(...vals), max = Math.max(...vals);
   const scale = v => {
@@ -2952,15 +2778,28 @@ function buildHeatmap(uData) {
   });
   host.innerHTML = '';
   host.appendChild(frag);
-  host.addEventListener('mouseover', e => {
-    const cell = e.target.closest('.h-cell');
-    if (!cell || !cell.dataset.period) return;
-    const [y, m] = cell.dataset.period.split('-');
-    const ev = eventForPeriod(cell.dataset.period);
-    document.getElementById('heatmap-hint').textContent =
-      `${MON_FULL[+m-1]} ${y} — ${(+cell.dataset.value).toFixed(1)}% unemployment${ev ? ' · ' + ev : ''}`;
-  });
+  if (!host._hoverBound) {
+    host.addEventListener('mouseover', e => {
+      const cell = e.target.closest('.h-cell');
+      if (!cell || !cell.dataset.period) return;
+      const [y, m] = cell.dataset.period.split('-');
+      const ev = eventForPeriod(cell.dataset.period);
+      document.getElementById('heatmap-hint').textContent =
+        `${MON_FULL[+m-1]} ${y} — ${(+cell.dataset.value).toFixed(1)}% unemployment${ev ? ' · ' + ev : ''}`;
+    });
+    host._hoverBound = true;
+  }
 }
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('#heatmap-range .btn-r[data-hm-range]');
+  if (!b) return;
+  b.closest('.range-btns').querySelectorAll('.btn-r').forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  const r = b.dataset.hmRange;
+  HEATMAP_RANGE = r === 'all' ? 'all' : parseInt(r);
+  renderHeatmap();
+});
 
 document.addEventListener('click', e => {
   const th = e.target.closest('#data-table thead th[data-sort]');
@@ -3081,17 +2920,12 @@ async function init() {
     buildEmp(eData);
     buildDual(uData, eData);
     buildYoY(uData);
-    buildSeasonal(uData);
     buildHeatmap(uData);
     buildTable(uData, eData);
 
     /* National comparison */
-    const nKeys = keys.filter(k => data.series[k].scope === 'national');
-    const nuKey = nKeys.find(k => data.series[k].label.toLowerCase().includes('unemployment'));
-    if (nuKey) {
-      const nuData = data.series[nuKey].data;
-      buildNationSection(uData, nuData);
-    }
+    // Nation comparison section was removed (Miami-first focus).
+    // Leaving US series parsing disabled to avoid rendering hidden charts.
 
     /* Hiring Signals charts */
     buildSignalsCharts();
