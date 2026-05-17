@@ -36,9 +36,28 @@ Each data record:
 { "year": 2025, "month": 12, "period": "2025-12", "value": 3.5, "footnotes": ["Preliminary."] }
 ```
 
+## Syncing index.html
+
+`index.html` ships its data hard-coded inline (so the page renders without a
+runtime fetch). After running the fetch script, re-inject the fresh data:
+
+```bash
+python3 sync_index_data.py
+```
+
+This rewrites the `const data = {...};` block in `index.html` from
+`jobs_data.json`. Skipping it leaves the dashboard's "Updated ... ago" badge
+and charts stale even though `jobs_data.json` is current.
+
 ## Scheduling
+
+Automated monthly via `.github/workflows/monthly-data-update.yml`, which runs
+the fetch + sync and commits the result. Add a `BLS_API_KEY` repo secret to
+unlock the full 20-year history (without it the API caps at 10 years).
+
+To run on a local cron instead:
 
 ```cron
 # Refresh on the 1st of each month at 9am
-0 9 1 * * cd /path/to/project && python3 execution/fetch_bls_jobs.py --years 2
+0 9 1 * * cd /path/to/project && python3 execution/fetch_bls_jobs.py --years 20 --force && python3 execution/sync_index_data.py
 ```

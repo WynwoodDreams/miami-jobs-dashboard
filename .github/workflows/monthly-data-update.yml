@@ -1,0 +1,47 @@
+name: Monthly BLS data refresh
+
+# Refreshes jobs_data.json from the BLS API and re-injects it into the
+# inline dataset in index.html, then commits the result.
+on:
+  schedule:
+    # 09:00 UTC on the 3rd of every month — BLS metro releases land mid-month,
+    # the 3rd gives the prior month's national figures time to post.
+    - cron: "0 9 3 * *"
+  workflow_dispatch: {}
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Fetch BLS data
+        env:
+          BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
+        run: python3 execution/fetch_bls_jobs.py --years 20 --force
+
+      - name: Sync inline data into index.html
+        run: python3 execution/sync_index_data.py
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- jobs_data.json index.html; then
+            echo "No data changes — nothing to commit."
+            exit 0
+          fi
+          git add jobs_data.json index.html
+          git commit -m "Monthly BLS data refresh"
+          git push
