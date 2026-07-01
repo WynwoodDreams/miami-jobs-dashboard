@@ -179,6 +179,14 @@
     .kpi.teal::before  { background: linear-gradient(90deg, var(--teal), var(--teal-l)); opacity:1; }
     .kpi.amber::before { background: linear-gradient(90deg, var(--amber), #fbbf24); opacity:1; }
     .kpi.red::before   { background: linear-gradient(90deg, var(--red), #f87171); opacity:1; }
+    .kpi.blue  { background: linear-gradient(160deg, var(--blue-pale) 0%, var(--surface) 60%); }
+    .kpi.teal  { background: linear-gradient(160deg, var(--teal-pale) 0%, var(--surface) 60%); }
+    .kpi.amber { background: linear-gradient(160deg, var(--amber-pale) 0%, var(--surface) 60%); }
+    .kpi.red   { background: linear-gradient(160deg, var(--red-pale) 0%, var(--surface) 60%); }
+    .kpi.blue:hover  { box-shadow: var(--shadow-md), 0 0 28px -10px rgba(29,78,216,.5); }
+    .kpi.teal:hover  { box-shadow: var(--shadow-md), 0 0 28px -10px rgba(13,148,136,.5); }
+    .kpi.amber:hover { box-shadow: var(--shadow-md), 0 0 28px -10px rgba(217,119,6,.5); }
+    .kpi.red:hover   { box-shadow: var(--shadow-md), 0 0 28px -10px rgba(220,38,38,.5); }
     .kpi-label { font-size: .68rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
     .kpi-value { font-size: 2.15rem; font-weight: 800; letter-spacing: -.035em; line-height: 1.08; font-variant-numeric: tabular-nums; }
     .kpi.blue .kpi-value  { color: var(--blue); }
@@ -208,6 +216,15 @@
     .card-title { font-size: .9rem; font-weight: 700; color: var(--text); letter-spacing: -.01em; }
     .card-desc { font-size: .72rem; color: var(--muted); margin-top: .25rem; }
     .card-body { padding: 1.35rem 1.5rem; }
+
+    /* Colored top accent bar for chart cards — pick the variant matching content */
+    .card[class*="accent-"] { position: relative; }
+    .card[class*="accent-"]::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; z-index: 1; }
+    .card.accent-blue::before  { background: linear-gradient(90deg, var(--blue), var(--blue-l)); }
+    .card.accent-teal::before  { background: linear-gradient(90deg, var(--teal), var(--teal-l)); }
+    .card.accent-dual::before  { background: linear-gradient(90deg, var(--blue) 0%, var(--blue) 48%, var(--teal) 52%, var(--teal) 100%); }
+    .card.accent-flux::before  { background: linear-gradient(90deg, var(--teal), var(--red)); }
+    .card.accent-spectrum::before { background: linear-gradient(90deg, #1d4ed8 0%, #0d9488 25%, #fbbf24 55%, #f97316 75%, #b91c1c 100%); }
 
     /* ── RANGE BUTTONS ── */
     .range-btns { display: flex; gap: .2rem; flex-shrink: 0; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: .2rem; }
@@ -299,6 +316,30 @@
        band (.nation-section + buildNationSection()) — that comparison section
        was removed for a Miami-first layout; its unused CSS/JS is removed here. */
     .stats-section-inner { max-width: 1440px; margin: 0 auto; padding: 2rem 2rem 3.5rem; }
+
+    /* Labor Market hero — blue+teal dual gradient (this tab's two data colors) */
+    .labor-hero {
+      background: linear-gradient(135deg, #eff6ff 0%, #f0fdfa 60%, #f4faf9 100%);
+      border: 1px solid rgba(29,78,216,.16);
+      border-radius: var(--radius-lg); padding: 2.5rem; margin-bottom: 1.75rem; color: var(--text);
+      position: relative; overflow: hidden; box-shadow: var(--shadow-sm);
+    }
+    .labor-hero::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background: linear-gradient(90deg, var(--blue), var(--teal) 65%, transparent); }
+    .labor-hero::after { content:''; position:absolute; top:-45%; right:-6%; width:380px; height:380px; border-radius:50%; background: radial-gradient(circle, rgba(29,78,216,.13), transparent 70%); pointer-events:none; }
+    .labor-hero-eyebrow { font-size:.72rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color: var(--blue); margin-bottom:.55rem; position:relative; }
+    .labor-hero-title { font-size:2.1rem; font-weight:800; letter-spacing:-.04em; line-height:1.12; margin:0 0 .75rem; color: var(--text); position:relative; }
+    .labor-hero-title span { color: var(--teal); }
+    .labor-hero-desc { font-size:.88rem; color: var(--text2); max-width:680px; line-height:1.7; margin:0 0 1.65rem; position:relative; }
+    .labor-hero-stats { display:flex; gap:.75rem; flex-wrap:wrap; position:relative; }
+    .labor-hero-stat { background: rgba(255,255,255,.6); border: 1px solid rgba(29,78,216,.14); border-radius: var(--radius-sm); padding: .65rem 1.1rem; }
+    .labor-hero-stat .val { display:block; font-size:1.3rem; font-weight:800; letter-spacing:-.02em; color: var(--blue); font-variant-numeric: tabular-nums; }
+    .labor-hero-stat .lbl { font-size:.66rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color: var(--muted); }
+    @media(max-width:640px) {
+      .labor-hero { padding: 1.25rem; border-radius: 12px; margin-bottom: 1.25rem; }
+      .labor-hero-title { font-size: 1.3rem; }
+      .labor-hero-desc { font-size: .8rem; }
+    }
+    @media(max-width:400px) { .labor-hero-title { font-size: 1.15rem; } }
     /* ════════════════════════════════════════════════════════
        WAGE INTELLIGENCE PAGE STYLES
     ════════════════════════════════════════════════════════ */
@@ -930,6 +971,18 @@
 
     <div id="error-box"></div>
 
+    <div class="labor-hero">
+      <div class="labor-hero-eyebrow">LABOR MARKET · LIVE BLS DATA</div>
+      <h1 class="labor-hero-title">Miami's Job Market, <span>Tracked Live</span></h1>
+      <p class="labor-hero-desc">Monthly unemployment and employment figures for the Miami–Fort Lauderdale–West Palm Beach metro area, sourced directly from the U.S. Bureau of Labor Statistics and refreshed automatically as new releases post.</p>
+      <div class="labor-hero-stats">
+        <div class="labor-hero-stat"><span class="val">20+</span><span class="lbl">Years of History</span></div>
+        <div class="labor-hero-stat"><span class="val">Monthly</span><span class="lbl">BLS Data Refresh</span></div>
+        <div class="labor-hero-stat"><span class="val">33100</span><span class="lbl">Miami Metro CBSA</span></div>
+        <div class="labor-hero-stat"><span class="val">NSA</span><span class="lbl">Not Seasonally Adjusted</span></div>
+      </div>
+    </div>
+
     <div class="section-head">
       <span class="section-title">Key Indicators — Latest Month</span>
       <span class="section-divider"></span>
@@ -968,7 +1021,7 @@
       <span class="section-divider"></span>
     </div>
     <div class="grid-1">
-      <div class="card">
+      <div class="card accent-blue">
         <div class="card-head">
           <div>
             <div class="card-title">Unemployment Rate (%) — Monthly</div>
@@ -989,7 +1042,7 @@
       <span class="section-title">20-Year Pattern — Year × Month Heatmap</span>
       <span class="section-divider"></span>
     </div>
-    <div class="card" style="margin-bottom:1rem">
+    <div class="card accent-spectrum" style="margin-bottom:1rem">
       <div class="card-head">
         <div>
           <div class="card-title">Miami Unemployment Rate — Calendar Heatmap</div>
@@ -1018,7 +1071,7 @@
       <span class="section-divider"></span>
     </div>
     <div class="grid-1">
-      <div class="card">
+      <div class="card accent-teal">
         <div class="card-head">
           <div>
             <div class="card-title">Total Employment Level — Monthly</div>
@@ -1040,7 +1093,7 @@
       <span class="section-divider"></span>
     </div>
     <div class="grid-1">
-      <div class="card">
+      <div class="card accent-dual">
         <div class="card-head">
           <div>
             <div class="card-title">Dual-Axis Overlay — Unemployment Rate vs. Employment Level</div>
@@ -1062,7 +1115,7 @@
       <span class="section-divider"></span>
     </div>
     <div class="grid-1">
-      <div class="card">
+      <div class="card accent-flux">
         <div class="card-head">
           <div>
             <div class="card-title">YoY Change — Unemployment Rate</div>
@@ -1755,24 +1808,24 @@ const ttBase = { backgroundColor:'#fff', borderColor:'#e2e8f0', borderWidth:1, t
 function buildUnemp(all) {
   const ctx = document.getElementById('c-unemp').getContext('2d');
   const grad = ctx.createLinearGradient(0,0,0,270);
-  grad.addColorStop(0,'rgba(29,78,216,.15)'); grad.addColorStop(1,'rgba(29,78,216,0)');
+  grad.addColorStop(0,'rgba(29,78,216,.32)'); grad.addColorStop(1,'rgba(29,78,216,0)');
   const labels = all.map(d=>fmtPeriod(d.period));
-  const chart = new Chart(ctx, { type:'line', data:{ labels, datasets:[{ data:all.map(d=>d.value), borderColor:'#1d4ed8', backgroundColor:grad, borderWidth:2, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35 }] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:false}, tooltip:{...ttBase,callbacks:{label:c=>` ${c.parsed.y.toFixed(1)}%`}}, annotation:{ annotations: eventAnnotations(labels) }}, scales:{ x:{grid:{color:'#f1f5f9'},ticks:{maxTicksLimit:10,maxRotation:0}}, y:{grid:{color:'#f1f5f9'},ticks:{callback:v=>v+'%'},title:{display:true,text:'Rate (%)',color:'#94a3b8',font:{size:11}}} } } });
+  const chart = new Chart(ctx, { type:'line', data:{ labels, datasets:[{ data:all.map(d=>d.value), borderColor:'#1d4ed8', backgroundColor:grad, borderWidth:2.5, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35 }] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:false}, tooltip:{...ttBase,callbacks:{label:c=>` ${c.parsed.y.toFixed(1)}%`}}, annotation:{ annotations: eventAnnotations(labels) }}, scales:{ x:{grid:{color:'#f1f5f9'},ticks:{maxTicksLimit:10,maxRotation:0}}, y:{grid:{color:'#f1f5f9'},ticks:{callback:v=>v+'%'},title:{display:true,text:'Rate (%)',color:'#94a3b8',font:{size:11}}} } } });
   REGISTRY['unemp'] = { chart, all };
 }
 
 function buildEmp(all) {
   const ctx = document.getElementById('c-emp').getContext('2d');
   const grad = ctx.createLinearGradient(0,0,0,270);
-  grad.addColorStop(0,'rgba(13,148,136,.15)'); grad.addColorStop(1,'rgba(13,148,136,0)');
-  const chart = new Chart(ctx, { type:'line', data:{ labels:all.map(d=>fmtPeriod(d.period)), datasets:[{ data:all.map(d=>d.value), borderColor:'#0d9488', backgroundColor:grad, borderWidth:2, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35 }] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:false}, tooltip:{...ttBase,callbacks:{label:c=>` ${fmtEmp(c.parsed.y)} persons`}}}, scales:{ x:{grid:{color:'#f1f5f9'},ticks:{maxTicksLimit:10,maxRotation:0}}, y:{grid:{color:'#f1f5f9'},ticks:{callback:v=>fmtEmp(v)},title:{display:true,text:'Persons',color:'#94a3b8',font:{size:11}}} } } });
+  grad.addColorStop(0,'rgba(13,148,136,.32)'); grad.addColorStop(1,'rgba(13,148,136,0)');
+  const chart = new Chart(ctx, { type:'line', data:{ labels:all.map(d=>fmtPeriod(d.period)), datasets:[{ data:all.map(d=>d.value), borderColor:'#0d9488', backgroundColor:grad, borderWidth:2.5, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35 }] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:false}, tooltip:{...ttBase,callbacks:{label:c=>` ${fmtEmp(c.parsed.y)} persons`}}}, scales:{ x:{grid:{color:'#f1f5f9'},ticks:{maxTicksLimit:10,maxRotation:0}}, y:{grid:{color:'#f1f5f9'},ticks:{callback:v=>fmtEmp(v)},title:{display:true,text:'Persons',color:'#94a3b8',font:{size:11}}} } } });
   REGISTRY['emp'] = { chart, all };
 }
 
 function buildDual(uAll, eAll) {
   const ctx = document.getElementById('c-dual').getContext('2d');
   const labels = uAll.map(d=>fmtPeriod(d.period));
-  const chart = new Chart(ctx, { type:'line', data:{ labels, datasets:[{ label:'Unemployment Rate (%)', data:uAll.map(d=>d.value), borderColor:'#1d4ed8', backgroundColor:'rgba(29,78,216,.06)', borderWidth:2.5, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35, yAxisID:'y' }, { label:'Employment Level', data:eAll.map(d=>d.value), borderColor:'#0d9488', backgroundColor:'rgba(13,148,136,.06)', borderWidth:2.5, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35, yAxisID:'y1' }] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{ legend:{display:true,position:'top',labels:{color:'#334155',boxWidth:12,padding:16,font:{size:12}}}, tooltip:{...ttBase,callbacks:{label:c=>c.datasetIndex===0?` Unemp: ${c.parsed.y.toFixed(1)}%`:` Employed: ${fmtEmp(c.parsed.y)}`}}, annotation:{ annotations: eventAnnotations(labels) } }, scales:{ x:{grid:{color:'#f1f5f9'},ticks:{maxTicksLimit:12,maxRotation:0}}, y:{position:'left',grid:{color:'#f1f5f9'},ticks:{callback:v=>v+'%'},title:{display:true,text:'Unemployment Rate (%)',color:'#1d4ed8',font:{size:11}}}, y1:{position:'right',grid:{drawOnChartArea:false},ticks:{callback:v=>fmtEmp(v)},title:{display:true,text:'Employment Level',color:'#0d9488',font:{size:11}}} } } });
+  const chart = new Chart(ctx, { type:'line', data:{ labels, datasets:[{ label:'Unemployment Rate (%)', data:uAll.map(d=>d.value), borderColor:'#1d4ed8', backgroundColor:'rgba(29,78,216,.14)', borderWidth:2.5, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35, yAxisID:'y' }, { label:'Employment Level', data:eAll.map(d=>d.value), borderColor:'#0d9488', backgroundColor:'rgba(13,148,136,.14)', borderWidth:2.5, pointRadius:0, pointHoverRadius:4, fill:true, tension:0.35, yAxisID:'y1' }] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{ legend:{display:true,position:'top',labels:{color:'#334155',boxWidth:12,padding:16,font:{size:12}}}, tooltip:{...ttBase,callbacks:{label:c=>c.datasetIndex===0?` Unemp: ${c.parsed.y.toFixed(1)}%`:` Employed: ${fmtEmp(c.parsed.y)}`}}, annotation:{ annotations: eventAnnotations(labels) } }, scales:{ x:{grid:{color:'#f1f5f9'},ticks:{maxTicksLimit:12,maxRotation:0}}, y:{position:'left',grid:{color:'#f1f5f9'},ticks:{callback:v=>v+'%'},title:{display:true,text:'Unemployment Rate (%)',color:'#1d4ed8',font:{size:11}}}, y1:{position:'right',grid:{drawOnChartArea:false},ticks:{callback:v=>fmtEmp(v)},title:{display:true,text:'Employment Level',color:'#0d9488',font:{size:11}}} } } });
   REGISTRY['dual'] = { chart, uAll, eAll };
 }
 
