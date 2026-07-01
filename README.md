@@ -11,12 +11,13 @@ Interactive job market data pipeline and dashboard for the **Miami–Fort Lauder
 cp .env.example .env
 # Edit .env → BLS_API_KEY=your_key_here
 
-# 2. Fetch latest data
+# 2. Fetch latest data and inject it into the dashboard
 python3 execution/fetch_bls_jobs.py --years 20
+python3 execution/sync_index_data.py
 
 # 3. Serve the dashboard
 python3 -m http.server 8080
-# Open: http://localhost:8080/jobs-dashboard.html
+# Open: http://localhost:8080/index.html
 ```
 
 ---
@@ -38,8 +39,9 @@ python3 -m http.server 8080
 | File | Description |
 |------|-------------|
 | `execution/fetch_bls_jobs.py` | BLS API v2 data fetch script |
-| `jobs_data.json` | Fetched data (239 records, Jan 2006 – Dec 2025) |
-| `jobs-dashboard.html` | Interactive dashboard (Chart.js, no build step) |
+| `execution/sync_index_data.py` | Re-injects `jobs_data.json` into `index.html`'s inline dataset |
+| `jobs_data.json` | Fetched data (raw, on-disk copy) |
+| `index.html` | The dashboard — Chart.js, no build step, BLS data embedded inline |
 | `.env.example` | API key template |
 | `execution/README.md` | Detailed pipeline documentation |
 
@@ -47,13 +49,13 @@ python3 -m http.server 8080
 
 ## Dashboard Features
 
-- 4 KPI cards — latest unemployment rate, employment level, 12-month average, peak on record
-- Unemployment rate trend chart (2Y / 5Y / 10Y / All filters)
-- Employment level trend chart (2Y / 5Y / 10Y / All filters)
-- Dual-axis overlay chart — unemployment vs. employment on same timeline
-- Year-over-year change bar chart
-- Seasonal pattern chart — average by calendar month
-- 24-month data table with YoY deltas and preliminary flags
+`index.html` is a single-page dashboard with five tabs:
+
+- **Labor Market** — 4 KPI cards (unemployment rate, employment level, 12-month average, peak on record), unemployment/employment trend charts with 2Y/5Y/10Y/All range filters, a 20-year calendar heatmap, a dual-axis overlay chart, a year-over-year change chart, and a searchable/sortable 24-month data table with CSV export. This is the only tab driven by live BLS data — the tabs below are editorial content refreshed independently of the monthly data pipeline.
+- **Wages** — Miami vs. U.S. mean hourly wage by occupational group (BLS OEWS)
+- **AI Impact** — AI automation exposure by role and sector
+- **Hiring** — South Florida hiring/funding signals
+- **Role Shifts** — how entry-level tech roles have evolved
 
 ---
 
