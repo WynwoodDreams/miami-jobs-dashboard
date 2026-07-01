@@ -18,17 +18,37 @@ Series pulled:
 Output:
   - ../jobs_data.json  (project root)
 
+Resilience model (why this script is hard to break):
+  * MERGE, don't replace. Newly fetched months are merged over the existing
+    jobs_data.json, keyed by period. Historical months that aren't re-fetched
+    are preserved, and revised months (BLS often revises the last 2–3) are
+    overwritten with the fresher value. A short fetch can therefore only
+    *refresh* recent data — it can never shrink the 20-year history.
+  * Fail soft. A transient error on one chunk falls back to per-series
+    requests; a series that still fails is simply left at its existing value.
+    One dropped connection no longer discards the whole run.
+  * Never clobber good data with nothing. If the fetch returns zero records,
+    the existing file is left untouched and the run exits non-zero so CI
+    surfaces the outage without corrupting the dataset.
+  * No spurious commits. If the merged series are byte-identical to what's
+    already on disk, the file (and its last_updated stamp) is left alone.
+
 Usage:
-  python3 fetch_bls_jobs.py [--years N]
+  python3 fetch_bls_jobs.py [--years N] [--force]
 
 Options:
-  --years N   Number of years of history to fetch (default: 20, max: 20)
+  --years N   Number of years of history to fetch (default: 20, max: 20).
+              Automatically capped to 10 when no API key is present, since the
+              unauthenticated BLS tier only serves ~10 years — existing history
+              is preserved by the merge, so this is lossless.
+  --force     Fetch even if the on-disk data was updated recently.
 """
 
 import os
 import sys
 import json
 import time
+import random
 import hashlib
 import argparse
 import logging
@@ -77,6 +97,11 @@ METRO = {
     "state": "Florida",
 }
 
+# The unauthenticated BLS v2 tier only serves ~10 years of history and is far
+# more likely to drop connections on large multi-year requests. Cap fetch depth
+# to this when there's no key — the merge preserves any older history on disk.
+UNAUTH_MAX_YEARS = 10
+
 OUTPUT_FILE = Path(__file__).parent.parent / "jobs_data.json"
 
 # ---------------------------------------------------------------------------
@@ -121,12 +146,13 @@ def load_api_key() -> str | None:
 
     log.warning(
         "No BLS_API_KEY found. Using unauthenticated tier "
-        "(limited to 25 series/day, 10 years of data)."
+        "(limited to 25 series/day, ~10 years of data)."
     )
     return None
 
 
-def fetch_series(series_ids, start_year, end_year, api_key, retries=3, backoff=2.0):
+def fetch_series(series_ids, start_year, end_year, api_key, retries=4, backoff=2.0):
+    """POST a single BLS request. Raises on definitive failure after retries."""
     payload = {
         "seriesid": series_ids,
         "startyear": str(start_year),
@@ -143,7 +169,7 @@ def fetch_series(series_ids, start_year, end_year, api_key, retries=3, backoff=2
     for attempt in range(1, retries + 1):
         try:
             log.info(f"Fetching BLS data (attempt {attempt}/{retries}): years={start_year}–{end_year}, series={series_ids}")
-            resp = requests.post(BLS_API_URL, json=payload, headers=headers, timeout=30)
+            resp = requests.post(BLS_API_URL, json=payload, headers=headers, timeout=45)
             resp.raise_for_status()
             data = resp.json()
 
@@ -155,19 +181,58 @@ def fetch_series(series_ids, start_year, end_year, api_key, retries=3, backoff=2
 
             return data
 
-        except (requests.RequestException, RuntimeError) as exc:
+        except (requests.RequestException, RuntimeError, ValueError) as exc:
             log.warning(f"Attempt {attempt} failed: {exc}")
             if attempt < retries:
-                sleep_time = backoff ** attempt
+                # Exponential backoff with jitter so simultaneous/transient
+                # BLS disconnects don't all retry in lockstep.
+                sleep_time = backoff ** attempt + random.uniform(0, 1.5)
                 log.info(f"Retrying in {sleep_time:.1f}s …")
                 time.sleep(sleep_time)
             else:
                 raise
 
 
-def parse_series_data(raw_series):
+def fetch_chunk_resilient(series_ids, start_year, end_year, api_key):
+    """Fetch a year-chunk for all series, degrading gracefully on failure.
+
+    Tries one batched request first (cheapest). If that fails after retries,
+    falls back to one request per series so a single bad series/payload can't
+    sink the others. Returns {seriesID: [raw BLS records]}; series that could
+    not be fetched are simply absent (their existing data is preserved by the
+    caller's merge).
+    """
+    try:
+        raw = fetch_series(series_ids, start_year, end_year, api_key)
+        return {
+            s.get("seriesID", ""): s.get("data", [])
+            for s in raw.get("Results", {}).get("series", [])
+        }
+    except (requests.RequestException, RuntimeError, ValueError) as exc:
+        log.warning(
+            f"Batched fetch for {start_year}–{end_year} failed ({exc}); "
+            "retrying series individually."
+        )
+
+    out = {}
+    for sid in series_ids:
+        try:
+            raw = fetch_series([sid], start_year, end_year, api_key)
+            for s in raw.get("Results", {}).get("series", []):
+                out[s.get("seriesID", "")] = s.get("data", [])
+            time.sleep(1)  # be polite between per-series retries
+        except (requests.RequestException, RuntimeError, ValueError) as exc:
+            log.error(
+                f"Series {sid} could not be fetched for {start_year}–{end_year}: "
+                f"{exc}. Keeping existing data for it."
+            )
+    return out
+
+
+def parse_series_data(raw_records):
+    """Turn raw BLS monthly records into clean, sorted period records."""
     records = []
-    for item in raw_series.get("data", []):
+    for item in raw_records:
         period = item.get("period", "")
         if not period.startswith("M") or period == "M13":
             continue
@@ -192,12 +257,56 @@ def parse_series_data(raw_series):
     return records
 
 
-def build_output(api_response):
-    series_map = {}
-    for raw in api_response.get("Results", {}).get("series", []):
-        sid = raw.get("seriesID", "")
-        series_map[sid] = parse_series_data(raw)
+def load_existing_series(path):
+    """Return {seriesID: {period: record}} from an existing output file.
 
+    Missing/corrupt file yields an empty dict — the run then behaves like a
+    first-time fetch rather than crashing.
+    """
+    if not path.exists():
+        return {}
+    try:
+        with open(path, encoding="utf-8") as f:
+            existing = json.load(f)
+    except (json.JSONDecodeError, OSError) as exc:
+        log.warning(f"Could not read existing data at {path}: {exc}")
+        return {}
+
+    out = {}
+    for sid, series in existing.get("series", {}).items():
+        by_period = {}
+        for r in series.get("data", []):
+            period = r.get("period")
+            if period:
+                by_period[period] = r
+        out[sid] = by_period
+    return out
+
+
+def merge_records(existing_by_period, fetched_records):
+    """Merge fetched records over existing ones, keyed by period.
+
+    Fetched values win for overlapping periods (this captures BLS revisions to
+    recent months); periods present only in the existing data are preserved.
+    Returns a list sorted ascending by (year, month).
+    """
+    merged = dict(existing_by_period)  # period -> record
+    for r in fetched_records:
+        merged[r["period"]] = r
+    records = list(merged.values())
+    records.sort(key=lambda r: (r["year"], r["month"]))
+    return records
+
+
+def series_hash(series_block):
+    """Stable hash over just the series data, so an unchanged refresh produces
+    an identical hash regardless of the last_updated timestamp."""
+    raw = json.dumps(series_block, sort_keys=True)
+    return hashlib.sha256(raw.encode()).hexdigest()[:12]
+
+
+def build_output(fetched_by_sid, existing_by_sid):
+    """Assemble the output document, merging fetched data over existing."""
     output = {
         "metadata": {
             "source": "U.S. Bureau of Labor Statistics (BLS)",
@@ -223,7 +332,17 @@ def build_output(api_response):
     }
 
     for sid, info in SERIES.items():
-        records = series_map.get(sid, [])
+        fetched = parse_series_data(fetched_by_sid.get(sid, []))
+        existing = existing_by_sid.get(sid, {})
+        records = merge_records(existing, fetched)
+
+        # The merge can only add or update periods, never drop them — guard
+        # anyway so a logic slip can never silently shrink history.
+        if len(records) < len(existing):
+            raise RuntimeError(
+                f"Refusing to shrink {sid}: merged {len(records)} < existing {len(existing)}"
+            )
+
         output["series"][sid] = {
             "label": info["label"],
             "unit": info["unit"],
@@ -232,16 +351,13 @@ def build_output(api_response):
             "record_count": len(records),
             "latest": records[-1] if records else None,
         }
-        log.info(f"  {info['label']} ({sid}): {len(records)} monthly records")
+        latest = records[-1]["period"] if records else "no data"
+        log.info(f"  {info['label']} ({sid}): {len(records)} records | latest {latest}")
 
     return output
 
 
 def save_output(data, path):
-    # Add a data hash so the frontend can detect changes without re-parsing
-    raw = json.dumps(data["series"], sort_keys=True)
-    data["metadata"]["data_hash"] = hashlib.sha256(raw.encode()).hexdigest()[:12]
-
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
@@ -260,8 +376,19 @@ def data_is_current(path, max_age_days=25):
             return False
         age = (datetime.now(timezone.utc) - datetime.fromisoformat(last)).days
         return age < max_age_days
-    except (json.JSONDecodeError, ValueError, KeyError):
+    except (json.JSONDecodeError, ValueError, KeyError, OSError):
         return False
+
+
+def existing_data_hash(path):
+    """Return the recorded data_hash of the on-disk file, or None."""
+    if not path.exists():
+        return None
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f).get("metadata", {}).get("data_hash")
+    except (json.JSONDecodeError, OSError):
+        return None
 
 
 # ---------------------------------------------------------------------------
@@ -273,53 +400,79 @@ def main():
         description="Fetch BLS employment data for Miami metro + US national comparison."
     )
     parser.add_argument("--years", type=int, default=20, metavar="N",
-                        help="Number of years of history to fetch (default: 20, max: 20)")
+                        help="Years of history to fetch (default: 20, max: 20).")
     parser.add_argument("--force", action="store_true",
-                        help="Force fetch even if existing data is recent")
+                        help="Fetch even if existing data is recent.")
     args = parser.parse_args()
 
     # Skip fetch if data is already current (unless --force)
     if not args.force and data_is_current(OUTPUT_FILE):
         log.info("Existing data is recent (< 25 days old). Skipping fetch. Use --force to override.")
-        return
+        return 0
+
+    api_key = load_api_key()
 
     current_year = datetime.now().year
     years_back = max(1, min(args.years, 20))
+    if not api_key and years_back > UNAUTH_MAX_YEARS:
+        log.info(
+            f"No API key: capping fetch to {UNAUTH_MAX_YEARS} years "
+            "(older history on disk is preserved by the merge)."
+        )
+        years_back = UNAUTH_MAX_YEARS
     start_year = current_year - years_back
     end_year = current_year
 
-    api_key = load_api_key()
     series_ids = list(SERIES.keys())
+    existing_by_sid = load_existing_series(OUTPUT_FILE)
+    have_existing = any(existing_by_sid.values())
 
     log.info("=" * 60)
     log.info("BLS Job Market Data Fetch — Miami Metro + US National")
     log.info(f"  Series          : {', '.join(series_ids)}")
     log.info(f"  Date Range      : {start_year} – {end_year}")
+    log.info(f"  Existing on disk: {'yes' if have_existing else 'no'}")
     log.info(f"  Output File     : {OUTPUT_FILE.resolve()}")
     log.info("=" * 60)
 
     chunk_size = 20 if api_key else 10
-    all_raw_series = {sid: [] for sid in series_ids}
+    fetched_by_sid = {sid: [] for sid in series_ids}
+    any_fetched = False
 
     chunk_start = start_year
     while chunk_start <= end_year:
         chunk_end = min(chunk_start + chunk_size - 1, end_year)
-        raw = fetch_series(series_ids, chunk_start, chunk_end, api_key)
-        for raw_series in raw.get("Results", {}).get("series", []):
-            sid = raw_series.get("seriesID", "")
-            if sid in all_raw_series:
-                all_raw_series[sid].extend(raw_series.get("data", []))
+        got = fetch_chunk_resilient(series_ids, chunk_start, chunk_end, api_key)
+        for sid, records in got.items():
+            if sid in fetched_by_sid and records:
+                fetched_by_sid[sid].extend(records)
+                any_fetched = True
         chunk_start = chunk_end + 1
         if chunk_start <= end_year:
             time.sleep(1)  # be polite to BLS API
 
-    synthetic_response = {
-        "Results": {
-            "series": [{"seriesID": sid, "data": data} for sid, data in all_raw_series.items()]
-        }
-    }
+    # Never overwrite good data with nothing. If the whole fetch came back
+    # empty, leave the existing file untouched and flag the outage to CI.
+    if not any_fetched:
+        if have_existing:
+            log.error(
+                "Fetch returned no data. Existing jobs_data.json left untouched "
+                "(data preserved, but stale). Exiting non-zero to flag the outage."
+            )
+        else:
+            log.error("Fetch returned no data and there is no existing file to preserve.")
+        return 1
 
-    output = build_output(synthetic_response)
+    output = build_output(fetched_by_sid, existing_by_sid)
+
+    # Skip the write entirely when nothing actually changed — this keeps
+    # last_updated stable and prevents empty "refresh" commits in CI.
+    new_hash = series_hash(output["series"])
+    output["metadata"]["data_hash"] = new_hash
+    if new_hash == existing_data_hash(OUTPUT_FILE):
+        log.info("Series data unchanged since last run — leaving jobs_data.json as-is.")
+        return 0
+
     save_output(output, OUTPUT_FILE)
 
     log.info("")
@@ -332,7 +485,8 @@ def main():
         )
         log.info(f"  [{series_info['label']}] {series_info['record_count']} records | Latest: {latest_str}")
     log.info(f"  Last updated: {output['metadata']['last_updated']}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

@@ -1,12 +1,27 @@
 name: Monthly BLS data refresh
 
-# Refreshes jobs_data.json from the BLS API and re-injects it into the
-# inline dataset in index.html, then commits the result.
+# Refreshes jobs_data.json from the BLS API and re-injects it into the inline
+# dataset in index.html, then commits the result.
+#
+# ┌─ API KEY (important) ───────────────────────────────────────────────────┐
+# │ Add a `BLS_API_KEY` repository secret to unlock the full 20-year history │
+# │ and the higher, more reliable rate limit. Without it the fetch falls     │
+# │ back to the unauthenticated tier (~10 years, easily throttled, prone to  │
+# │ dropped connections). The fetcher preserves any older history already on │
+# │ disk via a period-keyed merge, so a keyless run only refreshes recent    │
+# │ months — it never truncates the dataset — but a key makes runs far more  │
+# │ likely to succeed. Free registration:                                    │
+# │ https://www.bls.gov/developers/api_signature_v2.htm                      │
+# └─────────────────────────────────────────────────────────────────────────┘
 on:
   schedule:
-    # 09:00 UTC on the 3rd of every month — BLS metro releases land mid-month,
-    # the 3rd gives the prior month's national figures time to post.
+    # 09:00 UTC on the 3rd of every month — the 3rd gives the prior month's
+    # national figures time to post.
     - cron: "0 9 3 * *"
+    # Safety-net retry on the 6th in case the 3rd hit a sustained BLS outage.
+    # Re-running is harmless: the fetcher merges + skips writing when nothing
+    # changed, so a redundant run produces no commit.
+    - cron: "0 9 6 * *"
   workflow_dispatch: {}
 
 jobs:
@@ -26,10 +41,28 @@ jobs:
       - name: Install dependencies
         run: pip install requests
 
+      # The fetcher already retries each request (4x, jittered) and falls back
+      # to per-series requests. This outer loop adds a few more attempts spaced
+      # further apart, to ride out a brief BLS outage during the run window
+      # (the exact failure mode that broke an earlier run).
       - name: Fetch BLS data
         env:
           BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
-        run: python3 execution/fetch_bls_jobs.py --years 20 --force
+        run: |
+          for attempt in 1 2 3; do
+            echo "::group::Fetch attempt $attempt"
+            if python3 execution/fetch_bls_jobs.py --years 20 --force; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "Fetch attempt $attempt failed."
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 30))
+            fi
+          done
+          echo "All fetch attempts failed — existing data left untouched (stale but intact)."
+          exit 1
 
       - name: Sync inline data into index.html
         run: python3 execution/sync_index_data.py
