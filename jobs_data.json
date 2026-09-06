@@ -38,9 +38,9 @@
         "scope": "national"
       }
     },
-    "last_updated": "2026-09-03T09:20:05.316265+00:00",
+    "last_updated": "2026-09-06T12:40:45.390818+00:00",
     "fetch_status": "success",
-    "data_hash": "385608eaefc0"
+    "data_hash": "9cf4d0110a9a"
   },
   "series": {
     "LAUMT123310000000003": {
@@ -5253,13 +5253,20 @@
           "period": "2026-07",
           "value": 4.1,
           "footnotes": []
+        },
+        {
+          "year": 2026,
+          "month": 8,
+          "period": "2026-08",
+          "value": 4.1,
+          "footnotes": []
         }
       ],
-      "record_count": 246,
+      "record_count": 247,
       "latest": {
         "year": 2026,
-        "month": 7,
-        "period": "2026-07",
+        "month": 8,
+        "period": "2026-08",
         "value": 4.1,
         "footnotes": []
       }
@@ -7032,14 +7039,21 @@
           "period": "2026-07",
           "value": 162177.0,
           "footnotes": []
+        },
+        {
+          "year": 2026,
+          "month": 8,
+          "period": "2026-08",
+          "value": 162746.0,
+          "footnotes": []
         }
       ],
-      "record_count": 246,
+      "record_count": 247,
       "latest": {
         "year": 2026,
-        "month": 7,
-        "period": "2026-07",
-        "value": 162177.0,
+        "month": 8,
+        "period": "2026-08",
+        "value": 162746.0,
         "footnotes": []
       }
     }
