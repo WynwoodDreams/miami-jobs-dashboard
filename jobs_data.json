@@ -38,9 +38,9 @@
         "scope": "national"
       }
     },
-    "last_updated": "2026-09-06T12:40:45.390818+00:00",
+    "last_updated": "2026-10-03T14:12:59.726396+00:00",
     "fetch_status": "success",
-    "data_hash": "9cf4d0110a9a"
+    "data_hash": "afd20ced7ce7"
   },
   "series": {
     "LAUMT123310000000003": {
@@ -1768,16 +1768,23 @@
           "month": 7,
           "period": "2026-07",
           "value": 3.7,
+          "footnotes": []
+        },
+        {
+          "year": 2026,
+          "month": 8,
+          "period": "2026-08",
+          "value": 3.7,
           "footnotes": [
             "Preliminary."
           ]
         }
       ],
-      "record_count": 246,
+      "record_count": 247,
       "latest": {
         "year": 2026,
-        "month": 7,
-        "period": "2026-07",
+        "month": 8,
+        "period": "2026-08",
         "value": 3.7,
         "footnotes": [
           "Preliminary."
@@ -3508,18 +3515,25 @@
           "year": 2026,
           "month": 7,
           "period": "2026-07",
-          "value": 3147042.0,
+          "value": 3145281.0,
+          "footnotes": []
+        },
+        {
+          "year": 2026,
+          "month": 8,
+          "period": "2026-08",
+          "value": 3170150.0,
           "footnotes": [
             "Preliminary."
           ]
         }
       ],
-      "record_count": 246,
+      "record_count": 247,
       "latest": {
         "year": 2026,
-        "month": 7,
-        "period": "2026-07",
-        "value": 3147042.0,
+        "month": 8,
+        "period": "2026-08",
+        "value": 3170150.0,
         "footnotes": [
           "Preliminary."
         ]
@@ -5260,14 +5274,21 @@
           "period": "2026-08",
           "value": 4.1,
           "footnotes": []
+        },
+        {
+          "year": 2026,
+          "month": 9,
+          "period": "2026-09",
+          "value": 4.2,
+          "footnotes": []
         }
       ],
-      "record_count": 247,
+      "record_count": 248,
       "latest": {
         "year": 2026,
-        "month": 8,
-        "period": "2026-08",
-        "value": 4.1,
+        "month": 9,
+        "period": "2026-09",
+        "value": 4.2,
         "footnotes": []
       }
     },
@@ -7046,14 +7067,21 @@
           "period": "2026-08",
           "value": 162746.0,
           "footnotes": []
+        },
+        {
+          "year": 2026,
+          "month": 9,
+          "period": "2026-09",
+          "value": 163152.0,
+          "footnotes": []
         }
       ],
-      "record_count": 247,
+      "record_count": 248,
       "latest": {
         "year": 2026,
-        "month": 8,
-        "period": "2026-08",
-        "value": 162746.0,
+        "month": 9,
+        "period": "2026-09",
+        "value": 163152.0,
         "footnotes": []
       }
     }
