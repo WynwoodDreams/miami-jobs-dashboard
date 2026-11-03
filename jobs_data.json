@@ -38,9 +38,9 @@
         "scope": "national"
       }
     },
-    "last_updated": "2026-10-03T14:12:59.726396+00:00",
+    "last_updated": "2026-11-03T16:55:08.929072+00:00",
     "fetch_status": "success",
-    "data_hash": "afd20ced7ce7"
+    "data_hash": "d5a2916a5d8b"
   },
   "series": {
     "LAUMT123310000000003": {
@@ -1775,17 +1775,24 @@
           "month": 8,
           "period": "2026-08",
           "value": 3.7,
+          "footnotes": []
+        },
+        {
+          "year": 2026,
+          "month": 9,
+          "period": "2026-09",
+          "value": 3.2,
           "footnotes": [
             "Preliminary."
           ]
         }
       ],
-      "record_count": 247,
+      "record_count": 248,
       "latest": {
         "year": 2026,
-        "month": 8,
-        "period": "2026-08",
-        "value": 3.7,
+        "month": 9,
+        "period": "2026-09",
+        "value": 3.2,
         "footnotes": [
           "Preliminary."
         ]
@@ -3522,18 +3529,25 @@
           "year": 2026,
           "month": 8,
           "period": "2026-08",
-          "value": 3170150.0,
+          "value": 3167901.0,
+          "footnotes": []
+        },
+        {
+          "year": 2026,
+          "month": 9,
+          "period": "2026-09",
+          "value": 3197148.0,
           "footnotes": [
             "Preliminary."
           ]
         }
       ],
-      "record_count": 247,
+      "record_count": 248,
       "latest": {
         "year": 2026,
-        "month": 8,
-        "period": "2026-08",
-        "value": 3170150.0,
+        "month": 9,
+        "period": "2026-09",
+        "value": 3197148.0,
         "footnotes": [
           "Preliminary."
         ]
