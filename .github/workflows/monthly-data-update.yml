@@ -10,7 +10,9 @@ name: Monthly BLS data refresh
 # │ dropped connections). The fetcher preserves any older history already on │
 # │ disk via a period-keyed merge, so a keyless run only refreshes recent    │
 # │ months — it never truncates the dataset — but a key makes runs far more  │
-# │ likely to succeed. Free registration:                                    │
+# │ likely to succeed. If BLS rejects the key as invalid, the fetcher drops  │
+# │ it, finishes the run keyless, and raises a "BLS API key rejected"        │
+# │ warning annotation — fix the secret when you see it. Free registration:  │
 # │ https://www.bls.gov/developers/api_signature_v2.htm                      │
 # └─────────────────────────────────────────────────────────────────────────┘
 on:
@@ -31,10 +33,10 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 

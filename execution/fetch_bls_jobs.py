@@ -151,6 +151,23 @@ def load_api_key() -> str | None:
     return None
 
 
+class InvalidKeyError(RuntimeError):
+    """BLS rejected the registration key. Retrying with the same key is
+    pointless, so this bypasses the retry/fallback machinery and lets main()
+    drop the key and re-run on the unauthenticated tier."""
+
+
+def _is_invalid_key_error(messages) -> bool:
+    text = " ".join(str(m) for m in messages).lower()
+    return "key" in text and "invalid" in text
+
+
+def gha_warning(msg: str) -> None:
+    """Emit a GitHub Actions warning annotation (no-op noise locally)."""
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        print(f"::warning title=BLS API key rejected::{msg}", flush=True)
+
+
 def fetch_series(series_ids, start_year, end_year, api_key, retries=4, backoff=2.0):
     """POST a single BLS request. Raises on definitive failure after retries."""
     payload = {
@@ -177,10 +194,14 @@ def fetch_series(series_ids, start_year, end_year, api_key, retries=4, backoff=2
             if status != "REQUEST_SUCCEEDED":
                 messages = data.get("message", [])
                 log.error(f"BLS API returned status '{status}': {messages}")
+                if api_key and _is_invalid_key_error(messages):
+                    raise InvalidKeyError(f"BLS API key rejected: {messages}")
                 raise RuntimeError(f"BLS API error: {messages}")
 
             return data
 
+        except InvalidKeyError:
+            raise
         except (requests.RequestException, RuntimeError, ValueError) as exc:
             log.warning(f"Attempt {attempt} failed: {exc}")
             if attempt < retries:
@@ -208,6 +229,8 @@ def fetch_chunk_resilient(series_ids, start_year, end_year, api_key):
             s.get("seriesID", ""): s.get("data", [])
             for s in raw.get("Results", {}).get("series", [])
         }
+    except InvalidKeyError:
+        raise
     except (requests.RequestException, RuntimeError, ValueError) as exc:
         log.warning(
             f"Batched fetch for {start_year}–{end_year} failed ({exc}); "
@@ -221,6 +244,8 @@ def fetch_chunk_resilient(series_ids, start_year, end_year, api_key):
             for s in raw.get("Results", {}).get("series", []):
                 out[s.get("seriesID", "")] = s.get("data", [])
             time.sleep(1)  # be polite between per-series retries
+        except InvalidKeyError:
+            raise
         except (requests.RequestException, RuntimeError, ValueError) as exc:
             log.error(
                 f"Series {sid} could not be fetched for {start_year}–{end_year}: "
@@ -391,6 +416,51 @@ def existing_data_hash(path):
         return None
 
 
+def fetch_all(series_ids, years_requested, api_key, have_existing):
+    """Fetch every series over the requested range, chunked by year.
+
+    Returns ({seriesID: [raw records]}, any_fetched). Raises InvalidKeyError
+    if BLS rejects api_key.
+    """
+    current_year = datetime.now().year
+    years_back = max(1, min(years_requested, 20))
+    if not api_key and years_back > UNAUTH_MAX_YEARS:
+        log.info(
+            f"No API key: capping fetch to {UNAUTH_MAX_YEARS} years "
+            "(older history on disk is preserved by the merge)."
+        )
+        years_back = UNAUTH_MAX_YEARS
+    start_year = current_year - years_back
+    end_year = current_year
+
+    log.info("=" * 60)
+    log.info("BLS Job Market Data Fetch — Miami Metro + US National")
+    log.info(f"  Series          : {', '.join(series_ids)}")
+    log.info(f"  Date Range      : {start_year} – {end_year}")
+    log.info(f"  API key         : {'yes' if api_key else 'no (unauthenticated tier)'}")
+    log.info(f"  Existing on disk: {'yes' if have_existing else 'no'}")
+    log.info(f"  Output File     : {OUTPUT_FILE.resolve()}")
+    log.info("=" * 60)
+
+    chunk_size = 20 if api_key else 10
+    fetched_by_sid = {sid: [] for sid in series_ids}
+    any_fetched = False
+
+    chunk_start = start_year
+    while chunk_start <= end_year:
+        chunk_end = min(chunk_start + chunk_size - 1, end_year)
+        got = fetch_chunk_resilient(series_ids, chunk_start, chunk_end, api_key)
+        for sid, records in got.items():
+            if sid in fetched_by_sid and records:
+                fetched_by_sid[sid].extend(records)
+                any_fetched = True
+        chunk_start = chunk_end + 1
+        if chunk_start <= end_year:
+            time.sleep(1)  # be polite to BLS API
+
+    return fetched_by_sid, any_fetched
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -411,45 +481,24 @@ def main():
         return 0
 
     api_key = load_api_key()
-
-    current_year = datetime.now().year
-    years_back = max(1, min(args.years, 20))
-    if not api_key and years_back > UNAUTH_MAX_YEARS:
-        log.info(
-            f"No API key: capping fetch to {UNAUTH_MAX_YEARS} years "
-            "(older history on disk is preserved by the merge)."
-        )
-        years_back = UNAUTH_MAX_YEARS
-    start_year = current_year - years_back
-    end_year = current_year
-
     series_ids = list(SERIES.keys())
     existing_by_sid = load_existing_series(OUTPUT_FILE)
     have_existing = any(existing_by_sid.values())
 
-    log.info("=" * 60)
-    log.info("BLS Job Market Data Fetch — Miami Metro + US National")
-    log.info(f"  Series          : {', '.join(series_ids)}")
-    log.info(f"  Date Range      : {start_year} – {end_year}")
-    log.info(f"  Existing on disk: {'yes' if have_existing else 'no'}")
-    log.info(f"  Output File     : {OUTPUT_FILE.resolve()}")
-    log.info("=" * 60)
-
-    chunk_size = 20 if api_key else 10
-    fetched_by_sid = {sid: [] for sid in series_ids}
-    any_fetched = False
-
-    chunk_start = start_year
-    while chunk_start <= end_year:
-        chunk_end = min(chunk_start + chunk_size - 1, end_year)
-        got = fetch_chunk_resilient(series_ids, chunk_start, chunk_end, api_key)
-        for sid, records in got.items():
-            if sid in fetched_by_sid and records:
-                fetched_by_sid[sid].extend(records)
-                any_fetched = True
-        chunk_start = chunk_end + 1
-        if chunk_start <= end_year:
-            time.sleep(1)  # be polite to BLS API
+    try:
+        fetched_by_sid, any_fetched = fetch_all(series_ids, args.years, api_key, have_existing)
+    except InvalidKeyError as exc:
+        # A bad/revoked key fails every request instantly. Rather than burn
+        # ~10 minutes of retries and fail the run, fall back to the keyless
+        # tier (recent ~10 years; older history on disk is kept by the merge)
+        # and flag the bad key loudly so it gets fixed.
+        msg = (
+            f"{exc}. Falling back to the unauthenticated tier for this run. "
+            "Fix or remove the BLS_API_KEY repository secret."
+        )
+        log.warning(msg)
+        gha_warning(msg)
+        fetched_by_sid, any_fetched = fetch_all(series_ids, args.years, None, have_existing)
 
     # Never overwrite good data with nothing. If the whole fetch came back
     # empty, leave the existing file untouched and flag the outage to CI.
